@@ -1,0 +1,59 @@
+Zapant {
+    Program = Stmt+
+
+    Stmt (statement)
+        = "(" id ":" Exp* ")"                       --fnCall
+        | "(" def id ":" Exp ")"                    --varDec
+
+    Block = Stmt+
+
+    Exp
+        = Condition relop Condition                 --binary
+        | Condition
+
+    Condition
+        = Exp ("+" | "-") Term                      --binary
+        | Term
+
+    Term
+        = Term ("*" | "/" | "%") Factor             --binary
+        | Factor
+
+    Factor
+        = Primary "**" Factor                       --binary
+        | Primary
+
+    Primary
+        = Stmt_fnCall
+        | Var
+        | strlit
+        | floatlit
+        | intlit
+        | boolean
+
+
+    Var = id
+
+    def = "def" ~alnum
+    if = "if" ~alnum
+    loop = "loop" ~alnum
+    in = "in" ~alnum
+    true = "true" ~alnum
+    false = "false" ~alnum
+    keywords
+        = def
+        | if
+        | loop
+        | in
+        | true
+        | false
+
+    strlit = "\"" char* "\""
+    char = ~"\"" ~"\n"  any
+    boolean = true | false
+    intlit = digit+
+    floatlit = digit+ "." digit+
+    id = ~keywords letter idchar*
+    idchar = letter | digit | "_"
+    relop = "<=" | "<" | "==" | "!=" | ">=" | ">" 
+}
