@@ -42,9 +42,6 @@ const createSemantics = (grammar: Grammar, match: MatchResult) => {
       return args.asIteration().children.map(c => c.sourceString)
     },
     Var (val) {
-      // const entity = context.get(val.sourceString)
-      // if (!entity) throw new Error(`Identifier "${val.sourceString}" not declared`)
-
       return new Variable(val.sourceString, 'any')
     },
     true (_) {

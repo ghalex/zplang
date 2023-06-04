@@ -69,7 +69,7 @@ const sourceCode3 = String.raw`
 
   (def last:
     (fn [arr]:
-      (def age: 2)
+      (def age: 2)      // Multiple lines example
       (nth: -1 arr)
     )
   )
@@ -78,7 +78,7 @@ const sourceCode3 = String.raw`
   (print: (last: arr1))
 `
 
-const m = parser.parse(sourceCode3)
+const m = parser.parse(sourceCode2)
 const semantics = analyzer.createSemantics(parser.getGrammar(), m)
 const adapter = semantics(m)
 const ast = adapter.ast() as any[]
@@ -92,5 +92,8 @@ console.log('\n')
 
 const env = createEnvirement()
 
-ast.map(s => s.eval?.(env))
+console.log('---------------------')
+const result = ast.map(s => s.eval?.(env))
+console.log('---------------------')
+
 console.log(env)

@@ -64,6 +64,7 @@ Zapant {
     relop = "<=" | "<" | "==" | "!=" | ">=" | ">"    
     signs = "_" | "+" | "-" | "/" | "*" | ">" | "<" | ">=" | "<=" | "=" | "!" | "?" | "~"
 
-    eol = "\\n" | "\\r"
-  	space += "//" (~eol any)* 	--comment
+    eol = "\n" | "\r"
+    comment = "//" (~eol any)* eol*
+    space += comment
 }
