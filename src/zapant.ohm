@@ -2,8 +2,10 @@ Zapant {
     Program = Stmt+
 
     Stmt (statement)
-        = "(" id ":" Exp* ")"                       --fnCall
-        | "(" def id ":" Exp ")"                    --varDec
+        = "(" (id | signs) ":" Exp* ")"             --fnCall
+        | "(" fn ListArgs ":" Block ")"				--fnDec 
+        | "(" def id ":" (Stmt | Exp) ")"           --varDec
+        | Exp
 
     Block = Stmt+
 
@@ -25,17 +27,20 @@ Zapant {
 
     Primary
         = Stmt_fnCall
-        | Var
+        | List
         | strlit
         | floatlit
         | intlit
         | boolean
+        | Var
 
-
+    List = "[" listOf<Exp, " "> "]"
+    ListArgs = "[" listOf<id, " "> "]"
     Var = id
 
     def = "def" ~alnum
     if = "if" ~alnum
+    fn = "fn" ~alnum
     loop = "loop" ~alnum
     in = "in" ~alnum
     true = "true" ~alnum
@@ -43,6 +48,7 @@ Zapant {
     keywords
         = def
         | if
+        | fn
         | loop
         | in
         | true
@@ -51,9 +57,13 @@ Zapant {
     strlit = "\"" char* "\""
     char = ~"\"" ~"\n"  any
     boolean = true | false
-    intlit = digit+
+    intlit = ("+" | "-")* digit+
     floatlit = digit+ "." digit+
     id = ~keywords letter idchar*
     idchar = letter | digit | "_"
-    relop = "<=" | "<" | "==" | "!=" | ">=" | ">" 
+    relop = "<=" | "<" | "==" | "!=" | ">=" | ">"    
+    signs = "_" | "+" | "-" | "/" | "*" | ">" | "<" | ">=" | "<=" | "=" | "!" | "?" | "~"
+
+    eol = "\\n" | "\\r"
+  	space += "//" (~eol any)* 	--comment
 }

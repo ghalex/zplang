@@ -1,11 +1,14 @@
 import type { MatchResult, Grammar, Node } from 'ohm-js'
-import { FnCall, BinaryExpression, Expression, Variable, VarDec } from './core'
+import { FnCall, BinaryExpression, Expression, Variable, VarDec, Strlit, List, FnDec } from './core'
 
 const createSemantics = (grammar: Grammar, match: MatchResult) => {
   const semantics = grammar.createSemantics()
   const ast = {
     Program (stmts) {
       return stmts.children.map(s => s.ast())
+    },
+    Stmt_fnDec (_left, _fn, args, _dots, block, _right) {
+      return new FnDec(args.ast(), block.ast())
     },
     Stmt_fnCall (_left, fnName, _dots, args, _right) {
       return new FnCall(fnName.sourceString, args.ast())
@@ -32,11 +35,17 @@ const createSemantics = (grammar: Grammar, match: MatchResult) => {
     Exp (val: Node) {
       return new Expression(val.ast())
     },
+    List (p1, expressions, p2) {
+      return new List(expressions.asIteration().children.map(c => c.ast()))
+    },
+    ListArgs (_l, args, _r) {
+      return args.asIteration().children.map(c => c.sourceString)
+    },
     Var (val) {
       // const entity = context.get(val.sourceString)
       // if (!entity) throw new Error(`Identifier "${val.sourceString}" not declared`)
 
-      return ''
+      return new Variable(val.sourceString, 'any')
     },
     true (_) {
       return true
@@ -44,14 +53,14 @@ const createSemantics = (grammar: Grammar, match: MatchResult) => {
     false (_) {
       return false
     },
-    intlit (digits) {
-      return parseInt(digits.sourceString)
+    intlit (sign, digits) {
+      return parseInt(sign.sourceString + digits.sourceString)
     },
     floatlit (digits1: Node, _dot, digits2: Node) {
       return parseFloat(digits1.sourceString + '.' + digits2.sourceString)
     },
     strlit (_a1, chars: Node, _a2) {
-      return chars.ast().join('')
+      return new Strlit(chars.ast().join(''))
     },
     _terminal () {
       return (this as any).sourceString

@@ -12,7 +12,7 @@ class Env {
 
   get (name: string) {
     if (!this.env[name]) {
-      throw new Error(`${name} not in env`)
+      throw new Error(`"${name}" not defined`)
     }
 
     return this.env[name]
