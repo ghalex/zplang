@@ -1,10 +1,16 @@
-(def symbols: ["AAPL", "MSFT"])
 (def myObj: {name: "Alex", age: 22, money: (+: 2 3)})
 
 (:name myObj)
+
 ;; (def asset: (fn [symbol, price]: [symbol, 100]))
 ;; (def assets: (map: asset symbols))
+
+(print: "Hello nichita")  ;; this is comment
 (print: myObj)
+
+(def myvar: (fn []: (print: "my fn")))
+
+(def symbols: ["AAPL", "MSFT"])
 
 (loop symbol in symbols:
   (def cm: (cmr: symbol 21))

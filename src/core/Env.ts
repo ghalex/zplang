@@ -14,7 +14,7 @@ class Env {
     // String
     this.env['str'] = (...args) => args.join(' ')
     this.env['print'] = (...args) => {
-      console.log('#user> ', ...args)
+      console.log(...args)
       return args.join(' ')
     }
 

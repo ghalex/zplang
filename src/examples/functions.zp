@@ -1,8 +1,6 @@
 (def arr1: [1, 2, 3, 4])
 (def first:
-  (fn [arr]:
-    (nth: 0 arr)
-  )
+  (fn [arr]: (nth: 0 arr))
 )
 
 (def last:

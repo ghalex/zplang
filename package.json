@@ -30,6 +30,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "figlet": "^1.6.0",
     "ohm-js": "^17.1.0"
   }
 }
