@@ -1,7 +1,8 @@
 import * as fs from 'fs'
 import * as ohm from 'ohm-js'
+import path from 'path'
 
-const data = fs.readFileSync('src/zapant.ohm', { encoding: 'utf-8' })
+const data = fs.readFileSync(path.join(__dirname, 'zapant.ohm'), { encoding: 'utf-8' })
 const grammar = ohm.grammar(data)
 
 const parse = (sourceCode: string) => {

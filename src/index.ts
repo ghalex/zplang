@@ -9,6 +9,13 @@ import { type MatchResult } from 'ohm-js'
 
 const rl = readline.createInterface({ input, output, terminal: false })
 
+// process.stdin.on('keypress', function (s, key) {
+//   console.log('sssss')
+//   readline.cursorTo(output, 0, 0)
+//   if (key.name === 'up') {
+//   }
+// })
+
 function createEnvirement () {
   const env = new Env()
 
@@ -68,23 +75,37 @@ const evalZp = (env: Env, m: MatchResult) => {
   return ast.map(s => s.eval?.(env))
 }
 
+const clear = (ascii) => {
+  readline.cursorTo(output, 0, 0)
+  readline.clearScreenDown(process.stdout)
+  console.log(ascii)
+  console.log('v0.1.2')
+  console.log('release-05/Jun/2023')
+  console.log(`
+help:
+ - "examples" to see some examples
+ - "exit" to close the CLI
+`)
+}
+
 figlet('Zaplang', {
-  font: 'Ghost',
+  // font: 'Ghost',
   horizontalLayout: 'default',
   verticalLayout: 'default',
   width: 80,
   whitespaceBreak: true
-}, async (_, data) => {
+}, async (err, ascii) => {
+  if (err) {
+    console.log(err)
+  }
+
   const g = parser.getGrammar()
   const m = g.matcher()
 
   const env = createEnvirement()
 
   rl.setPrompt('#user> ')
-
-  readline.cursorTo(output, 0, 0)
-  readline.clearScreenDown(process.stdout)
-  console.log(data)
+  clear(ascii)
 
   rl.prompt()
   rl.on('line', (line) => {
@@ -92,9 +113,20 @@ figlet('Zaplang', {
       case 'exit':
         rl.close()
         break
+      case 'examples':
+        console.log(`
+(def age: 22)             ;; defines a variable
+(def arr1: [1, 2, 3])     ;; defines an array
+
+(print: age)              ;; prints a var
+
+(def myFn: (fn [param1]: (print: param1)))
+(myFn: "Alex")
+`)
+        break
+
       case 'cls':
-        readline.cursorTo(output, 0, 0)
-        readline.clearScreenDown(process.stdout)
+        clear(ascii)
         break
       default: {
         if (line.length > 0) {

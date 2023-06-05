@@ -2,7 +2,8 @@
   "name": "zp-lang",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "bin": "dist/index.js",
   "scripts": {
     "dev": "nodemon",
     "start": "node -r dotenv-flow/config dist/index.js",
@@ -32,5 +33,11 @@
   "dependencies": {
     "figlet": "^1.6.0",
     "ohm-js": "^17.1.0"
+  },
+  "pkg": {
+    "scripts": "dist/**/*.js",
+    "assets": ["dist/zapant.ohm", "node_modules/figlet/fonts/Standard.flf"],
+    "targets": [ "node14-macos-x64" ],
+    "outputPath": "dist"
   }
 }
