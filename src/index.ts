@@ -41,5 +41,5 @@ console.log('---------------------')
 const result = ast.map(s => s.eval?.(env))
 console.log('---------------------')
 
-console.log('Result:')
-console.log(result)
+// console.log('Result:')
+// console.log(result)

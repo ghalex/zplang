@@ -4,4 +4,6 @@
 (def asset: (fn [symbol, price]: [symbol, 100]))
 (def assets: (map: asset symbols))
 
-(print: assets)
+(print: symbols)
+(print: (pop: (pop: symbols)))
+(print: (push: "MA" symbols))

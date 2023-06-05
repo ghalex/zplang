@@ -20,6 +20,8 @@ class Env {
 
     // Array
     this.env['length'] = arr => arr.length
+    this.env['push'] = (val, arr) => [...arr, val]
+    this.env['pop'] = (arr) => arr.slice(0, -1)
     this.env['map'] = (fn, arr) => {
       return (fn instanceof Lambda) ? arr.map((val, i) => fn.eval(this, [val, i])) : arr.map(fn)
     }
