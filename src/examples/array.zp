@@ -2,4 +2,6 @@
 (def symbols: ["AAPL", "MSFT", "SNOW"])
 
 (def asset: (fn [symbol, price]: [symbol, 100]))
-(map: asset symbols)
+(def assets: (map: asset symbols))
+
+(print: assets)
