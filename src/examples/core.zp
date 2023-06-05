@@ -1,0 +1,14 @@
+(def age: 37)
+(def age2: age - 7)
+(def fname: "Alex")
+(def lname: "Ghiura")
+(def name: fname + " " + lname)
+
+(print: age)
+(print: "name: " name)
+
+(def arr1: [1, 2, 3, 4])
+(def msg: (str: "Last element" "is" (nth: -1 arr1)))
+
+(def asset: (fn [symbol]: [symbol, 100]))
+(asset: "AAPL")

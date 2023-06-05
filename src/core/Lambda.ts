@@ -9,10 +9,12 @@ class Lambda {
     const localEnv = env.duplicate()
 
     args.forEach((arg, i) => {
-      const bindName = this.bindNames[i].toString()
-      const value = evalExpression(arg, env)
+      if (this.bindNames[i] !== undefined) {
+        const bindName = this.bindNames[i].toString()
+        const value = evalExpression(arg, env)
 
-      localEnv.bind(bindName, value)
+        localEnv.bind(bindName, value)
+      }
     })
 
     const evaled = this.body.map(exp => {

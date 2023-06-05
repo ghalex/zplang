@@ -1,0 +1,16 @@
+(def arr1: [1, 2, 3, 4])
+(def first:
+  (fn [arr]:
+    (nth: 0 arr)
+  )
+)
+
+(def last:
+  (fn [arr]:
+    (def age: 2)      ;; Multiple lines example
+    (nth: -1 arr)     ;; Last line will be the return
+  )
+)
+
+(print: (first: arr1))
+(print: (last: arr1))

@@ -1,0 +1,5 @@
+(def arr1: [1, 2, 3, 4])
+(def symbols: ["AAPL", "MSFT", "SNOW"])
+
+(def asset: (fn [symbol, price]: [symbol, 100]))
+(map: asset symbols)

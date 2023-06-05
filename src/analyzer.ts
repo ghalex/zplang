@@ -1,5 +1,5 @@
 import type { MatchResult, Grammar, Node } from 'ohm-js'
-import { FnCall, BinaryExpression, Expression, Variable, VarDec, Strlit, List, FnDec, IfElse } from './core'
+import { FnCall, BinaryExpression, Expression, Variable, VarDec, Strlit, List, FnDec, IfElse, Loop } from './core'
 
 const createSemantics = (grammar: Grammar, match: MatchResult) => {
   const semantics = grammar.createSemantics()
@@ -9,6 +9,9 @@ const createSemantics = (grammar: Grammar, match: MatchResult) => {
     },
     Stmt_if (_l, _if, _p1, exp, _p2, _dots, yesStmt, noStmt, _r) {
       return new IfElse(exp.ast(), yesStmt.ast(), noStmt.ast())
+    },
+    Stmt_loop (_l, _loop, id, _in, list, _dots, block, _p2) {
+      return new Loop(id.sourceString, list.ast(), block.ast())
     },
     Stmt_fnDec (_left, _fn, args, _dots, block, _right) {
       return new FnDec(args.ast(), block.ast())

@@ -2,10 +2,11 @@ Zapant {
     Program = Stmt+
 
     Stmt (statement)
-        = "(" (id | "+" | "-" | "/" | "*") ":" Exp* ")"     --fnCall
-        | "(" if "[" Exp "]" ":" Stmt Stmt ")"              --if
-        | "(" fn ListArgs ":" Block ")"                     --fnDec 
-        | "(" def id ":" (Stmt | Exp) ")"                   --varDec
+        = "(" (id | "+" | "-" | "/" | "*") ":"? Exp* ")"            --fnCall
+        | "(" if "[" Exp "]" ":" Stmt Stmt ")"                      --if
+        | "(" loop id? in (List | Stmt_fnCall | Var) ":" Block ")"        --loop
+        | "(" fn ListArgs ":" Block ")"                             --fnDec 
+        | "(" def id ":" (Stmt | Exp) ")"                           --varDec
         | Exp
 
     Block = Stmt+
@@ -28,6 +29,7 @@ Zapant {
 
     Primary
         = Stmt_fnCall
+        | Stmt_fnDec
         | List
         | strlit
         | floatlit
@@ -36,8 +38,8 @@ Zapant {
         | null
         | Var
 
-    List = "[" listOf<Exp, " "> "]"
-    ListArgs = "[" listOf<id, " "> "]"
+    List = "[" listOf<Exp, ","> "]"
+    ListArgs = "[" listOf<id, ", "> "]"
     Var = id
 
     def = "def" ~alnum
@@ -63,11 +65,11 @@ Zapant {
     boolean = true | false
     intlit = ("+" | "-")* digit+
     floatlit = digit+ "." digit+
-    id = ~keywords letter idchar*
+    id = ~keywords (letter | "__") idchar*
     idchar = letter | digit | "_"
     relop = "<=" | "<" | "==" | "!=" | ">=" | ">"
 
     eol = "\n" | "\r"
-    comment = "//" (~eol any)* eol*
+    comment = ";;" (~eol any)* eol*
     space += comment
 }

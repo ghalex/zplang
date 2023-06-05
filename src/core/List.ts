@@ -8,7 +8,7 @@ class List {
   }
 
   toString () {
-    return '[' + this.expressions.join(' ') + ']'
+    return '[' + this.expressions.join(', ') + ']'
   }
 }
 

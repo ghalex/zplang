@@ -1,0 +1,17 @@
+(def ageAlex: 3)
+(def ageAndreea: 35)
+(def names: ["Alex", "Andreea", "Pop"])
+
+(print: "Length:" (length: names))
+(if [(length: names) > 10]:
+  (print: "TRUE")
+  (print: "FALSE")
+)
+
+(def getnames: (fn []: names))
+
+(loop name in names:
+  (print: (str: __value __idx))
+)
+
+(def test: "Alex" + 2)

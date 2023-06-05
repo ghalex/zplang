@@ -1,7 +1,8 @@
 import parser from './parser'
 import analyzer from './analyzer'
 import { Env } from './core'
-import { ex4 } from './examples'
+import * as ex from './examples'
+import Lambda from './core/Lambda'
 
 function createEnvirement () {
   const env = new Env()
@@ -10,6 +11,7 @@ function createEnvirement () {
   env.bind('-', (...args) => args.slice(1).reduce((prev, curr) => prev - curr, args[0]))
   env.bind('*', (...args) => args.slice(1).reduce((prev, curr) => prev * curr, args[0]))
   env.bind('/', (...args) => args.slice(1).reduce((prev, curr) => prev / curr, args[0]))
+  env.bind('inc', (val) => val + 1)
 
   // String
   env.bind('str', (...args) => args.join(' '))
@@ -20,6 +22,9 @@ function createEnvirement () {
 
   // Array
   env.bind('length', arr => arr.length)
+  env.bind('map', (fn, arr) => {
+    return (fn instanceof Lambda) ? arr.map((val, i) => fn.eval(env, [val, i])) : arr.map(fn)
+  })
   env.bind('nth', (idx, arr) => {
     if (idx < 0) {
       return arr[arr.length + idx % arr.length]
@@ -27,8 +32,6 @@ function createEnvirement () {
 
     return arr[idx % arr.length]
   })
-
-  
 
   // Market
   env.bind('price', (tick) => {
@@ -46,7 +49,7 @@ function createEnvirement () {
   return env
 }
 
-const m = parser.parse(ex4)
+const m = parser.parse(ex.array)
 const semantics = analyzer.createSemantics(parser.getGrammar(), m)
 const adapter = semantics(m)
 const ast = adapter.ast() as any[]
@@ -64,5 +67,5 @@ console.log('---------------------')
 const result = ast.map(s => s.eval?.(env))
 console.log('---------------------')
 
-console.log("Result:")
+console.log('Result:')
 console.log(result)

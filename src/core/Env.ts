@@ -11,7 +11,7 @@ class Env {
   }
 
   get (name: string) {
-    if (!this.env[name]) {
+    if (this.env[name] === undefined) {
       throw new Error(`"${name}" not defined`)
     }
 
