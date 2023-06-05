@@ -1,9 +1,14 @@
-(def arr1: [1, 2, 3, 4])
-(def symbols: ["AAPL", "MSFT", "SNOW"])
+(def symbols: ["AAPL", "MSFT"])
+(def myObj: {name: "Alex", age: 22, money: (+: 2 3)})
 
-(def asset: (fn [symbol, price]: [symbol, 100]))
-(def assets: (map: asset symbols))
+(:name myObj)
+;; (def asset: (fn [symbol, price]: [symbol, 100]))
+;; (def assets: (map: asset symbols))
+(print: myObj)
 
-(print: symbols)
-(print: (pop: (pop: symbols)))
-(print: (push: "MA" symbols))
+(loop symbol in symbols:
+  (def cm: (cmr: symbol 21))
+  (if [cm > 0.5]:
+    (orderUnits: symbol 10)
+  )
+)

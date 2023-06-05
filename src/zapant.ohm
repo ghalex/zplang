@@ -3,9 +3,10 @@ Zapant {
 
     Stmt (statement)
         = "(" (id | "+" | "-" | "/" | "*") ":"? Exp* ")"            --fnCall
-        | "(" if "[" Exp "]" ":" Stmt Stmt ")"                      --if
-        | "(" loop id? in (List | Stmt_fnCall | Var) ":" Block ")"        --loop
+        | "(" if "[" Exp "]" ":" Stmt Stmt? ")"                     --if
+        | "(" loop id? in (List | Stmt_fnCall | Var) ":" Block ")"  --loop
         | "(" fn ListArgs ":" Block ")"                             --fnDec 
+        | "(" ":" id Var ")"                                        --objGet
         | "(" def id ":" (Stmt | Exp) ")"                           --varDec
         | Exp
 
@@ -31,6 +32,7 @@ Zapant {
         = Stmt_fnCall
         | Stmt_fnDec
         | List
+        | Object
         | strlit
         | floatlit
         | intlit
@@ -40,6 +42,8 @@ Zapant {
 
     List = "[" listOf<Exp, ","> "]"
     ListArgs = "[" listOf<id, ", "> "]"
+    Object = "{" listOf<ObjItem, ",">  "}"
+    ObjItem = id ":" Exp
     Var = id
 
     def = "def" ~alnum

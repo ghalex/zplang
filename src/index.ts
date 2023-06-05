@@ -2,12 +2,20 @@ import parser from './parser'
 import analyzer from './analyzer'
 import { Env } from './core'
 import * as ex from './examples'
-import Lambda from './core/Lambda'
 
 function createEnvirement () {
   const env = new Env()
 
   // Market
+  env.bind('cmr', (symbol, window) => {
+    const test = { AAPL: 1, MSFT: 0.2, SNOW: 0.6 }
+    return test[symbol]
+  })
+
+  env.bind('orderUnits', (symbol, units) => {
+    return { symbol, units, date: new Date() }
+  })
+
   env.bind('price', (tick) => {
     const data = {
       AAPL: [{ close: 122, date: '01/01/2023' }, { close: 124, date: '02/01/2023' }]
@@ -41,5 +49,7 @@ console.log('---------------------')
 const result = ast.map(s => s.eval?.(env))
 console.log('---------------------')
 
-// console.log('Result:')
-// console.log(result)
+console.log('Result:')
+console.dir(result, { depth: null })
+const orders = result[result.length - 1].map(x => x[x.length - 1])
+console.log(orders)

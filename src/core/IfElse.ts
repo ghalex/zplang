@@ -7,7 +7,11 @@ class IfElse {
     const cond = evalExpression(this.expression, env)
 
     if (cond === false || cond === null || cond === undefined) {
-      return evalExpression(this.noStmt, env)
+      if (this.noStmt.length > 0) {
+        return evalExpression(this.noStmt[0], env)
+      } else {
+        return null
+      }
     }
 
     return evalExpression(this.yesStmt, env)

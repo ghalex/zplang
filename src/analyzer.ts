@@ -1,5 +1,5 @@
 import type { MatchResult, Grammar, Node } from 'ohm-js'
-import { FnCall, BinaryExpression, Expression, Variable, VarDec, Strlit, List, FnDec, IfElse, Loop } from './core'
+import { FnCall, BinaryExpression, Expression, Variable, VarDec, Strlit, List, FnDec, IfElse, Loop, Obj, ObjGet } from './core'
 
 const createSemantics = (grammar: Grammar, match: MatchResult) => {
   const semantics = grammar.createSemantics()
@@ -18,6 +18,9 @@ const createSemantics = (grammar: Grammar, match: MatchResult) => {
     },
     Stmt_fnCall (_left, fnName, _dots, args, _right) {
       return new FnCall(fnName.sourceString, args.ast())
+    },
+    Stmt_objGet (_l, _dots, id, obj, _r) {
+      return new ObjGet(id.sourceString, obj.ast())
     },
     Stmt_varDec (_left, _def, id: Node, _dots, exp: Node, _right) {
       const variable = new Variable(id.sourceString, 'any')
@@ -43,6 +46,12 @@ const createSemantics = (grammar: Grammar, match: MatchResult) => {
     },
     List (p1, expressions, p2) {
       return new List(expressions.asIteration().children.map(c => c.ast()))
+    },
+    Object (_l, body, _r) {
+      return new Obj(body.asIteration().children.map(s => s.ast()))
+    },
+    ObjItem (id, _dots, exp) {
+      return [id.sourceString, exp.ast()]
     },
     ListArgs (_l, args, _r) {
       return args.asIteration().children.map(c => c.sourceString)
