@@ -8,6 +8,10 @@ class Expression {
   }
 
   toString () {
+    if (this.value === null) {
+      return 'null'
+    }
+
     return this.value.toString()
   }
 }

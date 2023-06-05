@@ -1,11 +1,14 @@
 import type { MatchResult, Grammar, Node } from 'ohm-js'
-import { FnCall, BinaryExpression, Expression, Variable, VarDec, Strlit, List, FnDec } from './core'
+import { FnCall, BinaryExpression, Expression, Variable, VarDec, Strlit, List, FnDec, IfElse } from './core'
 
 const createSemantics = (grammar: Grammar, match: MatchResult) => {
   const semantics = grammar.createSemantics()
   const ast = {
     Program (stmts) {
       return stmts.children.map(s => s.ast())
+    },
+    Stmt_if (_l, _if, _p1, exp, _p2, _dots, yesStmt, noStmt, _r) {
+      return new IfElse(exp.ast(), yesStmt.ast(), noStmt.ast())
     },
     Stmt_fnDec (_left, _fn, args, _dots, block, _right) {
       return new FnDec(args.ast(), block.ast())
@@ -58,6 +61,9 @@ const createSemantics = (grammar: Grammar, match: MatchResult) => {
     },
     strlit (_a1, chars: Node, _a2) {
       return new Strlit(chars.ast().join(''))
+    },
+    null (val) {
+      return null
     },
     _terminal () {
       return (this as any).sourceString

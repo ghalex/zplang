@@ -7,15 +7,7 @@ class BinaryExpression {
     const left = evalExpression(this.left, env)
     const right = evalExpression(this.right, env)
 
-    switch (this.op) {
-      case '+':
-        return left + right
-
-      case '-':
-        return left - right
-    }
-
-    return null
+    return eval(left + this.op + right)
   }
 
   toString () {

@@ -2,9 +2,10 @@ Zapant {
     Program = Stmt+
 
     Stmt (statement)
-        = "(" (id | signs) ":" Exp* ")"             --fnCall
-        | "(" fn ListArgs ":" Block ")"				--fnDec 
-        | "(" def id ":" (Stmt | Exp) ")"           --varDec
+        = "(" (id | "+" | "-" | "/" | "*") ":" Exp* ")"     --fnCall
+        | "(" if "[" Exp "]" ":" Stmt Stmt ")"              --if
+        | "(" fn ListArgs ":" Block ")"                     --fnDec 
+        | "(" def id ":" (Stmt | Exp) ")"                   --varDec
         | Exp
 
     Block = Stmt+
@@ -32,6 +33,7 @@ Zapant {
         | floatlit
         | intlit
         | boolean
+        | null
         | Var
 
     List = "[" listOf<Exp, " "> "]"
@@ -45,6 +47,7 @@ Zapant {
     in = "in" ~alnum
     true = "true" ~alnum
     false = "false" ~alnum
+    null = "null" ~alnum
     keywords
         = def
         | if
@@ -53,6 +56,7 @@ Zapant {
         | in
         | true
         | false
+        | null
 
     strlit = "\"" char* "\""
     char = ~"\"" ~"\n"  any
@@ -61,8 +65,7 @@ Zapant {
     floatlit = digit+ "." digit+
     id = ~keywords letter idchar*
     idchar = letter | digit | "_"
-    relop = "<=" | "<" | "==" | "!=" | ">=" | ">"    
-    signs = "_" | "+" | "-" | "/" | "*" | ">" | "<" | ">=" | "<=" | "=" | "!" | "?" | "~"
+    relop = "<=" | "<" | "==" | "!=" | ">=" | ">"
 
     eol = "\n" | "\r"
     comment = "//" (~eol any)* eol*
