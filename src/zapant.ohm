@@ -6,7 +6,7 @@ Zapant {
         | "(" if "[" Exp "]" Stmt Stmt? ")"                     --if
         | "(" loop id? in (List | Stmt_fnCall | Var) Block ")"  --loop
         | "(" fn ListArgs Block ")"                             --fnDec 
-        | "(" ":" id (Var | Asset) ")"                          --objGet
+        | "(" ":" id (Var | Asset | Assets) ")"                 --objGet
         | "(" def id (Stmt | Exp) ")"                           --varDec
         | Exp
 
@@ -34,6 +34,7 @@ Zapant {
         | Stmt_objGet
         | List
         | Object
+        | Assets
         | Asset
         | strlit
         | floatlit
@@ -47,7 +48,8 @@ Zapant {
     Object = "{" listOf<ObjItem, ",">  "}"
     ObjItem = id ":" Exp
     Var = id
-    Asset = "{" upper+ ("," intlit)* "}"
+    Assets = "{" upper+ "," intlit "bars" "}"
+    Asset = "{" upper+ ("," intlit "days ago"?)? "}"
 
     def = "def" ~alnum
     if = "if" ~alnum

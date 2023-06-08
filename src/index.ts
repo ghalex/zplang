@@ -42,11 +42,15 @@ const evalZp = (env: Env, m: MatchResult) => {
 }
 
 const clear = (ascii) => {
+  const assets = Object.keys(data)
+  // const assetsDate = data[assets[0]]?.[0].dateFormatted
+
   readline.cursorTo(output, 0, 0)
   readline.clearScreenDown(process.stdout)
   console.log(ascii)
   console.log('v0.1.2')
   console.log('release-05/Jun/2023')
+  console.log('assets: ' + assets.join(', '))
   console.log(`
 help:
  - "examples" to see some examples
@@ -85,6 +89,7 @@ figlet('Zaplang', {
 (def arr1: [1, 2, 3])     ;; defines an array
 
 (print: age)              ;; prints a var
+(:close {AAPL})           ;; prints AAPL close price
 
 (def myFn: (fn [param1]: (print: param1)))
 (myFn: "Alex")

@@ -10,6 +10,7 @@ class Env {
     this.env['*'] = (...args) => args.slice(1).reduce((prev, curr) => prev * curr, args[0])
     this.env['/'] = (...args) => args.slice(1).reduce((prev, curr) => prev / curr, args[0])
     this.env['inc'] = (val) => val + 1
+    this.env['identity'] = (val) => val
 
     // String
     this.env['str'] = (...args) => args.map(a => a.toString()).join(' ')
@@ -34,7 +35,27 @@ class Env {
     }
 
     // Assets
+    this.env['bar'] = (symbol: string, daysAgo: number = 0) => {
+      if (!data[symbol]) {
+        throw new Error(`Bars for asset ${symbol} was not loaded`)
+      }
+
+      if (data[symbol].length < daysAgo) {
+        throw new Error(`Only ${data[symbol].length} bars available for asset ${symbol}`)
+      }
+
+      return data[symbol][daysAgo]
+    }
+
     this.env['bars'] = (symbol: string, window: number) => {
+      if (!data[symbol]) {
+        throw new Error(`Bars for asset ${symbol} was not loaded`)
+      }
+
+      if (data[symbol].length < window) {
+        throw new Error(`Only ${data[symbol].length} bars available for asset ${symbol}`)
+      }
+
       return data[symbol].slice(0, window)
     }
   }

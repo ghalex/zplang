@@ -1,34 +1,28 @@
 // import { evalExpression } from '../help'
 
 class Asset {
-  constructor (public symbol: any, public window: number = 1) {}
+  constructor (public symbol: any, public daysAgo: number = 0) {}
 
   eval (env) {
-    const getBars = env.get('bars')
+    const getBar = env.get('bar')
 
-    if (!getBars) {
-      throw new Error('"bars" function not defined')
+    if (!getBar) {
+      throw new Error('"bar" function not defined')
     }
 
-    const bars = getBars(this.symbol, this.window)
-
-    if (bars.length === 0) {
-      return null
+    try {
+      return getBar(this.symbol, this.daysAgo)
+    } catch (err: any) {
+      throw new Error(err.message)
     }
-
-    if (bars.length === 1) {
-      return bars[0]
-    }
-
-    return bars
   }
 
   toString () {
-    if (this.window <= 1) {
+    if (this.daysAgo < 1) {
       return `{${this.symbol}}`
     }
 
-    return `{${this.symbol}, ${this.window}}`
+    return `{${this.symbol}, ${this.daysAgo} days ago}`
   }
 }
 
