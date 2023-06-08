@@ -2,12 +2,12 @@ Zapant {
     Program = Stmt+
 
     Stmt (statement)
-        = "(" (id | "+" | "-" | "/" | "*") ":"? Exp* ")"            --fnCall
-        | "(" if "[" Exp "]" ":" Stmt Stmt? ")"                     --if
-        | "(" loop id? in (List | Stmt_fnCall | Var) ":" Block ")"  --loop
-        | "(" fn ListArgs ":" Block ")"                             --fnDec 
-        | "(" ":" id Var ")"                                        --objGet
-        | "(" def id ":" (Stmt | Exp) ")"                           --varDec
+        = "(" (id | "+" | "-" | "/" | "*") Exp* ")"             --fnCall
+        | "(" if "[" Exp "]" Stmt Stmt? ")"                     --if
+        | "(" loop id? in (List | Stmt_fnCall | Var) Block ")"  --loop
+        | "(" fn ListArgs Block ")"                             --fnDec 
+        | "(" ":" id (Var | Asset) ")"                          --objGet
+        | "(" def id (Stmt | Exp) ")"                           --varDec
         | Exp
 
     Block = Stmt+
@@ -34,6 +34,7 @@ Zapant {
         | Stmt_objGet
         | List
         | Object
+        | Asset
         | strlit
         | floatlit
         | intlit
@@ -46,6 +47,7 @@ Zapant {
     Object = "{" listOf<ObjItem, ",">  "}"
     ObjItem = id ":" Exp
     Var = id
+    Asset = "{" upper+ ("," intlit)* "}"
 
     def = "def" ~alnum
     if = "if" ~alnum

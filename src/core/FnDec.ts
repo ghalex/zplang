@@ -8,7 +8,7 @@ class FnDec {
   }
 
   toString () {
-    return `(fn [${this.args.join(', ')}]: ${this.expressions.map(a => a.toString()).join(' ')})`
+    return `(fn [${this.args.join(', ')}] ${this.expressions.map(a => a.toString()).join(' ')})`
   }
 }
 

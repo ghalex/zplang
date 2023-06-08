@@ -3,7 +3,7 @@ import Lambda from './Lambda'
 class Env {
   private readonly env: Record<string, any>
 
-  constructor () {
+  constructor (data: Record<string, any> = []) {
     this.env = {}
     this.env['+'] = (...args) => args.reduce((prev, curr) => prev + curr, 0)
     this.env['-'] = (...args) => args.slice(1).reduce((prev, curr) => prev - curr, args[0])
@@ -12,7 +12,7 @@ class Env {
     this.env['inc'] = (val) => val + 1
 
     // String
-    this.env['str'] = (...args) => args.join(' ')
+    this.env['str'] = (...args) => args.map(a => a.toString()).join(' ')
     this.env['print'] = (...args) => {
       console.log(...args)
       return args.join(' ')
@@ -31,6 +31,11 @@ class Env {
       }
 
       return arr[idx % arr.length]
+    }
+
+    // Assets
+    this.env['bars'] = (symbol: string, window: number) => {
+      return data[symbol].slice(0, window)
     }
   }
 

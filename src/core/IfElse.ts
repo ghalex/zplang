@@ -18,7 +18,7 @@ class IfElse {
   }
 
   toString () {
-    return `(if [${this.expression.toString()}]) ${this.yesStmt.toString()} ${this.noStmt.toString()}`
+    return `(if [${this.expression.toString()}] ${this.yesStmt.toString()} ${this.noStmt.toString()})`
   }
 }
 

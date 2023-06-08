@@ -27,7 +27,7 @@ class Loop {
   }
 
   toString () {
-    return `(loop [${this.id} in ${this.list.toString()}]: ${this.block.toString()})`
+    return `(loop [${this.id} in ${this.list.toString()}] ${this.block.toString()})`
   }
 }
 

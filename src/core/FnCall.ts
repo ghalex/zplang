@@ -21,7 +21,7 @@ class FnCall {
   }
 
   toString () {
-    return `(${this.name}: ${this.expressions.map(a => a.toString()).join(' ')})`
+    return `(${this.name} ${this.expressions.map(a => a.toString()).join(' ')})`
   }
 }
 

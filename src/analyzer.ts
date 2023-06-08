@@ -1,5 +1,5 @@
 import type { MatchResult, Grammar, Node } from 'ohm-js'
-import { FnCall, BinaryExpression, Expression, Variable, VarDec, Strlit, List, FnDec, IfElse, Loop, Obj, ObjGet } from './core'
+import { FnCall, BinaryExpression, Expression, Variable, VarDec, Strlit, List, FnDec, IfElse, Loop, Obj, ObjGet, Asset } from './core'
 
 const createSemantics = (grammar: Grammar, match: MatchResult) => {
   const semantics = grammar.createSemantics()
@@ -7,22 +7,22 @@ const createSemantics = (grammar: Grammar, match: MatchResult) => {
     Program (stmts) {
       return stmts.children.map(s => s.ast())
     },
-    Stmt_if (_l, _if, _p1, exp, _p2, _dots, yesStmt, noStmt, _r) {
+    Stmt_if (_l, _if, _p1, exp, _p2, yesStmt, noStmt, _r) {
       return new IfElse(exp.ast(), yesStmt.ast(), noStmt.ast())
     },
-    Stmt_loop (_l, _loop, id, _in, list, _dots, block, _p2) {
+    Stmt_loop (_l, _loop, id, _in, list, block, _p2) {
       return new Loop(id.sourceString, list.ast(), block.ast())
     },
-    Stmt_fnDec (_left, _fn, args, _dots, block, _right) {
+    Stmt_fnDec (_left, _fn, args, block, _right) {
       return new FnDec(args.ast(), block.ast())
     },
-    Stmt_fnCall (_left, fnName, _dots, args, _right) {
+    Stmt_fnCall (_left, fnName, args, _right) {
       return new FnCall(fnName.sourceString, args.ast())
     },
     Stmt_objGet (_l, _dots, id, obj, _r) {
       return new ObjGet(id.sourceString, obj.ast())
     },
-    Stmt_varDec (_left, _def, id: Node, _dots, exp: Node, _right) {
+    Stmt_varDec (_left, _def, id: Node, exp: Node, _right) {
       const variable = new Variable(id.sourceString, 'any')
       const initializer = exp.ast()
 
@@ -43,6 +43,10 @@ const createSemantics = (grammar: Grammar, match: MatchResult) => {
     },
     Exp (val: Node) {
       return new Expression(val.ast())
+    },
+    Asset (_l, symbol, _c, window, _r) {
+      const w = window.ast()[0] ?? 1
+      return new Asset(symbol.sourceString, w)
     },
     List (p1, expressions, p2) {
       return new List(expressions.asIteration().children.map(c => c.ast()))

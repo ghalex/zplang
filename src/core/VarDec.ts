@@ -12,7 +12,7 @@ class VarDec {
   }
 
   toString () {
-    return `(def ${this.variable.toString()}: ${this.initializer.toString()})`
+    return `(def ${this.variable.toString()} ${this.initializer.toString()})`
   }
 }
 
