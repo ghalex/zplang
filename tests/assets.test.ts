@@ -1,20 +1,10 @@
-import { Env } from '../src/core'
-import parser from '../src/parser'
-import analyzer from '../src/analyzer'
+import zp, { Env } from '../src/lib'
 import data from '../src/data'
 import * as r from 'ramda'
 
-const createAst = (code: string) => {
-  const m = parser.parse(code)
-  const semantics = analyzer.createSemantics(parser.getGrammar(), m)
-
-  const ast = semantics(m).ast() as any[]
-  return ast
-}
-
 describe('assets', () => {
   test('define an asset', () => {
-    const ast = createAst(String.raw`
+    const ast = zp.getAst(String.raw`
       {MSFT}
       {MSFT, 3 days ago}
     `)
@@ -49,7 +39,7 @@ describe('assets', () => {
   test('access asset close, open, volume', () => {
     const env = new Env(data)
 
-    const ast = createAst(String.raw`
+    const ast = zp.getAst(String.raw`
       (:close {MSFT})
       (:close {MSFT, 3 days ago})
       (def vol (:volume {MSFT, 2 days ago}))
@@ -69,7 +59,7 @@ describe('assets', () => {
       return r.mean(prices)
     })
 
-    const ast = createAst(String.raw`
+    const ast = zp.getAst(String.raw`
       (:close {MSFT, 2 bars})
       (sma (:close {AAPL, 10 bars}))
     `)
@@ -83,7 +73,7 @@ describe('assets', () => {
   test('assets with variable', () => {
     const env = new Env(data)
 
-    const ast = createAst(String.raw`
+    const ast = zp.getAst(String.raw`
       (def x 5)
       {MSFT, x bars}
       {MSFT, x days ago}
@@ -109,7 +99,7 @@ describe('assets', () => {
     metaEnv.bind('bars', () => [])
     metaEnv.bind('bar', () => ({ open: 0, close: 0, low: 0, high: 0, volume: 0, date: 0 }))
 
-    const ast = createAst(String.raw`
+    const ast = zp.getAst(String.raw`
       {AAPL, 2 days ago}
       (:close {MSFT, 10 bars})
       (identity (:close {AMD, 10 bars}))

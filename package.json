@@ -6,7 +6,7 @@
   "bin": "dist/index.js",
   "scripts": {
     "dev": "nodemon",
-    "start": "node -r dotenv-flow/config dist/index.js",
+    "start": "node -r dotenv-flow/config dist/cli.js",
     "build": "tsc",
     "lint": "eslint src --ext js,ts",
     "test": "jest --verbose"

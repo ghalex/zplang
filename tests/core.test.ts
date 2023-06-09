@@ -1,14 +1,4 @@
-import { Env, Lambda } from '../src/core'
-import parser from '../src/parser'
-import analyzer from '../src/analyzer'
-
-const createAst = (code: string) => {
-  const m = parser.parse(code)
-  const semantics = analyzer.createSemantics(parser.getGrammar(), m)
-
-  const ast = semantics(m).ast() as any[]
-  return ast
-}
+import zp, { Env, Lambda } from '../src/lib'
 
 const codeToStr = (code: string) => {
   return code.split('\n').map(v => v.replace(/\s{2}/g, '')).filter(s => s.length > 0).join(',')
@@ -24,7 +14,7 @@ describe('core', () => {
       name
     `
 
-    const ast = createAst(code)
+    const ast = zp.getAst(code)
 
     const res = ast.map(stmt => stmt.eval(env))
 
@@ -43,7 +33,7 @@ describe('core', () => {
       (def isBigger 10 > 5)
       6 % 5
     `
-    const ast = createAst(code)
+    const ast = zp.getAst(code)
     const res = ast.map(stmt => stmt.eval(env))
 
     expect(res[0]).toBe(8)
@@ -55,7 +45,7 @@ describe('core', () => {
 
   test('function calls', () => {
     const env = new Env()
-    const ast = createAst(`
+    const ast = zp.getAst(`
       (+ 2 3)
       (str "Alex" "Ghiura")
     `)
@@ -75,7 +65,7 @@ describe('core', () => {
       (def mul (fn [a, b] a * b))
       (mul 2 3)
     `
-    const ast = createAst(code)
+    const ast = zp.getAst(code)
 
     const res = ast.map(stmt => stmt.eval(env))
 

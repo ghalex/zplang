@@ -6,5 +6,5 @@
     "ignore": [
         "src/**/*.test.ts"
     ],
-    "exec": "NODE_ENV=development ts-node -r dotenv-flow/config src/index.ts"
+    "exec": "NODE_ENV=development ts-node -r dotenv-flow/config src/cli.ts"
 }

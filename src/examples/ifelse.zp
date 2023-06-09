@@ -1,9 +1,0 @@
-(def ageAlex: 3)
-(def ageAndreea: 35)
-(def names: ["Alex", "Andreea", "Pop"])
-
-(print: "Length:" (length: names))
-(if [(length: names) > 10]:
-  (print: "TRUE")
-  (print: "FALSE")
-)

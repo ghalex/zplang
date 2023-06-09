@@ -1,11 +1,9 @@
-import parser from './parser'
-import analyzer from './analyzer'
-import { Env } from './core'
+import zp, { Env } from './lib'
 import figlet from 'figlet'
 import * as readline from 'node:readline'
 import * as r from 'ramda'
 import { stdin as input, stdout as output } from 'node:process'
-import { type MatchResult } from 'ohm-js'
+
 import data from './data'
 
 const rl = readline.createInterface({ input, output, terminal: false })
@@ -31,14 +29,6 @@ function createEnvirement () {
   })
 
   return env
-}
-
-const evalZp = (env: Env, m: MatchResult) => {
-  const semantics = analyzer.createSemantics(parser.getGrammar(), m)
-  const adapter = semantics(m)
-  const ast = adapter.ast() as any[]
-
-  return ast.map(s => s.eval?.(env))
 }
 
 const clear = (ascii) => {
@@ -69,9 +59,7 @@ figlet('Zaplang', {
     console.log(err)
   }
 
-  const g = parser.getGrammar()
-  const m = g.matcher()
-
+  const m = zp.getMatcher()
   const env = createEnvirement()
 
   rl.setPrompt('#user> ')
@@ -106,7 +94,7 @@ figlet('Zaplang', {
             const match = m.match()
 
             if (match.succeeded()) {
-              const res = evalZp(env, match)
+              const res = zp.evalCode(env, match)
               console.log(res[0])
             } else {
               console.log(match.message)
