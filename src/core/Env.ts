@@ -2,9 +2,16 @@ import Lambda from './Lambda'
 
 class Env {
   private readonly env: Record<string, any>
+  private readonly parent: Env | null = null
 
-  constructor (data: Record<string, any> = []) {
-    this.env = {}
+  constructor (data: Record<string, any> = [], parent: Env | null = null) {
+    this.parent = parent
+    this.env = {
+      $$meta: {
+        assets: {}
+      }
+    }
+
     this.env['+'] = (...args) => args.reduce((prev, curr) => prev + curr, 0)
     this.env['-'] = (...args) => args.slice(1).reduce((prev, curr) => prev - curr, args[0])
     this.env['*'] = (...args) => args.slice(1).reduce((prev, curr) => prev * curr, args[0])
@@ -70,6 +77,18 @@ class Env {
     }
 
     return this.env[name]
+  }
+
+  addMeta (category: string, key: string, value: unknown) {
+    if (this.parent) {
+      this.parent.addMeta(category, key, value)
+    } else {
+      this.env.$$meta[category][key] = value
+    }
+  }
+
+  getMeta (key: string) {
+    return this.env.$$meta[key]
   }
 
   // this could be replaced with parentEnv and "looking up" if something is not found

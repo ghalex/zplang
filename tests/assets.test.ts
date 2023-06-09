@@ -75,9 +75,61 @@ describe('assets', () => {
     `)
 
     const res = ast.map(stmt => stmt.eval(env))
-    console.log(res)
 
     expect(res[0]).toEqual([323.46, 333.68])
     expect(res[1].toFixed(3)).toEqual('177.247')
+  })
+
+  test('assets with variable', () => {
+    const env = new Env(data)
+
+    const ast = createAst(String.raw`
+      (def x 5)
+      {MSFT, x bars}
+      {MSFT, x days ago}
+    `)
+
+    const res = ast.map(stmt => stmt.eval(env))
+
+    expect(res[1].length).toEqual(5)
+    expect(res[2]).toEqual({
+      symbol: 'MSFT',
+      open: 332.29,
+      high: 335.94,
+      low: 327.33,
+      close: 328.39,
+      volume: 45959770,
+      date: 1685505600000,
+      dateFormatted: '2023-05-31T04:00:00.000Z'
+    })
+  })
+
+  test('assets list and window', () => {
+    const metaEnv = new Env()
+    metaEnv.bind('bars', () => [])
+    metaEnv.bind('bar', () => ({ open: 0, close: 0, low: 0, high: 0, volume: 0, date: 0 }))
+
+    const ast = createAst(String.raw`
+      {AAPL, 2 days ago}
+      (:close {MSFT, 10 bars})
+      (identity (:close {AMD, 10 bars}))
+      (if
+        [(:close {AAPL, 8 days ago}) > 100]
+          (:volume {AMD, 21 days ago})
+          (:open {MSFT, 33 bars})
+      )
+      (def x {AAPL, 12 days ago})
+      (def myObj {aapl: {AAPL, 22 days ago}, msft: {MSFT, 10 days ago}})
+    `)
+
+    // console.log(ast)
+    ast.map(stmt => stmt.eval(metaEnv))
+
+    const meta = metaEnv.getMeta('assets')
+    console.log(meta)
+
+    expect(meta.AAPL).toEqual(22)
+    expect(meta.MSFT).toEqual(33)
+    expect(meta.AMD).toEqual(10)
   })
 })
