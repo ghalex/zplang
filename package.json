@@ -1,6 +1,6 @@
 {
   "name": "zplang",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "dist/zplang.umd.js",
   "module": "dist/zplang.es.js",
@@ -11,7 +11,6 @@
     "start": "node -r dotenv-flow/config dist/cli.js",
     "build": "rm -rf ./dist/ && rollup -c",
     "lint": "eslint src --ext js,ts",
-    "types": "tsc -P tsconfig.dts.json",
     "test": "jest --verbose"
   },
   "keywords": [],

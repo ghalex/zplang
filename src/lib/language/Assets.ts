@@ -24,7 +24,8 @@ class Asset {
   }
 
   toString () {
-    return `{${this.symbol}, ${this.window}}`
+    const symbol = this.symbol instanceof Variable ? this.symbol.toString() : this.symbol.join('')
+    return `{${symbol}, ${this.window}}`
   }
 }
 

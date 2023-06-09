@@ -32,8 +32,6 @@ const load = (env: Env) => {
 
     return arr[idx % arr.length]
   })
-
-  return module
 }
 
 export default {

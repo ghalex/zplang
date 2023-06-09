@@ -15,9 +15,15 @@ describe('assets', () => {
     `)
 
     const env = new Env()
-    env.loadBars(data)
+    const env2 = env.duplicate()
 
-    const res = ast.map(stmt => stmt.eval(env))
+    env2.loadModule(modules.core)
+    env2.loadModule(modules.assets)
+    env2.loadBars(data)
+
+    console.log(env2)
+
+    const res = ast.map(stmt => stmt.eval(env2))
 
     expect(res[0]).toMatchObject({
       symbol: 'MSFT',

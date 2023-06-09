@@ -1,7 +1,8 @@
 
 interface Module {
   name: string
-  load: (env: Env) => Record<string, any>
+  namespace: string
+  load: (env: Env) => void
 }
 
 class Env {
@@ -16,35 +17,6 @@ class Env {
       $$meta: {
         assets: {}
       }
-    }
-
-    // Assets
-    this.env['bar'] = (symbol: string, daysAgo: number = 0) => {
-      const data = this.env.$$bars
-
-      if (!data[symbol]) {
-        throw new Error(`Bars for asset ${symbol} was not loaded`)
-      }
-
-      if (data[symbol].length < daysAgo) {
-        throw new Error(`Only ${data[symbol].length} bars available for asset ${symbol}`)
-      }
-
-      return data[symbol][daysAgo]
-    }
-
-    this.env['bars'] = (symbol: string, window: number) => {
-      const data = this.env.$$bars
-
-      if (!data[symbol]) {
-        throw new Error(`Bars for asset ${symbol} was not loaded`)
-      }
-
-      if (data[symbol].length < window) {
-        throw new Error(`Only ${data[symbol].length} bars available for asset ${symbol}`)
-      }
-
-      return data[symbol].slice(0, window)
     }
   }
 
@@ -79,6 +51,10 @@ class Env {
 
   getMeta (key: string) {
     return this.env.$$meta[key]
+  }
+
+  getBars () {
+    return this.env.$$bars
   }
 
   // this could be replaced with parentEnv and "looking up" if something is not found

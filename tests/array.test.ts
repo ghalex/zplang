@@ -4,6 +4,10 @@ import zp, { Env, modules } from '../src/lib'
 const code1 = String.raw`
   (def arr1 [1, 2, 3])
   (length arr1)
+
+  (push 4 arr1)
+  (push 5 arr1)
+  (pop arr1)
 `
 
 describe('array', () => {
