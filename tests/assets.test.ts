@@ -6,6 +6,8 @@ describe('assets', () => {
   test('define an asset', () => {
     const ast = zp.getAst(String.raw`
       {MSFT}
+      {MSFT, today}
+      {MSFT, yesterday}
       {MSFT, 3 days ago}
     `)
 
@@ -23,8 +25,20 @@ describe('assets', () => {
       dateFormatted: '2023-06-07T04:00:00.000Z'
     })
 
+    // yesterday
+    expect(res[2]).toMatchObject({
+      symbol: 'MSFT',
+      open: 335.33,
+      high: 335.37,
+      low: 332.17,
+      close: 333.68,
+      volume: 20396223,
+      date: 1686024000000,
+      dateFormatted: '2023-06-06T04:00:00.000Z'
+    })
+
     // 3 days ago
-    expect(res[1]).toMatchObject({
+    expect(res[3]).toMatchObject({
       symbol: 'MSFT',
       open: 334.247,
       high: 337.5,

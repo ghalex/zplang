@@ -47,9 +47,17 @@ const createSemantics = (grammar: Grammar, match: MatchResult) => {
     Assets (_l, symbol, _c, w, _b, _r) {
       return new Assets(symbol.sourceString, w.ast())
     },
-    Asset (_l, symbol, _c, daysAgo, _t, _r) {
-      const d = daysAgo.ast()[0] ?? 0
-      return new Asset(symbol.sourceString, d)
+    Asset (_l, symbol, daysAgo, _r) {
+      return new Asset(symbol.sourceString, daysAgo.ast()[0] ?? 0)
+    },
+    DaysAgo_nb (_c, daysAgo, _w) {
+      return daysAgo.ast()
+    },
+    DaysAgo_today (_c, _today) {
+      return 0
+    },
+    DaysAgo_yesterday (_c, _yesterday) {
+      return 1
     },
     List (p1, expressions, p2) {
       return new List(expressions.asIteration().children.map(c => c.ast()))

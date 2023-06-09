@@ -57,7 +57,10 @@ Zapant {
   ObjItem = id ":" Exp
   Var = id
   Assets = "{" upper+ "," (Var | intlit) bars "}"
-  Asset = "{" upper+ ("," (Var | intlit) daysAgo?)? "}"
+  Asset = "{" upper+ DaysAgo? "}"
+  DaysAgo = "," (Var | intlit) "days ago"?  --nb
+      | "," today                           --today
+      | "," yesterday                       --yesterday
 
   def = "def" ~alnum
   if = "if" ~alnum
@@ -69,14 +72,19 @@ Zapant {
   null = "null" ~alnum
   bars = "bars" ~alnum
   daysAgo = "days ago" ~alnum
+  yesterday = "yesterday" ~alnum
+  today = "today" ~alnum
   keywords
       = def
       | if
       | fn
       | loop
       | in
+      | yesterday
       | true
       | bars
+      | today
+      | yesterday
       | false
       | null
 
