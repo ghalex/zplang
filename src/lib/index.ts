@@ -2,7 +2,7 @@
 // import path from 'path'
 import * as ohm from 'ohm-js'
 import analyzer from './analyzer'
-import { type Env } from './core'
+import { type Env } from './language'
 
 // const data = fs.readFileSync(path.join(__dirname, 'zapant.ohm'), { encoding: 'utf-8' })
 const grammar = ohm.grammar(String.raw`
@@ -56,8 +56,8 @@ Zapant {
   Object = "{" listOf<ObjItem, ",">  "}"
   ObjItem = id ":" Exp
   Var = id
-  Assets = "{" upper+ "," (Var | intlit) bars "}"
-  Asset = "{" upper+ DaysAgo? "}"
+  Assets = "{" (upper+ | Var) "," (Var | intlit) bars "}"
+  Asset = "{" (upper+ | Var) DaysAgo? "}"
   DaysAgo = "," (Var | intlit) "days ago"?  --nb
       | "," today                           --today
       | "," yesterday                       --yesterday
@@ -128,7 +128,8 @@ const evalCode = (env: Env, m: ohm.MatchResult) => {
   return ast.map(s => s.eval?.(env))
 }
 
-export * from './core'
+export * from './language'
+export * as modules from './modules'
 export default {
   parse,
   getAst,

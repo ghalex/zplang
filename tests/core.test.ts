@@ -1,4 +1,4 @@
-import zp, { Env, Lambda } from '../src/lib'
+import zp, { Env, Lambda, modules } from '../src/lib'
 
 const codeToStr = (code: string) => {
   return code.split('\n').map(v => v.replace(/\s{2}/g, '')).filter(s => s.length > 0).join(',')
@@ -45,6 +45,8 @@ describe('core', () => {
 
   test('function calls', () => {
     const env = new Env()
+    env.loadModule(modules.core)
+
     const ast = zp.getAst(`
       (+ 2 3)
       (str "Alex" "Ghiura")

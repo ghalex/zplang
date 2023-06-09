@@ -9,27 +9,30 @@ class Asset {
   eval (env: Env) {
     const getBar = env.get('bar')
     const daysAgo = this.daysAgo instanceof Variable ? this.daysAgo.eval(env) : this.daysAgo
+    const symbol = this.symbol instanceof Variable ? this.symbol.eval(env) : this.symbol.join('')
 
     if (!getBar) {
       throw new Error('"bar" function not defined')
     }
 
     // add meta
-    env.addMeta('assets', this.symbol, Math.max(env.getMeta('assets')[this.symbol] ?? 1, daysAgo))
+    env.addMeta('assets', symbol, Math.max(env.getMeta('assets')[symbol] ?? 1, daysAgo))
 
     try {
-      return getBar(this.symbol, daysAgo)
+      return getBar(symbol, daysAgo)
     } catch (err: any) {
       throw new Error(err.message)
     }
   }
 
   toString () {
+    const symbol = this.symbol instanceof Variable ? this.symbol.toString() : this.symbol.join('')
+
     if (this.daysAgo < 1) {
-      return `{${this.symbol}}`
+      return `{${symbol}}`
     }
 
-    return `{${this.symbol}, ${this.daysAgo} days ago}`
+    return `{${symbol}, ${this.daysAgo} days ago}`
   }
 }
 

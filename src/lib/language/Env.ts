@@ -1,48 +1,27 @@
-import Lambda from './Lambda'
+
+interface Module {
+  name: string
+  load: (env: Env) => Record<string, any>
+}
 
 class Env {
   private readonly env: Record<string, any>
   private readonly parent: Env | null = null
+  private readonly modules: Module[] = []
 
-  constructor (data: Record<string, any> = [], parent: Env | null = null) {
+  constructor (parent: Env | null = null) {
     this.parent = parent
     this.env = {
+      $$bars: [],
       $$meta: {
         assets: {}
       }
     }
 
-    this.env['+'] = (...args) => args.reduce((prev, curr) => prev + curr, 0)
-    this.env['-'] = (...args) => args.slice(1).reduce((prev, curr) => prev - curr, args[0])
-    this.env['*'] = (...args) => args.slice(1).reduce((prev, curr) => prev * curr, args[0])
-    this.env['/'] = (...args) => args.slice(1).reduce((prev, curr) => prev / curr, args[0])
-    this.env['inc'] = (val) => val + 1
-    this.env['identity'] = (val) => val
-
-    // String
-    this.env['str'] = (...args) => args.map(a => a.toString()).join(' ')
-    this.env['print'] = (...args) => {
-      console.log(...args)
-      return args.join(' ')
-    }
-
-    // Array
-    this.env['length'] = arr => arr.length
-    this.env['push'] = (val, arr) => [...arr, val]
-    this.env['pop'] = (arr) => arr.slice(0, -1)
-    this.env['map'] = (fn, arr) => {
-      return (fn instanceof Lambda) ? arr.map((val, i) => fn.eval(this, [val, i])) : arr.map(fn)
-    }
-    this.env['nth'] = (idx, arr) => {
-      if (idx < 0) {
-        return arr[arr.length + idx % arr.length]
-      }
-
-      return arr[idx % arr.length]
-    }
-
     // Assets
     this.env['bar'] = (symbol: string, daysAgo: number = 0) => {
+      const data = this.env.$$bars
+
       if (!data[symbol]) {
         throw new Error(`Bars for asset ${symbol} was not loaded`)
       }
@@ -55,6 +34,8 @@ class Env {
     }
 
     this.env['bars'] = (symbol: string, window: number) => {
+      const data = this.env.$$bars
+
       if (!data[symbol]) {
         throw new Error(`Bars for asset ${symbol} was not loaded`)
       }
@@ -77,6 +58,15 @@ class Env {
     }
 
     return this.env[name]
+  }
+
+  loadModule (m: Module) {
+    this.modules.push(m)
+    m.load(this)
+  }
+
+  loadBars (bars = {}) {
+    this.env.$$bars = bars
   }
 
   addMeta (category: string, key: string, value: unknown) {

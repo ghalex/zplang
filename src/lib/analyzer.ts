@@ -1,5 +1,5 @@
 import type { MatchResult, Grammar, Node } from 'ohm-js'
-import { FnCall, BinaryExpression, Expression, Variable, VarDec, Strlit, List, FnDec, IfElse, Loop, Obj, ObjGet, Asset, Assets } from './core'
+import { FnCall, BinaryExpression, Expression, Variable, VarDec, Strlit, List, FnDec, IfElse, Loop, Obj, ObjGet, Asset, Assets } from './language'
 
 const createSemantics = (grammar: Grammar, match: MatchResult) => {
   const semantics = grammar.createSemantics()
@@ -45,10 +45,10 @@ const createSemantics = (grammar: Grammar, match: MatchResult) => {
       return new Expression(val.ast())
     },
     Assets (_l, symbol, _c, w, _b, _r) {
-      return new Assets(symbol.sourceString, w.ast())
+      return new Assets(symbol.ast(), w.ast())
     },
     Asset (_l, symbol, daysAgo, _r) {
-      return new Asset(symbol.sourceString, daysAgo.ast()[0] ?? 0)
+      return new Asset(symbol.ast(), daysAgo.ast()[0] ?? 0)
     },
     DaysAgo_nb (_c, daysAgo, _w) {
       return daysAgo.ast()

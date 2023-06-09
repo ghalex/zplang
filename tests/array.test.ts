@@ -1,4 +1,4 @@
-import zp, { Env } from '../src/lib'
+import zp, { Env, modules } from '../src/lib'
 // import * as fs from 'node:fs'
 
 const code1 = String.raw`
@@ -9,6 +9,8 @@ const code1 = String.raw`
 describe('array', () => {
   test('defines an array', () => {
     const env = new Env()
+    env.loadModule(modules.core)
+
     const ast = zp.getAst(code1)
     const res = ast.map(stmt => stmt.eval(env))
 

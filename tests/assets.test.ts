@@ -1,4 +1,4 @@
-import zp, { Env } from '../src/lib'
+import zp, { Env, modules } from '../src/lib'
 import data from '../src/data'
 import * as r from 'ramda'
 
@@ -9,9 +9,14 @@ describe('assets', () => {
       {MSFT, today}
       {MSFT, yesterday}
       {MSFT, 3 days ago}
+
+      (def asset "AMD")
+      {asset, yesterday}
     `)
 
-    const env = new Env(data)
+    const env = new Env()
+    env.loadBars(data)
+
     const res = ast.map(stmt => stmt.eval(env))
 
     expect(res[0]).toMatchObject({
@@ -51,7 +56,8 @@ describe('assets', () => {
   })
 
   test('access asset close, open, volume', () => {
-    const env = new Env(data)
+    const env = new Env()
+    env.loadBars(data)
 
     const ast = zp.getAst(String.raw`
       (:close {MSFT})
@@ -68,7 +74,9 @@ describe('assets', () => {
   })
 
   test('get price for multiple days', () => {
-    const env = new Env(data)
+    const env = new Env()
+
+    env.loadBars(data)
     env.bind('sma', (prices) => {
       return r.mean(prices)
     })
@@ -85,7 +93,8 @@ describe('assets', () => {
   })
 
   test('assets with variable', () => {
-    const env = new Env(data)
+    const env = new Env()
+    env.loadBars(data)
 
     const ast = zp.getAst(String.raw`
       (def x 5)
@@ -110,13 +119,14 @@ describe('assets', () => {
 
   test('assets list and window', () => {
     const metaEnv = new Env()
+
     metaEnv.bind('bars', () => [])
-    metaEnv.bind('bar', () => ({ open: 0, close: 0, low: 0, high: 0, volume: 0, date: 0 }))
+    metaEnv.bind('bar', () => ({}))
 
     const ast = zp.getAst(String.raw`
       {AAPL, 2 days ago}
+      {AMD, 10 days ago}
       (:close {MSFT, 10 bars})
-      (identity (:close {AMD, 10 bars}))
       (if
         [(:close {AAPL, 8 days ago}) > 100]
           (:volume {AMD, 21 days ago})
@@ -126,14 +136,29 @@ describe('assets', () => {
       (def myObj {aapl: {AAPL, 22 days ago}, msft: {MSFT, 10 days ago}})
     `)
 
-    // console.log(ast)
     ast.map(stmt => stmt.eval(metaEnv))
-
     const meta = metaEnv.getMeta('assets')
-    console.log(meta)
 
     expect(meta.AAPL).toEqual(22)
     expect(meta.MSFT).toEqual(33)
     expect(meta.AMD).toEqual(10)
+  })
+
+  test('loop assets', () => {
+    const env = new Env()
+
+    env.loadBars(data)
+    env.loadModule(modules.core)
+
+    const ast = zp.getAst(String.raw`
+      (def assets ["AAPL", "MSFT"])
+
+      (loop a in (map (fn [x] {x}) assets)
+        (:close a)
+      )
+    `)
+
+    const res = ast.map(stmt => stmt.eval(env))
+    expect(res[1]).toEqual([[177.83], [323.46]])
   })
 })

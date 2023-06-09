@@ -10,7 +10,9 @@ class ObjGet {
       return obj.map(o => o[this.id])
     }
 
-    if (obj[this.id] === undefined) throw Error(`Key "${this.id}" not defined in object ${this.variable.name}`)
+    if (obj[this.id] === undefined) {
+      return null
+    } // throw Error(`Key "${this.id}" not defined in object ${this.variable.name}`)
 
     return obj[this.id]
   }

@@ -1,4 +1,4 @@
-import zp, { Env } from './lib'
+import zp, { Env, modules } from './lib'
 import figlet from 'figlet'
 import * as readline from 'node:readline'
 import * as r from 'ramda'
@@ -9,7 +9,10 @@ import data from './data'
 const rl = readline.createInterface({ input, output, terminal: false })
 
 function createEnvirement () {
-  const env = new Env(data)
+  const env = new Env()
+
+  env.loadBars(data)
+  env.loadModule(modules.core)
 
   // Market
   env.bind('cmr', (bars) => {

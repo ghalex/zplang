@@ -8,15 +8,16 @@ class Asset {
   eval (env) {
     const getBars = env.get('bars')
     const window = this.window instanceof Variable ? this.window.eval(env) : this.window
+    const symbol = this.symbol instanceof Variable ? this.symbol.eval(env) : this.symbol.join('')
 
     if (!getBars) {
       throw new Error('"bars" function not defined')
     }
 
-    env.addMeta('assets', this.symbol, Math.max(env.getMeta('assets')[this.symbol] ?? 1, window))
+    env.addMeta('assets', symbol, Math.max(env.getMeta('assets')[symbol] ?? 1, window))
 
     try {
-      return getBars(this.symbol, window)
+      return getBars(symbol, window)
     } catch (err: any) {
       throw new Error(err.message)
     }
