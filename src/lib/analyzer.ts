@@ -7,7 +7,7 @@ const createSemantics = (grammar: Grammar, match: MatchResult) => {
     Program (stmts) {
       return stmts.children.map(s => s.ast())
     },
-    Stmt_if (_l, _if, _p1, exp, _p2, yesStmt, noStmt, _r) {
+    Stmt_if (_l, _if, exp, yesStmt, noStmt, _r) {
       return new IfElse(exp.ast(), yesStmt.ast(), noStmt.ast())
     },
     Stmt_loop (_l, _loop, id, _in, list, block, _p2) {
@@ -29,18 +29,9 @@ const createSemantics = (grammar: Grammar, match: MatchResult) => {
       // context.set(variable.name, variable)
       return new VarDec(variable, initializer)
     },
-    Exp_binary (left, op, right) {
-      return new BinaryExpression(op.sourceString, left.ast(), right.ast())
-    },
-    Condition_binary (left, op, right) {
-      return new BinaryExpression(op.sourceString, left.ast(), right.ast())
-    },
-    Term_binary (left, op, right) {
-      return new BinaryExpression(op.sourceString, left.ast(), right.ast())
-    },
-    Factor_binary (left: Node, op: Node, right: Node) {
-      return new BinaryExpression(op.sourceString, left.ast(), right.ast())
-    },
+    // Exp_binary (left, op, right) {
+    //   return new BinaryExpression(op.sourceString, left.ast(), right.ast())
+    // },
     Exp (val: Node) {
       return new Expression(val.ast())
     },

@@ -13,9 +13,11 @@ function createEnvirement () {
 
   env.loadBars(data)
   env.loadModule(modules.core)
+  env.loadModule(modules.assets)
 
   // Market
-  env.bind('cmr', (bars) => {
+  env.bind('cmr', (asset, qty) => {
+    console.log(asset, qty)
     return 2
   })
 
@@ -63,7 +65,7 @@ figlet('Zaplang', {
   }
 
   const m = zp.getMatcher()
-  const env = createEnvirement()
+  const zpEnv = createEnvirement()
 
   rl.setPrompt('#user> ')
   clear(ascii)
@@ -97,7 +99,7 @@ figlet('Zaplang', {
             const match = m.match()
 
             if (match.succeeded()) {
-              const res = zp.evalCode(env, match)
+              const res = zp.evalCode(zpEnv, match)
               console.log(res[0])
             } else {
               console.log(match.message)

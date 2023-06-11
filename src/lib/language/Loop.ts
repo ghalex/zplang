@@ -16,8 +16,8 @@ class Loop {
         localEnv.bind(this.id, arr[i])
       }
 
-      localEnv.bind('__idx', i)
-      localEnv.bind('__value', arr[i])
+      localEnv.bind('_idx', i)
+      localEnv.bind('_value', arr[i])
 
       const out = this.block.map(e => evalExpression(e, localEnv))
       results.push(out)

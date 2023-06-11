@@ -10,46 +10,33 @@ Zapant {
   Program = Stmt+
 
   Stmt (statement)
-      = "(" (id | "+" | "-" | "/" | "*") Exp* ")"             --fnCall
-      | "(" if "[" Exp "]" Stmt Stmt? ")"                     --if
-      | "(" loop id? in (List | Stmt_fnCall | Var) Block ")"  --loop
-      | "(" fn ListArgs Block ")"                             --fnDec 
-      | "(" ":" id (Var | Asset | Assets) ")"                 --objGet
-      | "(" def id (Stmt | Exp) ")"                           --varDec
+      = "(" (id | operators) Exp* ")"                           --fnCall
+      | "(" if Exp Stmt Stmt? ")"                               --if
+      | "(" loop id? in (List | Stmt_fnCall | Var) Block ")"    --loop
+      | "(" fn ListArgs Block ")"                               --fnDec 
+      | "(" ":" id (Var | Asset | Assets) ")"                   --objGet
+      | "(" def id (Stmt | Exp) ")"                             --varDec
       | Exp
 
   Block = Stmt+
 
   Exp
-      = Condition relop Condition                 --binary
-      | Condition
-
-  Condition
-      = Exp ("+" | "-") Term                      --binary
-      | Term
-
-  Term
-      = Term ("*" | "/" | "%") Factor             --binary
-      | Factor
-
-  Factor
-      = Primary "**" Factor                       --binary
-      | Primary
-
-  Primary
       = Stmt_fnCall
       | Stmt_fnDec
       | Stmt_objGet
       | List
       | Object
       | Assets
-      | Asset
-      | strlit
+      | Asset 
+      | Var
+      | Primary
+
+  Primary
+      = strlit
       | floatlit
       | intlit
       | boolean
       | null
-      | Var
 
   List = "[" listOf<Exp, ","> "]"
   ListArgs = "[" listOf<id, ", "> "]"
@@ -93,9 +80,9 @@ Zapant {
   boolean = true | false
   intlit = ("+" | "-")* digit+
   floatlit = digit+ "." digit+
-  id = ~keywords (letter | "__") idchar*
-  idchar = letter | digit | "_"
-  relop = "<=" | "<" | "==" | "!=" | ">=" | ">"
+  id = ~keywords (letter | "_" | "$") idchar*
+  idchar = letter | digit | "_" | "$"
+  operators = "**" | "+" | "-" | "/" | "*" | "%" | "<=" | "<" | "=" | "!=" | ">=" | ">"
 
   eol = "\n" | "\r"
   comment = ";;" (~eol any)* eol*
@@ -124,6 +111,8 @@ const getMatcher = () => {
 const evalCode = (env: Env, m: ohm.MatchResult) => {
   const semantics = analyzer.createSemantics(grammar, m)
   const ast = semantics(m).ast() as any[]
+
+  console.dir(ast, { depth: null })
 
   return ast.map(s => s.eval?.(env))
 }

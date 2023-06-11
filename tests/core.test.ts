@@ -27,11 +27,13 @@ describe('core', () => {
 
   test('arithmetic operators', () => {
     const env = new Env()
+    env.loadModule(modules.core)
+
     const code = String.raw`
-      2 + 3 * 2
-      (def var1 4 * 3)
-      (def isBigger 10 > 5)
-      6 % 5
+      (+ 2 (* 3 2))
+      (def var1 (* 4 3))
+      (def isBigger (> 10 5))
+      (% 6 5)
     `
     const ast = zp.getAst(code)
     const res = ast.map(stmt => stmt.eval(env))
@@ -59,16 +61,17 @@ describe('core', () => {
 
   test('function definitions', () => {
     const env = new Env()
+    env.loadModule(modules.core)
+
     const code = `
       (def myFn (fn [p1] p1))
       (myFn 2)
       (myFn "John")
 
-      (def mul (fn [a, b] a * b))
+      (def mul (fn [a, b] (* a b)))
       (mul 2 3)
     `
     const ast = zp.getAst(code)
-
     const res = ast.map(stmt => stmt.eval(env))
 
     expect(res[0]).toBeInstanceOf(Lambda)

@@ -8,6 +8,16 @@ const load = (env: Env) => {
   env.bind('-', (...args) => args.slice(1).reduce((prev, curr) => prev - curr, args[0]))
   env.bind('*', (...args) => args.slice(1).reduce((prev, curr) => prev * curr, args[0]))
   env.bind('/', (...args) => args.slice(1).reduce((prev, curr) => prev / curr, args[0]))
+  env.bind('%', (a, b) => a % b)
+  env.bind('**', (a, b) => a ** b)
+
+  env.bind('>', (a, b) => a > b)
+  env.bind('>=', (a, b) => a >= b)
+  env.bind('=', (a, b) => a === b)
+  env.bind('!=', (a, b) => a !== b)
+  env.bind('<', (a, b) => a < b)
+  env.bind('<=', (a, b) => a <= b)
+
   env.bind('inc', (val) => val + 1)
   env.bind('identity', (val) => val)
 

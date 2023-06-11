@@ -1,87 +1,82 @@
 Zapant {
-    Program = Stmt+
+  Program = Stmt+
 
-    Stmt (statement)
-        = "(" (id | "+" | "-" | "/" | "*") Exp* ")"             --fnCall
-        | "(" if "[" Exp "]" Stmt Stmt? ")"                     --if
-        | "(" loop id? in (List | Stmt_fnCall | Var) Block ")"  --loop
-        | "(" fn ListArgs Block ")"                             --fnDec 
-        | "(" ":" id (Var | Asset | Assets) ")"                 --objGet
-        | "(" def id (Stmt | Exp) ")"                           --varDec
-        | Exp
+  Stmt (statement)
+      = "(" (id | operators) Exp* ")"                           --fnCall
+      | "(" if Exp Stmt Stmt? ")"                               --if
+      | "(" loop id? in (List | Stmt_fnCall | Var) Block ")"    --loop
+      | "(" fn ListArgs Block ")"                               --fnDec 
+      | "(" ":" id (Var | Asset | Assets) ")"                   --objGet
+      | "(" def id (Stmt | Exp) ")"                             --varDec
+      | Exp
 
-    Block = Stmt+
+  Block = Stmt+
 
-    Exp
-        = Condition relop Condition                 --binary
-        | Condition
+  Exp
+      = Stmt_fnCall
+      | Stmt_fnDec
+      | Stmt_objGet
+      | List
+      | Object
+      | Assets
+      | Asset 
+      | Var
+      | Primary
 
-    Condition
-        = Exp ("+" | "-") Term                      --binary
-        | Term
+  Primary
+      = strlit
+      | floatlit
+      | intlit
+      | boolean
+      | null
 
-    Term
-        = Term ("*" | "/" | "%") Factor             --binary
-        | Factor
+  List = "[" listOf<Exp, ","> "]"
+  ListArgs = "[" listOf<id, ", "> "]"
+  Object = "{" listOf<ObjItem, ",">  "}"
+  ObjItem = id ":" Exp
+  Var = id
+  Assets = "{" (upper+ | Var) "," (Var | intlit) bars "}"
+  Asset = "{" (upper+ | Var) DaysAgo? "}"
+  DaysAgo = "," (Var | intlit) "days ago"?  --nb
+      | "," today                           --today
+      | "," yesterday                       --yesterday
 
-    Factor
-        = Primary "**" Factor                       --binary
-        | Primary
+  def = "def" ~alnum
+  if = "if" ~alnum
+  fn = "fn" ~alnum
+  loop = "loop" ~alnum
+  in = "in" ~alnum
+  true = "true" ~alnum
+  false = "false" ~alnum
+  null = "null" ~alnum
+  bars = "bars" ~alnum
+  daysAgo = "days ago" ~alnum
+  yesterday = "yesterday" ~alnum
+  today = "today" ~alnum
+  keywords
+      = def
+      | if
+      | fn
+      | loop
+      | in
+      | yesterday
+      | true
+      | bars
+      | today
+      | yesterday
+      | false
+      | null
 
-    Primary
-        = Stmt_fnCall
-        | Stmt_fnDec
-        | Stmt_objGet
-        | List
-        | Object
-        | Assets
-        | Asset
-        | strlit
-        | floatlit
-        | intlit
-        | boolean
-        | null
-        | Var
+  strlit = "\"" char* "\""
+  char = ~"\"" ~"\n"  any
+  boolean = true | false
+  intlit = ("+" | "-")* digit+
+  floatlit = digit+ "." digit+
+  id = ~keywords (letter | "_" | "$") idchar*
+  idchar = letter | digit | "_" | "$"
+  operators = "+" | "-" | "/" | "*" | "%" | "**" | "<=" | "<" | "=" | "!=" | ">=" | ">"
 
-    List = "[" listOf<Exp, ","> "]"
-    ListArgs = "[" listOf<id, ", "> "]"
-    Object = "{" listOf<ObjItem, ",">  "}"
-    ObjItem = id ":" Exp
-    Var = id
-    Assets = "{" upper+ "," (Var | intlit) bars "}"
-    Asset = "{" upper+ ("," (Var | intlit) daysAgo?)? "}"
-
-    def = "def" ~alnum
-    if = "if" ~alnum
-    fn = "fn" ~alnum
-    loop = "loop" ~alnum
-    in = "in" ~alnum
-    true = "true" ~alnum
-    false = "false" ~alnum
-    null = "null" ~alnum
-    bars = "bars" ~alnum
-    daysAgo = "days ago" ~alnum
-    keywords
-        = def
-        | if
-        | fn
-        | loop
-        | in
-        | true
-        | bars
-        | false
-        | null
-
-    strlit = "\"" char* "\""
-    char = ~"\"" ~"\n"  any
-    boolean = true | false
-    intlit = ("+" | "-")* digit+
-    floatlit = digit+ "." digit+
-    id = ~keywords (letter | "__") idchar*
-    idchar = letter | digit | "_"
-    relop = "<=" | "<" | "==" | "!=" | ">=" | ">"
-
-    eol = "\n" | "\r"
-    comment = ";;" (~eol any)* eol*
-    space += comment
+  eol = "\n" | "\r"
+  comment = ";;" (~eol any)* eol*
+  space += comment
 }

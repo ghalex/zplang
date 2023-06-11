@@ -15,15 +15,12 @@ describe('assets', () => {
     `)
 
     const env = new Env()
-    const env2 = env.duplicate()
 
-    env2.loadModule(modules.core)
-    env2.loadModule(modules.assets)
-    env2.loadBars(data)
+    env.loadModule(modules.core)
+    env.loadModule(modules.assets)
+    env.loadBars(data)
 
-    console.log(env2)
-
-    const res = ast.map(stmt => stmt.eval(env2))
+    const res = ast.map(stmt => stmt.eval(env))
 
     expect(res[0]).toMatchObject({
       symbol: 'MSFT',
@@ -63,6 +60,8 @@ describe('assets', () => {
 
   test('access asset close, open, volume', () => {
     const env = new Env()
+    env.loadModule(modules.core)
+    env.loadModule(modules.assets)
     env.loadBars(data)
 
     const ast = zp.getAst(String.raw`
@@ -82,7 +81,10 @@ describe('assets', () => {
   test('get price for multiple days', () => {
     const env = new Env()
 
+    env.loadModule(modules.core)
+    env.loadModule(modules.assets)
     env.loadBars(data)
+
     env.bind('sma', (prices) => {
       return r.mean(prices)
     })
@@ -100,6 +102,8 @@ describe('assets', () => {
 
   test('assets with variable', () => {
     const env = new Env()
+    env.loadModule(modules.core)
+    env.loadModule(modules.assets)
     env.loadBars(data)
 
     const ast = zp.getAst(String.raw`
@@ -126,6 +130,9 @@ describe('assets', () => {
   test('assets list and window', () => {
     const metaEnv = new Env()
 
+    metaEnv.loadModule(modules.core)
+    metaEnv.loadModule(modules.assets)
+
     metaEnv.bind('bars', () => [])
     metaEnv.bind('bar', () => ({}))
 
@@ -134,7 +141,7 @@ describe('assets', () => {
       {AMD, 10 days ago}
       (:close {MSFT, 10 bars})
       (if
-        [(:close {AAPL, 8 days ago}) > 100]
+        (> (:close {AAPL, 8 days ago}) 100)
           (:volume {AMD, 21 days ago})
           (:open {MSFT, 33 bars})
       )
@@ -153,8 +160,9 @@ describe('assets', () => {
   test('loop assets', () => {
     const env = new Env()
 
-    env.loadBars(data)
     env.loadModule(modules.core)
+    env.loadModule(modules.assets)
+    env.loadBars(data)
 
     const ast = zp.getAst(String.raw`
       (def assets ["AAPL", "MSFT"])
