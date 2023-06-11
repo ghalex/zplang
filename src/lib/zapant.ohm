@@ -20,8 +20,9 @@ Zapant {
       | Object
       | Assets
       | Asset 
-      | Var
       | Primary
+      | Var
+      
 
   Primary
       = strlit
@@ -34,7 +35,7 @@ Zapant {
   ListArgs = "[" listOf<id, ", "> "]"
   Object = "{" listOf<ObjItem, ",">  "}"
   ObjItem = id ":" Exp
-  Var = id
+  Var = id | operators
   Assets = "{" (upper+ | Var) "," (Var | intlit) bars "}"
   Asset = "{" (upper+ | Var) DaysAgo? "}"
   DaysAgo = "," (Var | intlit) "days ago"?  --nb

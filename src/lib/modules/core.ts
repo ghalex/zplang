@@ -32,15 +32,26 @@ const load = (env: Env) => {
   env.bind('length', arr => arr.length)
   env.bind('push', (val, arr) => [...arr, val])
   env.bind('pop', (arr) => arr.slice(0, -1))
+  env.bind('filter', (fn, arr) => arr.filter(fn))
+  env.bind('reduce', (fn, arr) => arr.reduce((curr, val) => {
+    return (fn instanceof Lambda) ? fn.eval(env, [curr, val]) : fn(curr, val)
+  }))
   env.bind('map', (fn, arr) => {
     return (fn instanceof Lambda) ? arr.map((val, i) => fn.eval(env, [val, i])) : arr.map(fn)
   })
+  env.bind('first', arr => arr[0])
+  env.bind('last', arr => arr[arr.length - 1])
   env.bind('nth', (idx, arr) => {
-    if (idx < 0) {
-      return arr[arr.length + idx % arr.length]
+    function getIdx (i, a) {
+      if (Array.isArray(i)) {
+        const [curr, ...rest] = i
+        return getIdx(rest.length > 1 ? rest : rest[0], a[curr])
+      }
+
+      return a[i]
     }
 
-    return arr[idx % arr.length]
+    return getIdx(idx, arr)
   })
 }
 

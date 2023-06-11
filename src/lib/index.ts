@@ -28,8 +28,9 @@ Zapant {
       | Object
       | Assets
       | Asset 
-      | Var
       | Primary
+      | Var
+      
 
   Primary
       = strlit
@@ -42,7 +43,7 @@ Zapant {
   ListArgs = "[" listOf<id, ", "> "]"
   Object = "{" listOf<ObjItem, ",">  "}"
   ObjItem = id ":" Exp
-  Var = id
+  Var = id | operators
   Assets = "{" (upper+ | Var) "," (Var | intlit) bars "}"
   Asset = "{" (upper+ | Var) DaysAgo? "}"
   DaysAgo = "," (Var | intlit) "days ago"?  --nb
@@ -111,8 +112,6 @@ const getMatcher = () => {
 const evalCode = (env: Env, m: ohm.MatchResult) => {
   const semantics = analyzer.createSemantics(grammar, m)
   const ast = semantics(m).ast() as any[]
-
-  console.dir(ast, { depth: null })
 
   return ast.map(s => s.eval?.(env))
 }
