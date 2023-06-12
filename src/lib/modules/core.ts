@@ -20,6 +20,12 @@ const load = (env: Env) => {
 
   env.bind('inc', (val) => val + 1)
   env.bind('identity', (val) => val)
+  env.bind('round', val => Math.round(val))
+  env.bind('ceil', val => Math.ceil(val))
+  env.bind('floor', val => Math.floor(val))
+  env.bind('keys', (obj) => Object.keys(obj))
+  env.bind('values', (obj) => Object.values(obj))
+  env.bind('get', (key, obj) => obj[key])
 
   // String
   env.bind('str', (...args) => args.map(a => a.toString()).join(' '))
