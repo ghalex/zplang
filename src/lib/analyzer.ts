@@ -1,5 +1,5 @@
 import type { MatchResult, Grammar, Node } from 'ohm-js'
-import { FnCall, BinaryExpression, Expression, Variable, VarDec, Strlit, List, FnDec, IfElse, Loop, Obj, ObjGet, Asset, Assets } from './language'
+import { FnCall, Expression, Variable, VarDec, Strlit, List, FnDec, IfElse, Loop, Obj, ObjGet, ObjSet, Asset, Assets } from './language'
 
 const createSemantics = (grammar: Grammar, match: MatchResult) => {
   const semantics = grammar.createSemantics()
@@ -16,11 +16,20 @@ const createSemantics = (grammar: Grammar, match: MatchResult) => {
     Stmt_fnDec (_left, _fn, args, block, _right) {
       return new FnDec(args.ast(), block.ast())
     },
+    Stmt_fnDecShort (_l, _defn, id: Node, args, block, _r) {
+      const variable = new Variable(id.sourceString, 'any')
+      const initializer = new FnDec(args.ast(), block.ast())
+
+      return new VarDec(variable, initializer)
+    },
     Stmt_fnCall (_left, fnName, args, _right) {
       return new FnCall(fnName.sourceString, args.ast())
     },
     Stmt_objGet (_l, _dots, id, obj, _r) {
       return new ObjGet(id.sourceString, obj.ast())
+    },
+    Stmt_objSet (_l, _dots, id, write, value, obj, _r) {
+      return new ObjSet(id.sourceString, value.ast(), obj.ast(), write.ast().length > 0)
     },
     Stmt_varDec (_left, _def, id: Node, exp: Node, _right) {
       const variable = new Variable(id.sourceString, 'any')

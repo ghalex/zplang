@@ -23,6 +23,10 @@ class Lambda {
 
     return evaled[evaled.length - 1]
   }
+
+  toString () {
+    return `(fn [${this.bindNames.join(',')}] ${this.body})`
+  }
 }
 
 export default Lambda

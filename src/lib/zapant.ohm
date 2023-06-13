@@ -6,8 +6,10 @@ Zapant {
       | "(" if Exp Stmt Stmt? ")"                               --if
       | "(" loop id? in (List | Stmt_fnCall | Var) Block ")"    --loop
       | "(" fn ListArgs Block ")"                               --fnDec 
-      | "(" ":" id (Var | Asset | Assets) ")"                   --objGet
+      | "(" ":" id "!"? Exp (Var | Asset | Assets) ")"          --objSet
+      | "(" ":" id (Var | Asset | Assets | Stmt_objSet) ")"     --objGet
       | "(" def id (Stmt | Exp) ")"                             --varDec
+      | "(" defn id ListArgs Block ")"                          --fnDecShort
       | Exp
 
   Block = Stmt+
@@ -43,6 +45,7 @@ Zapant {
       | "," yesterday                       --yesterday
 
   def = "def" ~alnum
+  defn = "defn" ~alnum
   if = "if" ~alnum
   fn = "fn" ~alnum
   loop = "loop" ~alnum
@@ -56,6 +59,7 @@ Zapant {
   today = "today" ~alnum
   keywords
       = def
+      | defn
       | if
       | fn
       | loop
@@ -73,7 +77,7 @@ Zapant {
   boolean = true | false
   intlit = ("+" | "-")* digit+
   floatlit = digit+ "." digit+
-  id = ~keywords (letter | "_" | "$") idchar*
+  id = ~keywords (letter | "_" | "$") idchar* "!"
   idchar = letter | digit | "_" | "$"
   operators = "+" | "-" | "/" | "*" | "%" | "**" | "<=" | "<" | "=" | "!=" | ">=" | ">"
 

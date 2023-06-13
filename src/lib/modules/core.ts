@@ -25,8 +25,9 @@ const load = (env: Env) => {
   env.bind('floor', val => Math.floor(val))
   env.bind('keys', (obj) => Object.keys(obj))
   env.bind('values', (obj) => Object.values(obj))
-  env.bind('get', (key, obj) => obj[key])
 
+  env.bind('get', (key, obj) => obj[key])
+  env.bind('set', (obj1, obj2) => ({ ...obj2, ...obj1 }))
   // String
   env.bind('str', (...args) => args.map(a => a.toString()).join(' '))
   env.bind('print', (...args) => {
@@ -35,9 +36,13 @@ const load = (env: Env) => {
   })
 
   // Array
-  env.bind('length', arr => arr.length)
+  env.bind('len', arr => arr.length)
   env.bind('push', (val, arr) => [...arr, val])
+  env.bind('push!', (val, arr) => arr.push(val))
   env.bind('pop', (arr) => arr.slice(0, -1))
+  env.bind('pop!', (arr) => arr.pop())
+  env.bind('shift', (arr) => arr.slice(1))
+  env.bind('shift!', (arr) => arr.shift())
   env.bind('filter', (fn, arr) => arr.filter(fn))
   env.bind('reduce', (fn, arr) => arr.reduce((curr, val) => {
     return (fn instanceof Lambda) ? fn.eval(env, [curr, val]) : fn(curr, val)

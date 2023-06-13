@@ -2,7 +2,7 @@
 // import path from 'path'
 import * as ohm from 'ohm-js'
 import analyzer from './analyzer'
-import { type Env } from './language'
+import { Lambda, type Env } from './language'
 
 // const data = fs.readFileSync(path.join(__dirname, 'zapant.ohm'), { encoding: 'utf-8' })
 const grammar = ohm.grammar(String.raw`
@@ -14,8 +14,10 @@ Zapant {
       | "(" if Exp Stmt Stmt? ")"                               --if
       | "(" loop id? in (List | Stmt_fnCall | Var) Block ")"    --loop
       | "(" fn ListArgs Block ")"                               --fnDec 
-      | "(" ":" id (Var | Asset | Assets) ")"                   --objGet
+      | "(" ":" id "!"? Exp (Var | Asset | Assets) ")"          --objSet
+      | "(" ":" id (Var | Asset | Assets | Stmt_objSet) ")"     --objGet
       | "(" def id (Stmt | Exp) ")"                             --varDec
+      | "(" defn id ListArgs Block ")"                          --fnDecShort
       | Exp
 
   Block = Stmt+
@@ -51,6 +53,7 @@ Zapant {
       | "," yesterday                       --yesterday
 
   def = "def" ~alnum
+  defn = "defn" ~alnum
   if = "if" ~alnum
   fn = "fn" ~alnum
   loop = "loop" ~alnum
@@ -64,6 +67,7 @@ Zapant {
   today = "today" ~alnum
   keywords
       = def
+      | defn
       | if
       | fn
       | loop
@@ -81,7 +85,7 @@ Zapant {
   boolean = true | false
   intlit = ("+" | "-")* digit+
   floatlit = digit+ "." digit+
-  id = ~keywords (letter | "_" | "$") idchar*
+  id = ~keywords (letter | "_" | "$") idchar* "!"?
   idchar = letter | digit | "_" | "$"
   operators = "**" | "+" | "-" | "/" | "*" | "%" | "<=" | "<" | "=" | "!=" | ">=" | ">"
 
@@ -109,11 +113,32 @@ const getMatcher = () => {
   return grammar.matcher()
 }
 
-const evalCode = (env: Env, m: ohm.MatchResult) => {
+const evalAst = (env: Env, ast: any[]) => {
+  return ast.map(stmt => {
+    const x = stmt.eval(env)
+
+    if (x instanceof Lambda) {
+      return 'lamda ' + x.toString()
+    }
+
+    if (typeof x === 'object') {
+      if (Array.isArray(x)) return [...x]
+      return { ...x }
+    }
+    return x
+  })
+}
+
+const evalMatch = (env: Env, m: ohm.MatchResult) => {
   const semantics = analyzer.createSemantics(grammar, m)
   const ast = semantics(m).ast() as any[]
 
   return ast.map(s => s.eval?.(env))
+}
+
+const evalCode = (env: Env, code: string) => {
+  const ast = getAst(code)
+  return evalAst(env, ast)
 }
 
 export * from './language'
@@ -122,5 +147,7 @@ export default {
   parse,
   getAst,
   getMatcher,
-  evalCode
+  evalCode,
+  evalMatch,
+  evalAst
 }

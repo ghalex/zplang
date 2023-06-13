@@ -99,7 +99,7 @@ figlet('Zaplang', {
             const match = m.match()
 
             if (match.succeeded()) {
-              const res = zp.evalCode(zpEnv, match)
+              const res = zp.evalMatch(zpEnv, match)
               console.log(res[0])
             } else {
               console.log(match.message)
