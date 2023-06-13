@@ -10,13 +10,34 @@ describe('array & objects', () => {
       (def arr1 [1, 2, 3])
       (len arr1)
       
-      (push 5 arr1)
-      (push! 4 arr1)
-      arr1
+      (nth 1 arr1)
     `)
 
     expect(res[0]).toEqual([1, 2, 3])
     expect(res[1]).toBe(3)
+    expect(res[2]).toBe(2)
+  })
+
+  test('array functions', () => {
+    const env = new Env()
+    env.loadModule(modules.core)
+
+    const res = zp.evalCode(env, String.raw`
+      (def arr1 [1, 2, 3])
+      
+      (push 5 arr1)
+      (push! 4 arr1)
+
+      (defn big2 [val] (> val 2))
+      (filter big2 arr1)
+
+      (map (fn [x] (* x 2)) arr1)
+    `)
+
+    expect(res[1]).toEqual([1, 2, 3, 5])
+    expect(res[2]).toBe(4)
+    expect(res[4]).toEqual([3, 4])
+    expect(res[5]).toEqual([2, 4, 6, 8])
   })
 
   test('defines an access objects', () => {

@@ -1,4 +1,4 @@
-import { type Env, Lambda } from '../language'
+import { type Env } from '../language'
 
 const name = 'core'
 const namespace = ''
@@ -43,13 +43,9 @@ const load = (env: Env) => {
   env.bind('pop!', (arr) => arr.pop())
   env.bind('shift', (arr) => arr.slice(1))
   env.bind('shift!', (arr) => arr.shift())
-  env.bind('filter', (fn, arr) => arr.filter(fn))
-  env.bind('reduce', (fn, arr) => arr.reduce((curr, val) => {
-    return (fn instanceof Lambda) ? fn.eval(env, [curr, val]) : fn(curr, val)
-  }))
-  env.bind('map', (fn, arr) => {
-    return (fn instanceof Lambda) ? arr.map((val, i) => fn.eval(env, [val, i])) : arr.map(fn)
-  })
+  env.bind('filter', (lamda, arr) => arr.filter(val => lamda.eval(env, [val])))
+  env.bind('reduce', (lamda, arr) => arr.reduce((curr, val) => lamda.eval(env, [curr, val])))
+  env.bind('map', (lamda, arr) => arr.map((val, i) => lamda.eval(env, [val, i])))
   env.bind('first', arr => arr[0])
   env.bind('last', arr => arr[arr.length - 1])
   env.bind('nth', (idx, arr) => {
