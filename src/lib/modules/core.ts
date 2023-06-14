@@ -1,4 +1,5 @@
-import { type Env } from '../language'
+import { Lambda, type Env } from '../language'
+import * as r from 'ramda'
 
 const name = 'core'
 const namespace = ''
@@ -11,12 +12,13 @@ const load = (env: Env) => {
   env.bind('%', (a, b) => a % b)
   env.bind('**', (a, b) => a ** b)
 
-  env.bind('>', (a, b) => a > b)
-  env.bind('>=', (a, b) => a >= b)
-  env.bind('=', (a, b) => a === b)
-  env.bind('!=', (a, b) => a !== b)
-  env.bind('<', (a, b) => a < b)
-  env.bind('<=', (a, b) => a <= b)
+  env.bind('>', r.curry((a, b) => a > b))
+  env.bind('>=', r.curry((a, b) => a >= b))
+  env.bind('=', r.curry((a, b) => a === b))
+  env.bind('!=', r.curry((a, b) => a !== b))
+  env.bind('<', r.curry((a, b) => a < b))
+  env.bind('<=', r.curry((a, b) => a <= b))
+  env.bind('not', (a) => !a)
 
   env.bind('inc', (val) => val + 1)
   env.bind('identity', (val) => val)
@@ -26,7 +28,7 @@ const load = (env: Env) => {
   env.bind('keys', (obj) => Object.keys(obj))
   env.bind('values', (obj) => Object.values(obj))
 
-  env.bind('get', (key, obj) => obj[key])
+  env.bind('get', (key: string, obj) => r.path(key.split('.'))(obj))
   env.bind('set', (obj1, obj2) => ({ ...obj2, ...obj1 }))
   // String
   env.bind('str', (...args) => args.map(a => a.toString()).join(' '))
@@ -37,13 +39,16 @@ const load = (env: Env) => {
 
   // Array
   env.bind('len', arr => arr.length)
+  env.bind('indexOf', (el, arr) => arr.indexOf(el))
   env.bind('push', (val, arr) => [...arr, val])
   env.bind('push!', (val, arr) => arr.push(val))
   env.bind('pop', (arr) => arr.slice(0, -1))
   env.bind('pop!', (arr) => arr.pop())
   env.bind('shift', (arr) => arr.slice(1))
   env.bind('shift!', (arr) => arr.shift())
-  env.bind('filter', (lamda, arr) => arr.filter(val => lamda.eval(env, [val])))
+  env.bind('filter', (lamda, arr) => {
+    return lamda instanceof Lambda ? arr.filter(val => lamda.eval(env, [val])) : arr.filter(lamda)
+  })
   env.bind('reduce', (lamda, arr) => arr.reduce((curr, val) => lamda.eval(env, [curr, val])))
   env.bind('map', (lamda, arr) => arr.map((val, i) => lamda.eval(env, [val, i])))
   env.bind('first', arr => arr[0])

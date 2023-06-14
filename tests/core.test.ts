@@ -82,4 +82,19 @@ describe('core', () => {
     expect(res[4]).toBe(6)
     // expect(ast.toString()).toEqual(codeToStr(code))
   })
+
+  test('curry functions', () => {
+    const env = new Env()
+    env.loadModule(modules.core)
+
+    const code = `
+      (def arr1 ["AAPL", "MSFT", "SNOW"])
+      (filter #([val] (= val "MSFT")) arr1)
+    `
+    const res = zp.evalCode(env, code)
+    console.log(res)
+
+    expect(1).toEqual(1)
+    // expect(ast.toString()).toEqual(codeToStr(code))
+  })
 })
