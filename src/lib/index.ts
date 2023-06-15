@@ -48,7 +48,7 @@ Zapant {
   Object = "{" listOf<ObjItem, ",">  "}"
   ObjItem = id ":" Exp
   Var = id | operators
-  Assets = "{" (upper+ | Var) "," (Var | intlit) bars "}"
+  Assets = "{" (upper+ | Var) "," (Var | intlit) bars DaysAgo? "}"
   Asset = "{" (upper+ | Var) DaysAgo? "}"
   DaysAgo = "," (Var | intlit) "days ago"?  --nb
       | "," today                           --today

@@ -47,8 +47,8 @@ const createSemantics = (grammar: Grammar, match: MatchResult) => {
     Exp (val: Node) {
       return new Expression(val.ast())
     },
-    Assets (_l, symbol, _c, w, _b, _r) {
-      return new Assets(symbol.ast(), w.ast())
+    Assets (_l, symbol, _c, w, _b, daysAgo, _r) {
+      return new Assets(symbol.ast(), w.ast(), daysAgo.ast()[0] ?? 0)
     },
     Asset (_l, symbol, daysAgo, _r) {
       return new Asset(symbol.ast(), daysAgo.ast()[0] ?? 0)

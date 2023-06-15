@@ -18,7 +18,7 @@ const load = (env: Env) => {
     return data[symbol][daysAgo]
   })
 
-  env.bind('bars', (symbol: string, window: number) => {
+  env.bind('bars', (symbol: string, window: number, daysAgo: number = 0) => {
     const data = env.getBars()
 
     if (!data[symbol]) {
@@ -29,7 +29,7 @@ const load = (env: Env) => {
       throw new Error(`Only ${data[symbol].length} bars available for asset ${symbol}`)
     }
 
-    return data[symbol].slice(0, window)
+    return data[symbol].slice(daysAgo, window + daysAgo)
   })
 }
 
