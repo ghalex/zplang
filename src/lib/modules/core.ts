@@ -19,6 +19,7 @@ const load = (env: Env) => {
   env.bind('<', r.curry((a, b) => a < b))
   env.bind('<=', r.curry((a, b) => a <= b))
   env.bind('not', (a) => !a)
+  env.bind('and', (a, b) => a && b)
 
   env.bind('inc', (val) => val + 1)
   env.bind('identity', (val) => val)
@@ -35,6 +36,11 @@ const load = (env: Env) => {
   env.bind('print', (...args) => {
     console.log(...args)
     return args.join(' ')
+  })
+
+  env.bind('call', (fn, ...rest) => {
+    if (!fn) throw new Error('Cannot call function')
+    return fn(...rest)
   })
 
   // Array
@@ -66,6 +72,8 @@ const load = (env: Env) => {
       return lamda instanceof Lambda ? lamda.eval(env, [val, idx]) : lamda(val, idx)
     })
   })
+
+  env.bind('size', (arr) => arr.length)
 
   env.bind('map', (lamda, arr) => arr.map((val, i) => lamda.eval(env, [val, i])))
   env.bind('first', arr => arr[0])

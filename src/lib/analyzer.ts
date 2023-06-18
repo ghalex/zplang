@@ -16,8 +16,8 @@ const createSemantics = (grammar: Grammar, match: MatchResult) => {
     Stmt_fnDec (_left, _fn, args, block, _right) {
       return new FnDec(args.ast(), block.ast())
     },
-    Stmt_fnDec2 (args, _x, block) {
-      return new FnDec(args.ast(), block.ast())
+    Stmt_fnDec2 (args, _x, exp) {
+      return new FnDec(args.ast(), [exp.ast()])
     },
     Stmt_fnDec3 (_l, _defn, id: Node, args, block, _r) {
       const variable = new Variable(id.sourceString, 'any')

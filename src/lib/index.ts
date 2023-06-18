@@ -14,7 +14,7 @@ Zapant {
       | "(" if Exp Stmt Stmt? ")"                               --if
       | "(" loop id? in (List | Stmt_fnCall | Var) Block ")"    --loop
       | "(" fn ListArgs Block ")"                               --fnDec
-      | ListArgs "=>" Block                                     --fnDec2
+      | ListArgs "=>" Exp                                       --fnDec2
       | "(" ":" id "!"? Exp (Var | Asset | Assets) ")"          --objSet
       | "(" ":" id (Var | Asset | Assets | Stmt_objSet) ")"     --objGet
       | "(" def id (Stmt | Exp) ")"                             --varDec
