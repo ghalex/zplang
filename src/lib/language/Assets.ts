@@ -11,7 +11,6 @@ class Asset {
     const daysAgo = this.daysAgo instanceof Variable ? this.daysAgo.eval(env) : this.daysAgo
     const symbol = this.symbol instanceof Variable ? this.symbol.eval(env) : this.symbol.join('')
 
-    console.log(daysAgo)
     if (!getBars) {
       throw new Error('"bars" function not defined')
     }

@@ -49,7 +49,24 @@ const load = (env: Env) => {
   env.bind('filter', (lamda, arr) => {
     return lamda instanceof Lambda ? arr.filter(val => lamda.eval(env, [val])) : arr.filter(lamda)
   })
-  env.bind('reduce', (lamda, arr) => arr.reduce((curr, val) => lamda.eval(env, [curr, val])))
+  env.bind('take', (val, arr) => r.take(val, arr))
+
+  env.bind('sortBy', (fn, arr) => {
+    return r.sortBy(val => fn.eval(env, [val]), arr)
+  })
+
+  env.bind('reduce', (lamda, arr) => {
+    return arr.reduce((curr, val) => {
+      return lamda instanceof Lambda ? lamda.eval(env, [curr, val]) : lamda(curr, val)
+    })
+  })
+
+  env.bind('some', (lamda, arr) => {
+    return arr.some((val, idx) => {
+      return lamda instanceof Lambda ? lamda.eval(env, [val, idx]) : lamda(val, idx)
+    })
+  })
+
   env.bind('map', (lamda, arr) => arr.map((val, i) => lamda.eval(env, [val, i])))
   env.bind('first', arr => arr[0])
   env.bind('last', arr => arr[arr.length - 1])
@@ -60,7 +77,11 @@ const load = (env: Env) => {
         return getIdx(rest.length > 1 ? rest : rest[0], a[curr])
       }
 
-      return a[i]
+      if (i < 0) {
+        return a[(a.length + i) % a.length]
+      }
+
+      return a[i % a.length]
     }
 
     return getIdx(idx, arr)

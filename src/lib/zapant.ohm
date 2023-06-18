@@ -5,8 +5,8 @@ Zapant {
       = "(" (id | operators) Exp* ")"                           --fnCall
       | "(" if Exp Stmt Stmt? ")"                               --if
       | "(" loop id? in (List | Stmt_fnCall | Var) Block ")"    --loop
-      | "(" fn ListArgs Block ")"                               --fnDec 
-      | "#("ListArgs Block ")"                                  --fnDec2 
+      | "(" fn ListArgs Block ")"                               --fnDec
+      | "#("ListArgs Block ")"                                  --fnDec2  
       | "(" ":" id "!"? Exp (Var | Asset | Assets) ")"          --objSet
       | "(" ":" id (Var | Asset | Assets | Stmt_objSet) ")"     --objGet
       | "(" def id (Stmt | Exp) ")"                             --varDec
@@ -18,6 +18,7 @@ Zapant {
   Exp
       = Stmt_fnCall
       | Stmt_fnDec
+      | Stmt_fnDec2
       | Stmt_objGet
       | List
       | Object
@@ -39,7 +40,7 @@ Zapant {
   Object = "{" listOf<ObjItem, ",">  "}"
   ObjItem = id ":" Exp
   Var = id | operators
-  Assets = "{" (upper+ | Var) "," (Var | intlit) bars "}"
+  Assets = "{" (upper+ | Var) "," (Var | intlit) bars DaysAgo? "}"
   Asset = "{" (upper+ | Var) DaysAgo? "}"
   DaysAgo = "," (Var | intlit) "days ago"?  --nb
       | "," today                           --today
@@ -78,9 +79,9 @@ Zapant {
   boolean = true | false
   intlit = ("+" | "-")* digit+
   floatlit = digit+ "." digit+
-  id = ~keywords (letter | "_" | "$") idchar* "!"
+  id = ~keywords (letter | "_" | "$") idchar* "!"?
   idchar = letter | digit | "_" | "$"
-  operators = "+" | "-" | "/" | "*" | "%" | "**" | "<=" | "<" | "=" | "!=" | ">=" | ">"
+  operators = "**" | "+" | "-" | "/" | "*" | "%" | "<=" | "<" | "=" | "!=" | ">=" | ">"
 
   eol = "\n" | "\r"
   comment = ";;" (~eol any)* eol*

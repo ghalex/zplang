@@ -9,7 +9,7 @@ class FnCall {
     const name = this.name
     const fun = env.get(name)
 
-    if (!fun) throw new Error(`Function "${name}" not defined`)
+    if (fun === undefined) throw new Error(`Function "${name}" not defined`)
 
     const args = this.expressions.map(exp => evalExpression(exp, env))
 

@@ -14,11 +14,11 @@ Zapant {
       | "(" if Exp Stmt Stmt? ")"                               --if
       | "(" loop id? in (List | Stmt_fnCall | Var) Block ")"    --loop
       | "(" fn ListArgs Block ")"                               --fnDec
-      | "#("ListArgs Block ")"                                  --fnDec2  
+      | ListArgs "=>" Block                                     --fnDec2
       | "(" ":" id "!"? Exp (Var | Asset | Assets) ")"          --objSet
       | "(" ":" id (Var | Asset | Assets | Stmt_objSet) ")"     --objGet
       | "(" def id (Stmt | Exp) ")"                             --varDec
-      | "(" defn id ListArgs Block ")"                          --fnDecShort
+      | "(" defn id ListArgs Block ")"                          --fnDec3
       | Exp
 
   Block = Stmt+
@@ -28,6 +28,7 @@ Zapant {
       | Stmt_fnDec
       | Stmt_fnDec2
       | Stmt_objGet
+      | ArrayIdx
       | List
       | Object
       | Assets
@@ -43,11 +44,12 @@ Zapant {
       | boolean
       | null
 
+  ArrayIdx = id "[" intlit "]"
   List = "[" listOf<Exp, ","> "]"
   ListArgs = "[" listOf<id, ", "> "]"
   Object = "{" listOf<ObjItem, ",">  "}"
   ObjItem = id ":" Exp
-  Var = id | operators
+  Var = id
   Assets = "{" (upper+ | Var) "," (Var | intlit) bars DaysAgo? "}"
   Asset = "{" (upper+ | Var) DaysAgo? "}"
   DaysAgo = "," (Var | intlit) "days ago"?  --nb

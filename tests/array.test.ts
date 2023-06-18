@@ -11,11 +11,16 @@ describe('array & objects', () => {
       (len arr1)
       
       (nth 1 arr1)
+      arr1[0]
+
+      (> arr1[-1] 2)
     `)
 
     expect(res[0]).toEqual([1, 2, 3])
     expect(res[1]).toBe(3)
     expect(res[2]).toBe(2)
+    expect(res[3]).toBe(1)
+    expect(res[4]).toBe(true)
   })
 
   test('array functions', () => {

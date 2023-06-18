@@ -88,13 +88,12 @@ describe('core', () => {
     env.loadModule(modules.core)
 
     const code = `
-      (def arr1 ["AAPL", "MSFT", "SNOW"])
-      (filter #([val] (= val "MSFT")) arr1)
+      (def add [a, b] => (+ a b))
+      (add 3 4)
     `
     const res = zp.evalCode(env, code)
-    console.log(res)
 
-    expect(1).toEqual(1)
+    expect(res[1]).toEqual(7)
     // expect(ast.toString()).toEqual(codeToStr(code))
   })
 })

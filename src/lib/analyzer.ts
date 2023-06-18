@@ -1,5 +1,5 @@
 import type { MatchResult, Grammar, Node } from 'ohm-js'
-import { FnCall, Expression, Variable, VarDec, Strlit, List, FnDec, IfElse, Loop, Obj, ObjGet, ObjSet, Asset, Assets } from './language'
+import { FnCall, Expression, Variable, VarDec, Strlit, List, FnDec, IfElse, Loop, Obj, ObjGet, ObjSet, Asset, Assets, ArrayIdx } from './language'
 
 const createSemantics = (grammar: Grammar, match: MatchResult) => {
   const semantics = grammar.createSemantics()
@@ -16,10 +16,10 @@ const createSemantics = (grammar: Grammar, match: MatchResult) => {
     Stmt_fnDec (_left, _fn, args, block, _right) {
       return new FnDec(args.ast(), block.ast())
     },
-    Stmt_fnDec2 (_left, args, block, _right) {
+    Stmt_fnDec2 (args, _x, block) {
       return new FnDec(args.ast(), block.ast())
     },
-    Stmt_fnDecShort (_l, _defn, id: Node, args, block, _r) {
+    Stmt_fnDec3 (_l, _defn, id: Node, args, block, _r) {
       const variable = new Variable(id.sourceString, 'any')
       const initializer = new FnDec(args.ast(), block.ast())
 
@@ -44,6 +44,9 @@ const createSemantics = (grammar: Grammar, match: MatchResult) => {
     // Exp_binary (left, op, right) {
     //   return new BinaryExpression(op.sourceString, left.ast(), right.ast())
     // },
+    ArrayIdx (id, _l, index, _r) {
+      return new ArrayIdx(id.sourceString, index.ast())
+    },
     Exp (val: Node) {
       return new Expression(val.ast())
     },
