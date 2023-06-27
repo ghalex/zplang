@@ -1,4 +1,4 @@
-import zp, { Env, modules } from './lib'
+import zp, { Env, modules } from 'zplang'
 import figlet from 'figlet'
 import * as readline from 'node:readline'
 import * as r from 'ramda'

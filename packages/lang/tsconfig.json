@@ -28,5 +28,5 @@
   "include": [
     "./src/**/*",
     "./tests/**/*"
-  ]
+, "../repl/src/cli.ts"  ]
 }
