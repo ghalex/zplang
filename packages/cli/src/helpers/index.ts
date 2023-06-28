@@ -47,3 +47,14 @@ export const loadData = (dataDir?: string) => {
     return []
   }
 }
+
+export const loadConfig = () => {
+  if (!fs.existsSync(path.join(process.cwd(), 'zpconfig.json'))) { return {} }
+
+  try {
+    const config = fs.readFileSync(path.join(process.cwd(), 'zpconfig.json'), 'utf-8')
+    return JSON.parse(config)
+  } catch {
+    return {}
+  }
+}

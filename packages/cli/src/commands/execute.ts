@@ -1,6 +1,6 @@
 import * as signale from 'signale'
 import { Command, Flags } from '@oclif/core'
-import { loadData, readCode, runCode } from '../helpers'
+import { loadConfig, loadData, readCode, runCode } from '../helpers'
 
 const interactive = new signale.Signale({ interactive: true, scope: 'zplang' })
 const log = new signale.Signale({
@@ -18,7 +18,7 @@ export default class ExecuteCommand extends Command {
   static description = 'Execute a ".zp" file'
 
   static examples = [
-    '<%= config.bin %> <%= command.id %>'
+    '<%= config.bin %> <%= command.id %> --file hello.zp --data "./data"'
   ]
 
   static flags = {
@@ -28,7 +28,8 @@ export default class ExecuteCommand extends Command {
 
   async run (): Promise<void> {
     const { flags } = await this.parse(ExecuteCommand)
-    const data = loadData(flags.data)
+    const { dataDir } = loadConfig()
+    const data = loadData(flags.data ?? dataDir)
 
     interactive.await('[%d/2] - Executing file %', 1, flags.file)
 
