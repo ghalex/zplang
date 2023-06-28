@@ -12,7 +12,8 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
     project: [
-      'tsconfig.json'
+      './packages/lang/tsconfig.json',
+      './packages/cli/tsconfig.json'
     ],
     tsconfigRootDir: __dirname
   },

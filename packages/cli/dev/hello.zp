@@ -1,4 +1,4 @@
 (def age 22)
 (str "Alex" age)
 
-(:close {AAPL})
+(len {AAPL, 10 bars})
