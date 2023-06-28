@@ -10,8 +10,7 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "esModuleInterop": true,
-    "target": "es2019",
-    "composite": true
+    "target": "es2019"
   },
   "include": [
     "src/**/*"

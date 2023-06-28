@@ -62,7 +62,7 @@ export default class ExecuteCommand extends Command {
   static description = 'Execute a ".zp" file'
 
   static examples = [
-    '<%= config.bin %>  <%= command.id %>',
+    '<%= config.bin %> <%= command.id %>',
   ]
 
   static flags = {
