@@ -61,13 +61,17 @@ const loadData = (dataDir?: string) => {
 export default class ExecuteCommand extends Command {
   static description = 'Execute a ".zp" file'
 
+  static examples = [
+    '<%= config.bin %>  <%= command.id %>',
+  ]
+
   static flags = {
     file: Flags.string({char: 'f', required: true, description: 'file with code to execute'}),
     data: Flags.string({char: 'd', description: 'data directory to load assests price', default: 'data'})
   }
 
   async run(): Promise<void> {
-    
+
     const {flags} = await this.parse(ExecuteCommand)
     const data = loadData(flags.data)
     
