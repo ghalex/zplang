@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import * as r from 'ramda'
-import { type OrderAction, type Order } from './types'
+import type { OrderAction, Order, Position } from './types'
 
 export const roundNumber = function (n: number, d: number) {
   const r = Math.pow(10, d)
@@ -32,8 +32,8 @@ export const closePositions = (openPositions: any[], context: { bars: any }) => 
   return res
 }
 
-export const balance = (orders: any[], positions: any[], context: { bars: any }) => {
-  const resultOrders: any[] = []
+export const balance = (orders: Order[], positions: Position[], context: { bars: any }) => {
+  const resultOrders: Order[] = []
 
   if (orders.length === 0) {
     return resultOrders
@@ -115,4 +115,123 @@ export const createOrdersAmount = (symbols: string[], weights: Record<string, nu
   }
 
   return res
+}
+
+export const calcStats = (position: Position, price: number, units: number) => {
+  const pl = (price - position.openPrice) * units * (position.side === 'long' ? 1 : -1)
+  const value = position.openPrice * units
+
+  return {
+    pl,
+    plPct: pl / value,
+    currentPrice: price
+  }
+}
+
+export const createPosition = (order: Order): Position => {
+  const data = {
+    symbol: order.symbol,
+    openDate: order.date,
+    openPrice: order.price,
+    closeDate: null,
+    closePrice: null,
+    units: order.units,
+    side: order.action === 'buy' ? 'long' : 'short' as 'long' | 'short',
+    accountType: 'paper',
+    stats: {
+      pl: 0,
+      plPct: 0,
+      currentPrice: order.price
+    }
+  }
+
+  return data
+}
+
+export const createClosePosition = (position: Position, order: Order): Position => {
+  const data = {
+    symbol: position.symbol,
+    openDate: position.openDate,
+    openPrice: position.openPrice,
+    closeDate: order.date,
+    closePrice: order.price,
+    units: order.units,
+    side: position.side,
+    accountType: 'paper',
+    stats: calcStats(position, order.price, order.units)
+  }
+
+  return data
+}
+
+export const sameSide = (position: Position, order: Order) => {
+  return (position.side === 'long' && order.action === 'buy') || (position.side === 'short' && order.action === 'sell')
+}
+
+export const executeOrders = (orders: Order[], openPositions: Position[], capital?: number) => {
+  const newPositions: Position[] = openPositions.map(p => ({ ...p }))
+  const failedOrders: Order[] = []
+
+  let capitalRequired = 0
+  let capitalAvailable = capital ?? Number.MAX_VALUE
+
+  for (const execution of orders) {
+    const position = r.find(p => p.symbol === execution.symbol, newPositions)
+    if (position) {
+      if (sameSide(position, execution)) {
+        capitalRequired += execution.units * execution.price
+
+        if (capitalAvailable >= capitalRequired) {
+          position.openPrice = (position.units * position.openPrice + execution.units * execution.price) / (position.units + execution.units)
+          position.units = position.units + execution.units
+          position.stats = calcStats(position, execution.price, position.units)
+        } else {
+          failedOrders.push(execution)
+        }
+      } else {
+        if (position.units > execution.units) {
+          position.units = position.units - execution.units
+          position.stats = calcStats(position, execution.price, position.units)
+
+          newPositions.push(createClosePosition(position, execution))
+
+          capitalAvailable += execution.units * execution.price
+        } else {
+          // close position
+          position.closeDate = execution.date
+          position.closePrice = execution.price
+          position.stats = calcStats(position, execution.price, position.units)
+
+          capitalAvailable += position.units * execution.price
+
+          // open new position in different direction
+          if (position.units < execution.units) {
+            const newPosition = createPosition({
+              ...execution,
+              units: execution.units - position.units
+            })
+
+            capitalRequired += newPosition.units * newPosition.openPrice
+
+            if (capitalAvailable >= capitalRequired) {
+              newPositions.push(newPosition)
+            } else {
+              failedOrders.push(execution)
+            }
+          }
+        }
+      }
+    } else {
+      const newPosition = createPosition(execution)
+      capitalRequired += newPosition.units * newPosition.openPrice
+
+      if (capitalAvailable >= capitalRequired) {
+        newPositions.push(newPosition)
+      } else {
+        failedOrders.push(execution)
+      }
+    }
+  }
+
+  return { newPositions, capitalAvailable, failedOrders }
 }

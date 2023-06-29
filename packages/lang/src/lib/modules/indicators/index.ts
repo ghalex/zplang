@@ -1,4 +1,4 @@
-import { type Env } from '../language'
+import { type Env } from '../../language'
 import indicators from 'zp-indicators'
 import * as r from 'ramda'
 
