@@ -1,8 +1,8 @@
 import { Lambda, type Env } from '../language'
 import * as r from 'ramda'
 
-const name = 'core'
-const namespace = ''
+const name = 'base'
+const namespace = 'core'
 
 const load = (env: Env) => {
   env.bind('+', (...args) => args.reduce((prev, curr) => prev + curr, 0))

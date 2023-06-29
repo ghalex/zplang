@@ -1,4 +1,8 @@
+;; (import "assets")
+;; (import "indicators" :as ind)
+;; (import "indicators" :as ind)
+(import "core/indicators" :as ind)
 (def age 22)
 (str "Alex" age)
 
-(len {AAPL, 10 bars})
+(:close {AAPL, 10 bars})

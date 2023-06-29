@@ -17,7 +17,7 @@ $ npm install -g zplang-cli
 $ zplang-cli COMMAND
 running command...
 $ zplang-cli (--version)
-zplang-cli/0.0.4 darwin-x64 node-v18.16.0
+zplang-cli/0.0.5 darwin-x64 node-v18.16.0
 $ zplang-cli --help [COMMAND]
 USAGE
   $ zplang-cli COMMAND
@@ -45,10 +45,10 @@ DESCRIPTION
   Execute a ".zp" file
 
 EXAMPLES
-  $ zplang-cli execute
+  $ zplang-cli execute --file hello.zp --data "./data"
 ```
 
-_See code: [dist/commands/execute.ts](https://github.com/zapant-com/zp-lang/blob/v0.0.4/dist/commands/execute.ts)_
+_See code: [dist/commands/execute.ts](https://github.com/zapant-com/zp-lang/blob/v0.0.5/dist/commands/execute.ts)_
 
 ## `zplang-cli help [COMMANDS]`
 

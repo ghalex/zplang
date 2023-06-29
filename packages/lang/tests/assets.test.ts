@@ -1,8 +1,23 @@
-import zp, { Env, modules } from '../src/lib'
+import zp, { Env } from '../src/lib'
 import data from '../src/data'
 import * as r from 'ramda'
 
 describe('assets', () => {
+  test('load module', () => {
+    const ast = zp.getAst(String.raw`
+      (import "core/indicators")
+
+      (def symbol "AMD")
+      (sma 21 symbol)
+    `)
+
+    const env = new Env()
+    env.loadBars(data)
+
+    const res = ast.map(stmt => stmt.eval(env))
+    expect(res[0]).toEqual('core/indicators')
+  })
+
   test('define an asset', () => {
     const ast = zp.getAst(String.raw`
       {MSFT}
@@ -16,8 +31,8 @@ describe('assets', () => {
 
     const env = new Env()
 
-    env.loadModule(modules.core)
-    env.loadModule(modules.assets)
+    // env.loadModule(modules.indicators)
+
     env.loadBars(data)
 
     const res = ast.map(stmt => stmt.eval(env))
@@ -60,8 +75,6 @@ describe('assets', () => {
 
   test('access asset close, open, volume', () => {
     const env = new Env()
-    env.loadModule(modules.core)
-    env.loadModule(modules.assets)
     env.loadBars(data)
 
     const ast = zp.getAst(String.raw`
@@ -81,8 +94,6 @@ describe('assets', () => {
   test('get price for multiple days', () => {
     const env = new Env()
 
-    env.loadModule(modules.core)
-    env.loadModule(modules.assets)
     env.loadBars(data)
 
     env.bind('sma', (prices) => {
@@ -102,8 +113,6 @@ describe('assets', () => {
 
   test('assets with variable', () => {
     const env = new Env()
-    env.loadModule(modules.core)
-    env.loadModule(modules.assets)
     env.loadBars(data)
 
     const ast = zp.getAst(String.raw`
@@ -129,9 +138,6 @@ describe('assets', () => {
 
   test('assets list and window', () => {
     const metaEnv = new Env()
-
-    metaEnv.loadModule(modules.core)
-    metaEnv.loadModule(modules.assets)
 
     metaEnv.bind('bars', () => [])
     metaEnv.bind('bar', () => ({}))
@@ -159,9 +165,6 @@ describe('assets', () => {
 
   test('loop assets', () => {
     const env = new Env()
-
-    env.loadModule(modules.core)
-    env.loadModule(modules.assets)
     env.loadBars(data)
 
     const ast = zp.getAst(String.raw`

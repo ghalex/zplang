@@ -1,7 +1,7 @@
 import { type Env } from '../language'
 
 const name = 'assets'
-const namespace = ''
+const namespace = 'core'
 
 const load = (env: Env) => {
   env.bind('bar', (symbol: string, daysAgo: number = 0) => {

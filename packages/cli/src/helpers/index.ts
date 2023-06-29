@@ -1,6 +1,6 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
-import zp, { Env, modules } from 'zplang'
+import zp, { Env } from 'zplang'
 
 export const readCode = (fileName: string) => {
   const fileContents = fs.readFileSync(fileName, 'utf8')
@@ -12,8 +12,6 @@ export const runCode = (code: string, bars: any) => {
   const zpEnv = new Env()
 
   zpEnv.loadBars(bars)
-  zpEnv.loadModule(modules.core)
-  zpEnv.loadModule(modules.assets)
 
   const result = zp.evalCode(zpEnv, code)
   const stop = performance.now()

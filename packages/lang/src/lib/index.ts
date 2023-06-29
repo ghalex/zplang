@@ -10,7 +10,7 @@ Zapant {
   Program = Stmt+
 
   Stmt (statement)
-      = "(" (id | operators) Exp* ")"                           --fnCall
+      = "(" ( idmodule | id | operators) Exp* ")"               --fnCall
       | "(" if Exp Stmt Stmt? ")"                               --if
       | "(" loop id? in (List | Stmt_fnCall | Var) Block ")"    --loop
       | "(" fn ListArgs Block ")"                               --fnDec
@@ -19,6 +19,7 @@ Zapant {
       | "(" ":" id (Var | Asset | Assets | Stmt_objSet) ")"     --objGet
       | "(" def id (Stmt | Exp) ")"                             --varDec
       | "(" defn id ListArgs Block ")"                          --fnDec3
+      | "(" import strlit (as id)? ")"                          --import
       | Exp
 
   Block = Stmt+
@@ -69,9 +70,13 @@ Zapant {
   daysAgo = "days ago" ~alnum
   yesterday = "yesterday" ~alnum
   today = "today" ~alnum
+  import = "import" ~alnum
+  as = ":as" ~alnum
   keywords
       = def
       | defn
+      | import
+      | as
       | if
       | fn
       | loop
@@ -90,6 +95,7 @@ Zapant {
   intlit = ("+" | "-")* digit+
   floatlit = digit+ "." digit+
   id = ~keywords (letter | "_" | "$") idchar* "!"?
+  idmodule = ~keywords letter idchar* "/" id
   idchar = letter | digit | "_" | "$"
   operators = "**" | "+" | "-" | "/" | "*" | "%" | "<=" | "<" | "=" | "!=" | ">=" | ">"
 

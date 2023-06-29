@@ -13,7 +13,8 @@ module.exports = {
     sourceType: 'module',
     project: [
       './packages/lang/tsconfig.json',
-      './packages/cli/tsconfig.json'
+      './packages/cli/tsconfig.json',
+      './packages/repl/tsconfig.json'
     ],
     tsconfigRootDir: __dirname
   },

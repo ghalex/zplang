@@ -34,7 +34,9 @@
     "typescript": "^5.1.5"
   },
   "dependencies": {
+    "dayjs": "^1.11.8",
     "ohm-js": "^17.1.0",
-    "ramda": "^0.29.0"
+    "ramda": "^0.29.0",
+    "zp-indicators": "^0.0.4"
   }
 }

@@ -1,4 +1,4 @@
-import zp, { Env, Lambda, modules } from '../src/lib'
+import zp, { Env, Lambda } from '../src/lib'
 
 const codeToStr = (code: string) => {
   return code.split('\n').map(v => v.replace(/\s{2}/g, '')).filter(s => s.length > 0).join(',')
@@ -15,8 +15,9 @@ describe('core', () => {
     `
 
     const ast = zp.getAst(code)
-
     const res = ast.map(stmt => stmt.eval(env))
+
+    console.log(res)
 
     expect(res[0]).toBe(1)
     expect(res[1]).toBe('Alex')
@@ -27,7 +28,6 @@ describe('core', () => {
 
   test('arithmetic operators', () => {
     const env = new Env()
-    env.loadModule(modules.core)
 
     const code = String.raw`
       (+ 2 (* 3 2))
@@ -47,7 +47,6 @@ describe('core', () => {
 
   test('function calls', () => {
     const env = new Env()
-    env.loadModule(modules.core)
 
     const ast = zp.getAst(`
       (+ 2 3)
@@ -61,7 +60,6 @@ describe('core', () => {
 
   test('function definitions', () => {
     const env = new Env()
-    env.loadModule(modules.core)
 
     const code = `
       (def myFn (fn [p1] p1))
@@ -85,7 +83,6 @@ describe('core', () => {
 
   test('curry functions', () => {
     const env = new Env()
-    env.loadModule(modules.core)
 
     const code = `
       (def add [a, b] => (+ a b))

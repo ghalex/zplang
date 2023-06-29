@@ -93,12 +93,18 @@ importers:
 
   packages/lang:
     dependencies:
+      dayjs:
+        specifier: ^1.11.8
+        version: 1.11.8
       ohm-js:
         specifier: ^17.1.0
         version: 17.1.0
       ramda:
         specifier: ^0.29.0
         version: 0.29.0
+      zp-indicators:
+        specifier: ^0.0.4
+        version: 0.0.4
     devDependencies:
       '@babel/core':
         specifier: ^7.22.5
@@ -4104,6 +4110,10 @@ packages:
     resolution: {integrity: sha512-2P0p0pFGzHS5EMnhdxQi7aJN+iMheud0UhG4dlE1DLAlvL8JHjJJTX/CSm4JXwV0Ka5nGk3zC5mcb5bUQUxxMA==}
     dev: true
 
+  /dayjs@1.11.8:
+    resolution: {integrity: sha512-LcgxzFoWMEPO7ggRv1Y2N31hUf2R0Vj7fuy/m+Bg1K8rr+KAs1AEy4y9jd5DXe8pbHgX+srkHNS7TH6Q6ZhYeQ==}
+    dev: false
+
   /debug@3.2.7(supports-color@5.5.0):
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
     peerDependencies:
@@ -7951,6 +7961,15 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
+  /ramda-analytics@0.2.1(ramda@0.29.0):
+    resolution: {integrity: sha512-zimrc9hWKRLfFoAq+7R3dyxHe00EKeyJz6Lps09+adjwPYZ+fXcTa8PXe4FbNWACYZpVktRvz5FTqlO9PIJOkA==}
+    peerDependencies:
+      ramda: ^0.27.1
+    dependencies:
+      dayjs: 1.11.8
+      ramda: 0.29.0
+    dev: false
+
   /ramda@0.27.2:
     resolution: {integrity: sha512-SbiLPU40JuJniHexQSAgad32hfwd+DRUdwF2PlVuI5RZD0/vahUco7R8vD86J/tcEKKF9vZrUVwgtmGCqlCKyA==}
     dev: true
@@ -8418,6 +8437,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /simple-statistics@7.8.3:
+    resolution: {integrity: sha512-JFvMY00t6SBGtwMuJ+nqgsx9ylkMiJ5JlK9bkj8AdvniIe5615wWQYkKHXe84XtSuc40G/tlrPu0A5/NlJvv8A==}
+    dev: false
 
   /simple-update-notifier@1.1.0:
     resolution: {integrity: sha512-VpsrsJSUcJEseSbMHkrsrAVSdvVS5I96Qo1QAQ4FxQ9wXFcB+pjj7FB7/us9+GcgfW4ziHtYMc1J0PLczb55mg==}
@@ -9451,3 +9474,12 @@ packages:
       taketalk: 1.0.0
       wrap-ansi: 2.1.0
     dev: true
+
+  /zp-indicators@0.0.4:
+    resolution: {integrity: sha512-DtbK7DF5qmsJigp/+/KjVWk4YnySQMe7toHRR2svqt/r4VCPJcvoQlo/tqrAtf0aKrmg0L1M220bxvtHvOUohA==}
+    dependencies:
+      dayjs: 1.11.8
+      ramda: 0.29.0
+      ramda-analytics: 0.2.1(ramda@0.29.0)
+      simple-statistics: 7.8.3
+    dev: false

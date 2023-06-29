@@ -1,10 +1,9 @@
-import zp, { Env, modules } from '../src/lib'
+import zp, { Env } from '../src/lib'
 // import * as fs from 'node:fs'
 
 describe('array & objects', () => {
   test('defines an access arrays', () => {
     const env = new Env()
-    env.loadModule(modules.core)
 
     const res = zp.evalCode(env, String.raw`
       (def arr1 [1, 2, 3])
@@ -25,7 +24,6 @@ describe('array & objects', () => {
 
   test('array functions', () => {
     const env = new Env()
-    env.loadModule(modules.core)
 
     const res = zp.evalCode(env, String.raw`
       (def arr1 [1, 2, 3])
@@ -47,7 +45,6 @@ describe('array & objects', () => {
 
   test('defines an access objects', () => {
     const env = new Env()
-    env.loadModule(modules.core)
 
     const res = zp.evalCode(env, String.raw`
       (def obj1 {name: "My Name", age: 2})
