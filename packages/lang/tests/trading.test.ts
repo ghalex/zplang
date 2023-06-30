@@ -74,8 +74,8 @@ describe('trading', () => {
       )
     `)
 
-    console.log(portfolio)
-    console.log(env.get('execute')(portfolio.orders))
+    // console.log(portfolio)
+    // console.log(env.get('execute')(portfolio.orders))
 
     expect(portfolio.orders.length).toEqual(3)
   })

@@ -27,6 +27,7 @@
   ],
   "include": [
     "./src/**/*",
-    "./tests/**/*"
-, "../repl/src/cli.ts"  ]
+    "./tests/**/*",
+    "../repl/src/cli.ts"
+  ]
 }

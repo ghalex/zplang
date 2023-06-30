@@ -17,7 +17,10 @@ class Env {
       $$bars: [],
       $$isMeta: false,
       $$meta: {
-        assets: {}
+        assets: {},
+        trading: {
+          portfolio: null
+        }
       }
     }
 

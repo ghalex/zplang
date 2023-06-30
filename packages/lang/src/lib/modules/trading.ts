@@ -1,7 +1,6 @@
-import { Lambda, type Env } from '../../language'
-import Portfolio from './portfolio'
-import type { Order, OrderOptions } from './types'
-// import { closePositions, balance } from './utils'
+import { Lambda, type Env } from '../language'
+import { Portfolio } from '@zapant/core'
+import type { Order, OrderOptions } from '@zapant/core'
 
 const name = 'trading'
 const namespace = 'core'
@@ -10,6 +9,8 @@ const load = (zpEnv: Env, as: string = '') => {
   const isMeta = zpEnv.get('$$isMeta')
   const ns = as.length > 0 ? as + '/' : ''
   const portfolio = new Portfolio(0, [])
+
+  zpEnv.addMeta('trading', 'portfolio', portfolio)
 
   zpEnv.bind(ns + 'portfolio', (newData) => {
     if (newData) {
