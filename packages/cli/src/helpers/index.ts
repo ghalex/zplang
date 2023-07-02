@@ -11,7 +11,12 @@ export const runCode = (code: string, bars: any) => {
   const start = performance.now()
   const zpEnv = new Env()
 
+  const myObj = {
+    hello: () => 'hello'
+  }
+
   zpEnv.loadBars(bars)
+  zpEnv.bind('myObj', myObj)
 
   const result = zp.evalCode(zpEnv, code)
   const stop = performance.now()

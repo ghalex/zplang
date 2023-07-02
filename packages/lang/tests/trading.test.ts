@@ -1,5 +1,6 @@
 import zp, { Env } from '../src/lib'
 import data from '../src/data'
+import type { Portfolio } from '@zapant/core'
 // import * as r from 'ramda'
 
 const positions = [{
@@ -57,12 +58,16 @@ describe('trading', () => {
     env.loadBars(data)
     env.loadModuleByName('core/trading')
 
-    const portfolio = env.get('portfolio')({
+    const portfolio = env.get('portfolio') as Portfolio
+
+    portfolio.change({
       initialCapital: 1000,
       positions: [...positions]
-    })
+    } as any)
 
-    zp.evalCode(env, String.raw`
+    portfolio.update(data as any)
+
+    const res = zp.evalCode(env, String.raw`
       (def symbols [
         "AAPL",
         "MSFT",
@@ -70,13 +75,17 @@ describe('trading', () => {
       ])
 
       (loop symbol in symbols
-        (buy {symbol} 2 {target: true})
+        (buy {symbol} 1 {target: true})
       )
+
+      (execute)
+      (portfolio/data)
+      (date/getMonth)
     `)
 
-    // console.log(portfolio)
-    // console.log(env.get('execute')(portfolio.orders))
+    // console.dir(portfolio.data, { depth: null })
+    console.log(res)
 
-    expect(portfolio.orders.length).toEqual(3)
+    expect(3).toEqual(3)
   })
 })

@@ -10,25 +10,16 @@ const load = (zpEnv: Env, as: string = '') => {
   const ns = as.length > 0 ? as + '/' : ''
   const portfolio = new Portfolio(0, [])
 
-  zpEnv.addMeta('trading', 'portfolio', portfolio)
-
-  zpEnv.bind(ns + 'portfolio', (newData) => {
-    if (newData) {
-      portfolio.data = newData
-      return portfolio.data
+  // zpEnv.addMeta('trading', 'portfolio', portfolio)
+  zpEnv.bind(ns + 'portfolio', portfolio)
+  zpEnv.bind(ns + 'openPositions', (lamda) => {
+    if (lamda) {
+      return portfolio.openPositions.filter(pos => {
+        return lamda instanceof Lambda ? lamda.eval(zpEnv, [pos]) : lamda(pos)
+      })
     }
 
-    return portfolio.data
-  })
-
-  zpEnv.bind(ns + 'openPositions', () => {
     return portfolio.openPositions
-  })
-
-  zpEnv.bind(ns + 'openPositionsWith', (lamda) => {
-    return portfolio.openPositions.filter(pos => {
-      return lamda instanceof Lambda ? lamda.eval(zpEnv, [pos]) : lamda(pos)
-    })
   })
 
   zpEnv.bind(ns + 'balance', () => {
@@ -36,8 +27,8 @@ const load = (zpEnv: Env, as: string = '') => {
     return portfolio.balance(bars)
   })
 
-  zpEnv.bind(ns + 'execute', (orders: Order[]) => {
-    return portfolio.execute(orders)
+  zpEnv.bind(ns + 'execute', (orders?: Order[]) => {
+    return portfolio.execute(orders ?? portfolio.data.orders)
   })
 
   zpEnv.bind(ns + 'closePositions', (positions) => {

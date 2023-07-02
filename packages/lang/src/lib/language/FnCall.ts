@@ -17,7 +17,11 @@ class FnCall {
       return fun.eval(env, args)
     }
 
-    return fun(...args)
+    if (typeof fun === 'function') {
+      return fun(...args)
+    }
+
+    return fun
   }
 
   toString () {

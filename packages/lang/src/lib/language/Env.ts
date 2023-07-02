@@ -18,9 +18,7 @@ class Env {
       $$isMeta: false,
       $$meta: {
         assets: {},
-        trading: {
-          portfolio: null
-        }
+        trading: {}
       }
     }
 
@@ -54,6 +52,10 @@ class Env {
 
       if (this.env[a][b] === undefined) {
         throw new Error(`"${b}" not defined`)
+      }
+
+      if (this.env[a][b].bind !== undefined) {
+        return this.env[a][b].bind(this.env[a])
       }
 
       return this.env[a][b]

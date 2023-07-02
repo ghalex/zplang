@@ -34,7 +34,6 @@
     "typescript": "^5.1.5"
   },
   "dependencies": {
-    "@zapant/core": "^0.0.55",
     "dayjs": "^1.11.8",
     "ohm-js": "^17.1.0",
     "ramda": "^0.29.0"

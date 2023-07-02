@@ -20,6 +20,8 @@ const load = (env: Env) => {
   env.bind('<=', r.curry((a, b) => a <= b))
   env.bind('not', (a) => !a)
 
+  env.bind('date', new Date())
+
   env.bind('inc', (val) => val + 1)
   env.bind('identity', (val) => val)
   env.bind('round', val => Math.round(val))
