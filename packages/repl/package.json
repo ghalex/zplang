@@ -1,0 +1,50 @@
+{
+  "name": "zplang-repl",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/zplang-repl.umd.js",
+  "module": "dist/zplang-repl.es.js",
+  "types": "dist/zplang-repl.d.ts",
+  "bin": "dist/zplang-repl.umd.js",
+  "scripts": {
+    "dev": "nodemon",
+    "start": "node -r dotenv-flow/config dist/cli.js",
+    "build": "rm -rf ./dist/ && rollup -c",
+    "lint": "eslint src --ext js,ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/jest": "^29.5.2",
+    "@types/node": "^20.3.2",
+    "@typescript-eslint/eslint-plugin": "^5.60.1",
+    "@typescript-eslint/parser": "^5.60.1",
+    "dotenv-flow": "^3.2.0",
+    "module-alias": "^2.2.3",
+    "nodemon": "^2.0.22",
+    "rollup": "^3.25.3",
+    "rollup-plugin-dts": "^5.3.0",
+    "rollup-plugin-esbuild": "^5.0.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.5"
+  },
+  "dependencies": {
+    "figlet": "^1.6.0",
+    "ramda": "^0.29.0",
+    "zplang": "workspace:*"
+  },
+  "pkg": {
+    "scripts": "dist/**/*.js",
+    "assets": [
+      "dist/zapant.ohm",
+      "node_modules/figlet/fonts/Standard.flf"
+    ],
+    "targets": [
+      "node16-macos-x64",
+      "node16-win-x64"
+    ],
+    "outputPath": "dist"
+  }
+}
