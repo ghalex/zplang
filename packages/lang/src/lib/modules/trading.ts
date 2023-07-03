@@ -53,13 +53,13 @@ const load = (zpEnv: Env, as: string = '') => {
 
   zpEnv.bind(ns + 'buy', (asset, qty, options = {}) => zpEnv.get(ns + 'order')('buy', asset, qty, options))
   zpEnv.bind(ns + 'buyAmount', (asset, amount, options: any = {}) => {
-    const qty = options.round ? Math.round(amount / asset.close) : amount / asset.close
+    const qty = options.round ? Math.floor(amount / asset.close) : amount / asset.close
     return zpEnv.get(ns + 'buy')(asset, qty, options)
   })
 
   zpEnv.bind(ns + 'sell', (asset, qty, options = {}) => zpEnv.get(ns + 'order')('sell', asset, qty, options))
   zpEnv.bind(ns + 'sellAmount', (asset, amount, options: any = {}) => {
-    const qty = options.round ? Math.round(amount / asset.close) : amount / asset.close
+    const qty = options.round ? Math.floor(amount / asset.close) : amount / asset.close
     return zpEnv.get(ns + 'sell')(asset, qty, options)
   })
 }

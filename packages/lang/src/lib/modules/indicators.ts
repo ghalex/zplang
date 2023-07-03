@@ -1,5 +1,5 @@
 import { type Env } from '../language'
-import zpcore from '@zapant/core'
+import * as zpcore from '@zapant/core'
 import * as r from 'ramda'
 
 const name = 'indicators'
