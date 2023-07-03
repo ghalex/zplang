@@ -1,7 +1,6 @@
 import zp, { Env } from 'zplang'
 import figlet from 'figlet'
 import * as readline from 'node:readline'
-import * as r from 'ramda'
 import { stdin as input, stdout as output } from 'node:process'
 
 import data from './data'
@@ -10,25 +9,10 @@ const rl = readline.createInterface({ input, output, terminal: false })
 
 function createEnvirement () {
   const env = new Env()
+
   env.loadBars(data)
-
-  // Market
-  env.bind('cmr', (asset, qty) => {
-    console.log(asset, qty)
-    return 2
-  })
-
-  env.bind('sma', (prices) => {
-    if (typeof prices[0] === 'object') {
-      return r.mean(r.pluck('close')(prices))
-    }
-
-    return r.mean(prices)
-  })
-
-  env.bind('orderUnits', (symbol, units) => {
-    return { symbol, units, date: new Date() }
-  })
+  env.loadModuleByName('core/trading')
+  env.loadModuleByName('core/indicators')
 
   return env
 }
@@ -75,14 +59,14 @@ figlet('Zaplang', {
         break
       case 'examples':
         console.log(`
-(def age: 22)             ;; defines a variable
-(def arr1: [1, 2, 3])     ;; defines an array
+(def age 22)             ;; defines a variable
+(def arr1 [1, 2, 3])     ;; defines an array
 
-(print: age)              ;; prints a var
-(:close {AAPL})           ;; prints AAPL close price
+(print age)              ;; prints a var
+(:close {AAPL})          ;; prints AAPL close price
 
-(def myFn: (fn [param1]: (print: param1)))
-(myFn: "Alex")
+(def myFn (fn [param1] (print: param1)))
+(myFn "Alex")
 `)
         break
 

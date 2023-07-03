@@ -93,6 +93,9 @@ importers:
 
   packages/lang:
     dependencies:
+      '@zapant/core':
+        specifier: ^0.0.57
+        version: 0.0.57
       dayjs:
         specifier: ^1.11.8
         version: 1.11.8
@@ -3169,6 +3172,15 @@ packages:
       '@typescript-eslint/types': 5.60.1
       eslint-visitor-keys: 3.4.1
     dev: true
+
+  /@zapant/core@0.0.57:
+    resolution: {integrity: sha512-9E8pYKL54yKBWlVaylICsODDLNLkPXtV5FmBBdwtf0OB9iphpvo9E2sshtvWnBNsqSOQ9VnznzqBovweNm3row==}
+    dependencies:
+      dayjs: 1.11.8
+      ramda: 0.29.0
+      ramda-analytics: 0.2.1(ramda@0.29.0)
+      simple-statistics: 7.8.3
+    dev: false
 
   /abbrev@1.1.1:
     resolution: {integrity: sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==}
@@ -7958,6 +7970,15 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
+  /ramda-analytics@0.2.1(ramda@0.29.0):
+    resolution: {integrity: sha512-zimrc9hWKRLfFoAq+7R3dyxHe00EKeyJz6Lps09+adjwPYZ+fXcTa8PXe4FbNWACYZpVktRvz5FTqlO9PIJOkA==}
+    peerDependencies:
+      ramda: ^0.27.1
+    dependencies:
+      dayjs: 1.11.8
+      ramda: 0.29.0
+    dev: false
+
   /ramda@0.27.2:
     resolution: {integrity: sha512-SbiLPU40JuJniHexQSAgad32hfwd+DRUdwF2PlVuI5RZD0/vahUco7R8vD86J/tcEKKF9vZrUVwgtmGCqlCKyA==}
     dev: true
@@ -8425,6 +8446,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /simple-statistics@7.8.3:
+    resolution: {integrity: sha512-JFvMY00t6SBGtwMuJ+nqgsx9ylkMiJ5JlK9bkj8AdvniIe5615wWQYkKHXe84XtSuc40G/tlrPu0A5/NlJvv8A==}
+    dev: false
 
   /simple-update-notifier@1.1.0:
     resolution: {integrity: sha512-VpsrsJSUcJEseSbMHkrsrAVSdvVS5I96Qo1QAQ4FxQ9wXFcB+pjj7FB7/us9+GcgfW4ziHtYMc1J0PLczb55mg==}

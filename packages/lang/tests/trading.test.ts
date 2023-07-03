@@ -46,7 +46,7 @@ describe('trading', () => {
     env.loadBars(data)
 
     const res = ast.map(stmt => stmt.eval(env))
-    const portfolio = env.get('td/portfolio')()
+    const portfolio = env.get('td/portfolio') as Portfolio
 
     expect(res[0]).toEqual('core/trading :as td')
     expect(portfolio.orders.length).toEqual(3)
@@ -79,13 +79,14 @@ describe('trading', () => {
       )
 
       (execute)
-      (portfolio/data)
-      (date/getMonth)
+      (len (portfolio/orders))
+      (len (portfolio/openPositions))
     `)
 
     // console.dir(portfolio.data, { depth: null })
-    console.log(res)
+    // console.log(res)
 
-    expect(3).toEqual(3)
+    expect(res[3]).toEqual(2)
+    expect(res[4]).toEqual(3)
   })
 })

@@ -17,8 +17,6 @@ describe('core', () => {
     const ast = zp.getAst(code)
     const res = ast.map(stmt => stmt.eval(env))
 
-    console.log(res)
-
     expect(res[0]).toBe(1)
     expect(res[1]).toBe('Alex')
     expect(res[2]).toBe(1)

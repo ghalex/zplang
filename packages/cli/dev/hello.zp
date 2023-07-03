@@ -7,11 +7,8 @@
   "MSFT"
 ])
 
-(def getStats [] => (get "stats" (portfolio)))
-
 (loop symbol in symbols
   (buy {symbol} 1 {target: true})
 )
 
 (myObj/hello)
-(date/getDay)
