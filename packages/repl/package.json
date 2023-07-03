@@ -1,6 +1,6 @@
 {
   "name": "zplang-repl",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "",
   "main": "dist/zplang-repl.umd.js",
   "module": "dist/zplang-repl.es.js",
@@ -10,7 +10,8 @@
     "dev": "nodemon",
     "start": "node -r dotenv-flow/config dist/cli.js",
     "build": "rm -rf ./dist/ && rollup -c",
-    "lint": "eslint src --ext js,ts"
+    "lint": "eslint src --ext js,ts",
+    "prepack": "pnpm build"
   },
   "keywords": [],
   "author": "",

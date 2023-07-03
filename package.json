@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "description": "Zaplang monorepo",
   "author": "Alexandru Ghiura @ghalex",
+  "scripts": {
+    "publish-all": "changeset version && changeset publish"
+  },
   "devDependencies": {
     "eslint": "^8.42.0",
     "eslint-config-oclif": "^4.0.0",

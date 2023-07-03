@@ -1,15 +1,17 @@
 {
   "name": "zplang",
-  "version": "1.0.17",
+  "version": "1.0.19",
   "description": "",
   "main": "dist/zplang.umd.js",
   "module": "dist/zplang.es.js",
   "types": "dist/zplang.d.ts",
   "bin": "dist/zplang.umd.js",
+  "private": "false",
   "scripts": {
     "build": "rm -rf ./dist/ && rollup -c",
     "lint": "eslint src --ext js,ts",
-    "test": "jest --verbose"
+    "test": "jest --verbose",
+    "prepack": "pnpm build"
   },
   "keywords": [],
   "author": "",
