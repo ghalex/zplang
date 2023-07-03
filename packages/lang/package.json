@@ -6,7 +6,6 @@
   "module": "dist/zplang.es.js",
   "types": "dist/zplang.d.ts",
   "bin": "dist/zplang.umd.js",
-  "private": "false",
   "scripts": {
     "build": "rm -rf ./dist/ && rollup -c",
     "lint": "eslint src --ext js,ts",

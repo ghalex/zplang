@@ -4,7 +4,7 @@
   "description": "Zaplang monorepo",
   "author": "Alexandru Ghiura @ghalex",
   "scripts": {
-    "publish-all": "changeset version && changeset publish"
+    "publish": "pnpm --filter './packages/**' publish"
   },
   "devDependencies": {
     "eslint": "^8.42.0",
