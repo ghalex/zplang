@@ -17,7 +17,7 @@ $ npm install -g zplang-cli
 $ zplang-cli COMMAND
 running command...
 $ zplang-cli (--version)
-zplang-cli/0.0.12 darwin-x64 node-v18.16.0
+zplang-cli/0.0.14 darwin-x64 node-v18.16.0
 $ zplang-cli --help [COMMAND]
 USAGE
   $ zplang-cli COMMAND
@@ -26,8 +26,26 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+* [`zplang-cli create NAME`](#zplang-cli-create-name)
 * [`zplang-cli execute`](#zplang-cli-execute)
 * [`zplang-cli help [COMMANDS]`](#zplang-cli-help-commands)
+
+## `zplang-cli create NAME`
+
+Create a new project
+
+```
+USAGE
+  $ zplang-cli create NAME
+
+DESCRIPTION
+  Create a new project
+
+EXAMPLES
+  $ zplang-cli create {projectName}
+```
+
+_See code: [dist/commands/create.ts](https://github.com/zapant-com/zp-lang/blob/v0.0.14/dist/commands/create.ts)_
 
 ## `zplang-cli execute`
 
@@ -51,7 +69,7 @@ EXAMPLES
   $ zplang-cli execute --file hello.zp --data "./data"
 ```
 
-_See code: [dist/commands/execute.ts](https://github.com/zapant-com/zp-lang/blob/v0.0.12/dist/commands/execute.ts)_
+_See code: [dist/commands/execute.ts](https://github.com/zapant-com/zp-lang/blob/v0.0.14/dist/commands/execute.ts)_
 
 ## `zplang-cli help [COMMANDS]`
 
