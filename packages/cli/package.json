@@ -1,6 +1,6 @@
 {
   "name": "zplang-cli",
-  "version": "0.0.9",
+  "version": "0.0.11",
   "description": "Zaplang CLI",
   "author": "Alexandru Ghiura @ghalex",
   "private": "false",
@@ -40,7 +40,7 @@
     "@oclif/plugin-plugins": "^3.1.5",
     "@types/signale": "^1.4.4",
     "signale": "^1.4.0",
-    "zplang": "workspace:*"
+    "zplang": "^1.0.20"
   },
   "devDependencies": {
     "@oclif/test": "^2.3.25",

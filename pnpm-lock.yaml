@@ -57,7 +57,7 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0
       zplang:
-        specifier: workspace:*
+        specifier: ^1.0.20
         version: link:../lang
     devDependencies:
       '@oclif/test':

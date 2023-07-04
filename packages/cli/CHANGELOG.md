@@ -1,5 +1,11 @@
 # zplang-cli
 
+## 0.0.11
+
+### Patch Changes
+
+- new release cli
+
 ## 0.0.9
 
 ### Patch Changes
