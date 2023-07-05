@@ -10,8 +10,8 @@ const load = (zpEnv: Env, as: string = '') => {
   const ns = as.length > 0 ? as + '/' : ''
   const portfolio = new Portfolio(0, [])
 
-  // zpEnv.addMeta('trading', 'portfolio', portfolio)
   zpEnv.bind(ns + 'portfolio', portfolio)
+  zpEnv.bind(ns + 'portfolioData', () => portfolio.data)
   zpEnv.bind(ns + 'openPositions', (lamda) => {
     if (lamda) {
       return portfolio.openPositions.filter(pos => {

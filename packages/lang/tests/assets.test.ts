@@ -137,10 +137,7 @@ describe('assets', () => {
   })
 
   test('assets list and window', () => {
-    const metaEnv = new Env()
-
-    metaEnv.bind('bars', () => [])
-    metaEnv.bind('bar', () => ({}))
+    const metaEnv = new Env({ isMeta: true })
 
     const ast = zp.getAst(String.raw`
       {AAPL, 2 days ago}
@@ -156,11 +153,11 @@ describe('assets', () => {
     `)
 
     ast.map(stmt => stmt.eval(metaEnv))
-    const meta = metaEnv.getMeta('assets')
+    const assets = metaEnv.getAssets()
 
-    expect(meta.AAPL).toEqual(22)
-    expect(meta.MSFT).toEqual(33)
-    expect(meta.AMD).toEqual(10)
+    expect(assets.AAPL).toEqual(22)
+    expect(assets.MSFT).toEqual(33)
+    expect(assets.AMD).toEqual(10)
   })
 
   test('loop assets', () => {

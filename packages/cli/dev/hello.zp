@@ -8,7 +8,6 @@
 ])
 
 (loop symbol in symbols
+  (print "Buying: " symbol)
   (buy {symbol} 1 {target: true})
 )
-
-(myObj/hello)

@@ -15,8 +15,8 @@ class Asset {
       throw new Error('"bar" function not defined')
     }
 
-    // add meta
-    env.addMeta('assets', symbol, Math.max(env.getMeta('assets')[symbol] ?? 1, daysAgo))
+    // add assets
+    env.addAsset(symbol, daysAgo)
 
     try {
       return getBar(symbol, daysAgo)

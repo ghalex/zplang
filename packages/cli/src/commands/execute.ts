@@ -13,6 +13,18 @@ const log = new signale.Signale({
   }
 })
 
+const resToString = (res: any, flags: any, json = false) => {
+  if (flags.stdout) {
+    return json ? { stdout: res.stdout } : '\n' + res.stdout
+  } else {
+    if (flags.last) {
+      return json ? res.result[res.result.length - 1] : JSON.stringify(res.result[res.result.length - 1], null, 2)
+    } else {
+      return json ? res.result : JSON.stringify(res.result, null, 2)
+    }
+  }
+}
+
 export default class ExecuteCommand extends Command {
   static description = 'Execute a ".zp" file'
   static enableJsonFlag = true
@@ -22,7 +34,9 @@ export default class ExecuteCommand extends Command {
 
   static flags = {
     file: Flags.string({ char: 'f', required: true, description: 'file with code to execute' }),
-    data: Flags.string({ char: 'd', description: 'data directory to load assests price', default: 'data' })
+    data: Flags.string({ char: 'd', description: 'data directory to load assests price', default: 'data' }),
+    stdout: Flags.boolean({ char: 's' }),
+    last: Flags.boolean({ char: 'l' })
   }
 
   async run (): Promise<any> {
@@ -35,10 +49,10 @@ export default class ExecuteCommand extends Command {
       const res = runCode(code, data)
 
       if (flags.json) {
-        return res
+        return resToString(res, flags, true)
       } else {
         log.success('File "%s" executed with success', flags.file)
-        log.result(JSON.stringify(res, null, 2))
+        log.result(resToString(res, flags))
       }
     } catch (err: any) {
       log.error('File "%s" executed with error', flags.file)

@@ -106,8 +106,8 @@ importers:
   packages/lang:
     dependencies:
       '@zapant/core':
-        specifier: ^0.0.57
-        version: 0.0.57
+        specifier: ^0.0.58
+        version: 0.0.58
       dayjs:
         specifier: ^1.11.8
         version: 1.11.8
@@ -3417,8 +3417,8 @@ packages:
       eslint-visitor-keys: 3.4.1
     dev: true
 
-  /@zapant/core@0.0.57:
-    resolution: {integrity: sha512-9E8pYKL54yKBWlVaylICsODDLNLkPXtV5FmBBdwtf0OB9iphpvo9E2sshtvWnBNsqSOQ9VnznzqBovweNm3row==}
+  /@zapant/core@0.0.58:
+    resolution: {integrity: sha512-k6jd9n45/+p6/mVLhC/Jak8DGi+NTrotRVVmIPaSrzs62YTbNzUmzJpx0zDt0j+1wnnNEELwvtxaAsfbRtpxew==}
     dependencies:
       dayjs: 1.11.8
       ramda: 0.29.0

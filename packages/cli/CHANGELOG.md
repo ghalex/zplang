@@ -1,5 +1,13 @@
 # zplang-cli
 
+## 0.0.15
+
+### Patch Changes
+
+- remove $meta and a better print
+- Updated dependencies
+  - zplang@1.0.21
+
 ## 0.0.11
 
 ### Patch Changes

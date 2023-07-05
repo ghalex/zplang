@@ -2,7 +2,7 @@
 
 import Variable from './Variable'
 
-class Asset {
+class Assets {
   constructor (public symbol: any, public window: any, public daysAgo: any) {}
 
   eval (env) {
@@ -15,7 +15,8 @@ class Asset {
       throw new Error('"bars" function not defined')
     }
 
-    env.addMeta('assets', symbol, Math.max(env.getMeta('assets')[symbol] ?? 1, window + daysAgo))
+    // add assets
+    env.addAsset(symbol, window + daysAgo)
 
     try {
       return getBars(symbol, window, daysAgo)
@@ -30,4 +31,4 @@ class Asset {
   }
 }
 
-export default Asset
+export default Assets

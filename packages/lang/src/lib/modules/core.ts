@@ -20,6 +20,7 @@ const load = (env: Env) => {
   env.bind('<=', r.curry((a, b) => a <= b))
   env.bind('not', (a) => !a)
   env.bind('and', (a, b) => a && b)
+  env.bind('or', (a, b) => a || b)
 
   env.bind('inc', (val) => val + 1)
   env.bind('identity', (val) => val)
@@ -28,14 +29,16 @@ const load = (env: Env) => {
   env.bind('floor', val => Math.floor(val))
   env.bind('keys', (obj) => Object.keys(obj))
   env.bind('values', (obj) => Object.values(obj))
-
+  env.bind('json', val => JSON.stringify(val, null, 2))
   env.bind('get', (key: string, obj) => r.path(key.split('.'))(obj))
   env.bind('set', (obj1, obj2) => ({ ...obj2, ...obj1 }))
   // String
   env.bind('str', (...args) => args.map(a => a.toString()).join(' '))
+  env.bind('clear', () => { env.clear() })
   env.bind('print', (...args) => {
-    console.log(...args)
-    return args.join(' ')
+    const str = args.join('')
+    env.print(str)
+    return str
   })
 
   env.bind('call', (fn, ...rest) => {

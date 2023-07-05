@@ -25,8 +25,8 @@ const positions = [{
 
 describe('trading', () => {
   test('load trading module', () => {
-    const ast = zp.getAst(String.raw`
-      (import "core/trading" :as td)
+    const code = String.raw`
+      (import "core/trading")
 
       (def symbols [
         "AAPL",
@@ -35,27 +35,27 @@ describe('trading', () => {
       ])
 
       (loop symbol in symbols
-        (td/buy {symbol} 1)
+        (print "Buying " symbol)
+        (buy {symbol} 1)
       )
 
-      (td/portfolio)
-    `)
+      (print (json (portfolio/orders)))
 
-    const env = new Env()
+      (:stats (portfolio/data))
+    `
 
-    env.loadBars(data)
+    const env = new Env({ bars: data })
+    const res = zp.evalCode(env, code)
+    const portfolio = env.get('portfolio') as Portfolio
 
-    const res = ast.map(stmt => stmt.eval(env))
-    const portfolio = env.get('td/portfolio') as Portfolio
-
-    expect(res[0]).toEqual('core/trading :as td')
+    expect(res[0]).toEqual('core/trading')
     expect(portfolio.orders.length).toEqual(3)
+
+    console.log(env.stdout)
   })
 
   test('balance', () => {
-    const env = new Env()
-
-    env.loadBars(data)
+    const env = new Env({ bars: data })
     env.loadModuleByName('core/trading')
 
     const portfolio = env.get('portfolio') as Portfolio

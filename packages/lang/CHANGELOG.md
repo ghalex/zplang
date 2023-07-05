@@ -1,5 +1,11 @@
 # zplang
 
+## 1.0.21
+
+### Patch Changes
+
+- remove $meta and a better print
+
 ## 1.0.20
 
 ### Patch Changes

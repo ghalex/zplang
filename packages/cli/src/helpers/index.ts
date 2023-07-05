@@ -9,14 +9,7 @@ export const readCode = (fileName: string) => {
 
 export const runCode = (code: string, bars: any) => {
   const start = performance.now()
-  const zpEnv = new Env()
-
-  const myObj = {
-    hello: () => 'hello'
-  }
-
-  zpEnv.loadBars(bars)
-  zpEnv.bind('myObj', myObj)
+  const zpEnv = new Env({ bars })
 
   const result = zp.evalCode(zpEnv, code)
   const stop = performance.now()
@@ -24,6 +17,7 @@ export const runCode = (code: string, bars: any) => {
 
   return {
     result,
+    stdout: zpEnv.stdout,
     time: inSeconds
   }
 }

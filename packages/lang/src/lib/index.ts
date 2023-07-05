@@ -16,7 +16,7 @@ Zapant {
       | "(" fn ListArgs Block ")"                               --fnDec
       | ListArgs "=>" Exp                                       --fnDec2
       | "(" ":" id "!"? Exp (Var | Asset | Assets) ")"          --objSet
-      | "(" ":" id (Var | Asset | Assets | Stmt_objSet) ")"     --objGet
+      | "(" ":" id (Var | Asset | Assets | Stmt_objSet | Stmt_fnCall) ")"     --objGet
       | "(" def id (Stmt | Exp) ")"                             --varDec
       | "(" defn id ListArgs Block ")"                          --fnDec3
       | "(" import strlit (as id)? ")"                          --import

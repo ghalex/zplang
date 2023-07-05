@@ -5,10 +5,6 @@ import * as r from 'ramda'
 const name = 'indicators'
 const namespace = 'core'
 
-const addWindow = (env, symbol, window) => {
-  env.addMeta('assets', symbol, Math.max(env.getMeta('assets')[symbol] ?? 1, window))
-}
-
 const getBars = (env, symbol, window) => {
   const fn = env.get('bars')
   return fn(symbol, window)
@@ -28,7 +24,7 @@ const load = (zpEnv: Env, as: string = '') => {
     const { roll, prop, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
 
     if (isMeta) {
-      addWindow(zpEnv, symbol, len + roll + offset)
+      zpEnv.addAsset(symbol, len + roll + offset)
       return roll ? [0] : 0
     }
 
@@ -46,7 +42,7 @@ const load = (zpEnv: Env, as: string = '') => {
     const { roll, prop, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
 
     if (isMeta) {
-      addWindow(zpEnv, symbol, len * 2 + roll + offset)
+      zpEnv.addAsset(symbol, len * 2 + roll + offset)
       return roll ? [0] : 0
     }
 
@@ -63,7 +59,7 @@ const load = (zpEnv: Env, as: string = '') => {
 
     const { roll, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
     if (isMeta) {
-      addWindow(zpEnv, symbol, len * 2 + roll + offset)
+      zpEnv.addAsset(symbol, len * 2 + roll + offset)
       return roll ? [0] : 0
     }
 
@@ -80,7 +76,7 @@ const load = (zpEnv: Env, as: string = '') => {
     const { roll, prop, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
 
     if (isMeta) {
-      addWindow(zpEnv, symbol, len + roll + offset)
+      zpEnv.addAsset(symbol, len + roll + offset)
       return roll ? [0] : 0
     }
 
@@ -98,7 +94,7 @@ const load = (zpEnv: Env, as: string = '') => {
     const { roll, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
 
     if (isMeta) {
-      addWindow(zpEnv, symbol, len + roll + offset + 1)
+      zpEnv.addAsset(symbol, len + roll + offset)
       return roll ? [0] : 0
     }
 
@@ -116,7 +112,7 @@ const load = (zpEnv: Env, as: string = '') => {
     const { roll, offset, prop } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
 
     if (isMeta) {
-      addWindow(zpEnv, symbol, len + roll + offset + 1)
+      zpEnv.addAsset(symbol, len + roll + offset)
       return roll ? [0] : 0
     }
 
@@ -134,7 +130,7 @@ const load = (zpEnv: Env, as: string = '') => {
     const { roll, prop, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
 
     if (isMeta) {
-      addWindow(zpEnv, symbol, len + roll + offset)
+      zpEnv.addAsset(symbol, len + roll + offset)
       return roll ? [0] : 0
     }
 
@@ -151,7 +147,7 @@ const load = (zpEnv: Env, as: string = '') => {
     const { roll, prop, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
 
     if (isMeta) {
-      addWindow(zpEnv, symbol, len + roll + offset)
+      zpEnv.addAsset(symbol, len + roll + offset)
       return roll ? [0] : 0
     }
 
@@ -168,7 +164,7 @@ const load = (zpEnv: Env, as: string = '') => {
     const { roll, prop, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
 
     if (isMeta) {
-      addWindow(zpEnv, symbol, len + roll + offset)
+      zpEnv.addAsset(symbol, len + roll + offset)
       return roll ? [0] : 0
     }
 

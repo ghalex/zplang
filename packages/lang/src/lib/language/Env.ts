@@ -6,20 +6,24 @@ interface Module {
   load: (env: Env, as?: string) => void
 }
 
+interface EnvOptions {
+  parent?: Env
+  isMeta?: boolean
+  bars?: Record<string, any[]>
+}
+
 class Env {
   private readonly env: Record<string, any>
   private readonly parent: Env | null = null
   private readonly modules: Record<string, Module> = {}
 
-  constructor (parent: Env | null = null) {
-    this.parent = parent
+  constructor (options: EnvOptions = {}) {
+    this.parent = options.parent ?? null
     this.env = {
-      $$bars: [],
-      $$isMeta: false,
-      $$meta: {
-        assets: {},
-        trading: {}
-      }
+      $$bars: options.bars ?? [],
+      $$isMeta: options.isMeta ?? false,
+      $$assets: {},
+      $$stdout: []
     }
 
     this.loadModule(core.core)
@@ -40,6 +44,10 @@ class Env {
     }
 
     this.env[a] = value
+  }
+
+  public get stdout () {
+    return this.env.$$stdout.join('\n')
   }
 
   get (name: string) {
@@ -91,16 +99,26 @@ class Env {
     this.env.$$bars = bars
   }
 
-  addMeta (category: string, key: string, value: unknown) {
+  addAsset (symbol: string, window: number) {
     if (this.parent) {
-      this.parent.addMeta(category, key, value)
-    } else {
-      this.env.$$meta[category][key] = value
+      return this.parent.addAsset(symbol, window)
     }
+
+    const asset = { symbol, window: Math.max(this.env.$$assets[symbol] ?? 1, window) }
+    this.env.$$assets[symbol] = asset.window
+    return asset
   }
 
-  getMeta (key: string) {
-    return this.env.$$meta[key]
+  print (line: string) {
+    this.env.$$stdout.push(line)
+  }
+
+  clear () {
+    this.env.$$stdout = []
+  }
+
+  getAssets (): Record<string, number> {
+    return { ...this.env.$$assets }
   }
 
   getBars () {
