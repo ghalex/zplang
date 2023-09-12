@@ -17,7 +17,7 @@ $ npm install -g zplang-cli
 $ zplang-cli COMMAND
 running command...
 $ zplang-cli (--version)
-zplang-cli/0.0.14 darwin-x64 node-v18.16.0
+zplang-cli/0.0.15 linux-x64 node-v19.3.0
 $ zplang-cli --help [COMMAND]
 USAGE
   $ zplang-cli COMMAND
@@ -45,7 +45,7 @@ EXAMPLES
   $ zplang-cli create {projectName}
 ```
 
-_See code: [dist/commands/create.ts](https://github.com/zapant-com/zp-lang/blob/v0.0.14/dist/commands/create.ts)_
+_See code: [dist/commands/create.ts](https://github.com/zapant-com/zp-lang/blob/v0.0.15/dist/commands/create.ts)_
 
 ## `zplang-cli execute`
 
@@ -53,11 +53,13 @@ Execute a ".zp" file
 
 ```
 USAGE
-  $ zplang-cli execute -f <value> [--json] [-d <value>]
+  $ zplang-cli execute -f <value> [--json] [-d <value>] [-s] [-l]
 
 FLAGS
   -d, --data=<value>  [default: data] data directory to load assests price
   -f, --file=<value>  (required) file with code to execute
+  -l, --last
+  -s, --stdout
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -69,7 +71,7 @@ EXAMPLES
   $ zplang-cli execute --file hello.zp --data "./data"
 ```
 
-_See code: [dist/commands/execute.ts](https://github.com/zapant-com/zp-lang/blob/v0.0.14/dist/commands/execute.ts)_
+_See code: [dist/commands/execute.ts](https://github.com/zapant-com/zp-lang/blob/v0.0.15/dist/commands/execute.ts)_
 
 ## `zplang-cli help [COMMANDS]`
 

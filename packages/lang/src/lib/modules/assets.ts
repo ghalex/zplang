@@ -17,7 +17,7 @@ const load = (zpEnv: Env) => {
     }
 
     if (data[symbol].length < daysAgo) {
-      throw new Error(`Only ${data[symbol].length} bars available for asset ${symbol}`)
+      throw new Error(`Only ${data[symbol].length} bars available for asset ${symbol} require ${daysAgo}`)
     }
 
     return data[symbol][daysAgo]
@@ -35,7 +35,7 @@ const load = (zpEnv: Env) => {
     }
 
     if (data[symbol].length < window) {
-      throw new Error(`Only ${data[symbol].length} bars available for asset ${symbol}`)
+      throw new Error(`Only ${data[symbol].length} bars available for asset ${symbol} require ${daysAgo}`)
     }
 
     return data[symbol].slice(daysAgo, window + daysAgo)
