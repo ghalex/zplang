@@ -1,5 +1,11 @@
 # zplang
 
+## 1.0.23
+
+### Patch Changes
+
+- Add let keyword
+
 ## 1.0.21
 
 ### Patch Changes

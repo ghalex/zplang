@@ -1,6 +1,6 @@
 {
   "name": "zplang-cli",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "Zaplang CLI",
   "author": "Alexandru Ghiura @ghalex",
   "bin": {
