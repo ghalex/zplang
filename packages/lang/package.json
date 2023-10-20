@@ -1,6 +1,6 @@
 {
   "name": "zplang",
-  "version": "1.0.23",
+  "version": "1.0.24",
   "description": "",
   "main": "dist/zplang.umd.js",
   "module": "dist/zplang.es.js",

@@ -24,27 +24,15 @@ const positions = [{
 
 describe('trading', () => {
   test('load trading module', () => {
-    // const code = String.raw`
-    //   (import "core/trading")
-    //   (changePortfolio {initialCapital: 1000})
-
-    //   (def symbols [
-    //     "AAPL",
-    //     "MSFT",
-    //     "AMD"
-    //   ])
-    // `
-
     const code = String.raw`
-      (def age 22)
-      (let
-        (def age 50)
-        (def name "John")
+      (def symbols [
+        "AAPL",
+        "MSFT",
+        "AMD"
+      ])
 
-        (print name age)
-      )
-
-      (print age)
+      (buy {AAPL} 1 {target: true})
+      (?? (:openPrice (getPosition "MSFT2")) 100)
     `
 
     // (print (json (portfolio/orders)))
@@ -52,14 +40,20 @@ describe('trading', () => {
     // (:stats (portfolio/data))
 
     const env = new Env({ bars: data })
-    const res = zp.evalCode(env, code)
+    env.loadModuleByName('core/trading')
 
-    // const portfolio = env.get('portfolio')
+    const changePortfolio = env.get('changePortfolio')
+    changePortfolio({
+      initialCapital: 1000,
+      openPositions: [...positions]
+    })
+
+    const res = zp.evalCode(env, code)
 
     // expect(res[0]).toEqual('core/trading')
     // expect(portfolio.orders.length).toEqual(3)
 
-    console.log(res)
+    console.dir(res)
   })
 
   // test('balance', () => {

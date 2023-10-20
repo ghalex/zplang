@@ -1,5 +1,11 @@
 # zplang
 
+## 1.0.24
+
+### Patch Changes
+
+- Add trading module and ?? operator
+
 ## 1.0.23
 
 ### Patch Changes

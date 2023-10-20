@@ -29,7 +29,7 @@ class Env {
     this.loadModule(core.core)
     this.loadModule(core.assets)
 
-    // this.registerModule(core.trading)
+    this.registerModule(core.trading)
     this.registerModule(core.indicators)
   }
 

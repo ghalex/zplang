@@ -99,7 +99,7 @@ Zapant {
   id = ~keywords (letter | "_" | "$") idchar* "!"?
   idmodule = ~keywords letter idchar* "/" id
   idchar = letter | digit | "_" | "$"
-  operators = "**" | "+" | "-" | "/" | "*" | "%" | "<=" | "<" | "=" | "!=" | ">=" | ">"
+  operators = "**" | "+" | "-" | "/" | "*" | "%" | "<=" | "<" | "=" | "!=" | ">=" | ">" | "??"
 
   eol = "\n" | "\r"
   comment = ";;" (~eol any)* eol*

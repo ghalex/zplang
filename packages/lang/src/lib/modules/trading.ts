@@ -16,10 +16,9 @@ const load = (zpEnv: Env, as: string = '') => {
     availableCapital: 0
   }
 
-  zpEnv.bind(ns + 'portfolio', portfolio)
+  zpEnv.bind(ns + 'getPortfolio', () => portfolio)
   zpEnv.bind(ns + 'changePortfolio', (obj) => {
-    portfolio = { ...portfolio, ...obj }
-    console.log('changePortfolio', portfolio)
+    portfolio = { ...portfolio, ...pick(['openPositions', 'initialCapital', 'totalCapital', 'availableCapital'], obj) }
   })
 
   zpEnv.bind(ns + 'getOpenPositions', (lamda) => {
@@ -30,6 +29,11 @@ const load = (zpEnv: Env, as: string = '') => {
     }
 
     return portfolio.openPositions
+  })
+
+  zpEnv.bind(ns + 'getPosition', (symbol) => {
+    const p = portfolio.openPositions.find(p => p.symbol === symbol)
+    return p ?? null
   })
 
   zpEnv.bind(ns + 'balance', () => {

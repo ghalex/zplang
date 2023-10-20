@@ -6,6 +6,10 @@ class ObjGet {
   eval (env) {
     const obj = this.variable.eval(env)
 
+    if (obj === null || obj === undefined) {
+      return null
+    }
+
     if (Array.isArray(obj)) {
       return obj.map(o => o[this.id])
     }

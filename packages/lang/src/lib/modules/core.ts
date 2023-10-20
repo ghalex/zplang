@@ -11,6 +11,7 @@ const load = (env: Env) => {
   env.bind('/', (...args) => args.slice(1).reduce((prev, curr) => prev / curr, args[0]))
   env.bind('%', (a, b) => a % b)
   env.bind('**', (a, b) => a ** b)
+  env.bind('??', (val, defaultValue) => val !== undefined && val !== null ? val : defaultValue)
 
   env.bind('>', r.curry((a, b) => a > b))
   env.bind('>=', r.curry((a, b) => a >= b))
