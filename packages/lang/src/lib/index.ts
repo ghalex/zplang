@@ -20,6 +20,7 @@ Zapant {
       | "(" def id (Stmt | Exp) ")"                             --varDec
       | "(" defn id ListArgs Block ")"                          --fnDec3
       | "(" import strlit (as id)? ")"                          --import
+      | "(" let Block ")"                                       --let
       | Exp
 
   Block = Stmt+
@@ -63,6 +64,7 @@ Zapant {
   fn = "fn" ~alnum
   loop = "loop" ~alnum
   in = "in" ~alnum
+  let = "let" ~alnum
   true = "true" ~alnum
   false = "false" ~alnum
   null = "null" ~alnum

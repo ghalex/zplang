@@ -32,6 +32,11 @@ const load = (env: Env) => {
   env.bind('json', val => JSON.stringify(val, null, 2))
   env.bind('get', (key: string, obj) => r.path(key.split('.'))(obj))
   env.bind('set', (obj1, obj2) => ({ ...obj2, ...obj1 }))
+  env.bind('set!', (obj1, obj2) => {
+    console.log('in set ', obj1, obj2)
+    obj1 = { ...obj1, ...obj2 }
+  })
+
   // String
   env.bind('str', (...args) => args.map(a => a.toString()).join(' '))
   env.bind('clear', () => { env.clear() })
@@ -58,7 +63,7 @@ const load = (env: Env) => {
   env.bind('filter', (lamda, arr) => {
     return lamda instanceof Lambda ? arr.filter(val => lamda.eval(env, [val])) : arr.filter(lamda)
   })
-  env.bind('take', (val, arr) => r.take(val, arr))
+  env.bind('take', (val, arr) => val > 0 ? r.take(val, arr) : r.takeLast(Math.abs(val), arr))
 
   env.bind('sortBy', (fn, arr) => {
     return r.sortBy(val => fn.eval(env, [val]), arr)
@@ -77,7 +82,7 @@ const load = (env: Env) => {
   })
 
   env.bind('size', (arr) => arr.length)
-
+  env.bind('count', (arr: any[]) => arr.length)
   env.bind('map', (lamda, arr) => arr.map((val, i) => lamda.eval(env, [val, i])))
   env.bind('first', arr => arr[0])
   env.bind('last', arr => arr[arr.length - 1])

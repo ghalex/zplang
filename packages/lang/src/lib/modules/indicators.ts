@@ -1,5 +1,5 @@
 import { type Env } from '../language'
-import * as zpcore from '@zapant/core'
+import { indicators } from '@zapant/core'
 import * as r from 'ramda'
 
 const name = 'indicators'
@@ -18,7 +18,7 @@ const load = (zpEnv: Env, as: string = '') => {
   zpEnv.bind(ns + 'sma', (len, symbol, rest: any = {}) => {
     if (Array.isArray(len)) {
       if (isMeta) return 0
-      return zpcore.sma(len.length, len.map(x => x.close), {})
+      return indicators.sma(len.length, len.map(x => x.close), {})
     }
 
     const { roll, prop, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
@@ -29,14 +29,14 @@ const load = (zpEnv: Env, as: string = '') => {
     }
 
     const data = getBars(zpEnv, symbol, len + roll + offset).map(b => b[prop])
-    return zpcore.sma(len, data, { roll, offset })
+    return indicators.sma(len, data, { roll, offset })
   })
 
   // Exponential moving averange
   zpEnv.bind(ns + 'ema', (len, symbol, rest: any = {}) => {
     if (Array.isArray(len)) {
       if (isMeta) return 0
-      return zpcore.ema(len.length / 2, len, {})
+      return indicators.ema(len.length / 2, len, {})
     }
 
     const { roll, prop, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
@@ -47,14 +47,14 @@ const load = (zpEnv: Env, as: string = '') => {
     }
 
     const data = getBars(zpEnv, symbol, len * 2 + roll + offset).map(b => b[prop])
-    return zpcore.ema(len, data, { roll, offset })
+    return indicators.ema(len, data, { roll, offset })
   })
 
   // Momentum Squeeze
   zpEnv.bind(ns + 'mms', (len, symbol, rest: any = {}) => {
     if (Array.isArray(len)) {
       if (isMeta) return 0
-      return zpcore.mms(len.length / 2, len, {})
+      return indicators.mms(len.length / 2, len, {})
     }
 
     const { roll, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
@@ -64,13 +64,13 @@ const load = (zpEnv: Env, as: string = '') => {
     }
 
     const data = getBars(zpEnv, symbol, len * 2 + roll + offset)
-    return zpcore.mms(len, data, { roll, offset })
+    return indicators.mms(len, data, { roll, offset })
   })
 
   zpEnv.bind(ns + 'mm', (len, symbol, rest: any = {}) => {
     if (Array.isArray(len)) {
       if (isMeta) return 0
-      return zpcore.momentum(len.length, len.map(x => x.close), {})
+      return indicators.momentum(len.length, len.map(x => x.close), {})
     }
 
     const { roll, prop, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
@@ -81,14 +81,14 @@ const load = (zpEnv: Env, as: string = '') => {
     }
 
     const data = getBars(zpEnv, symbol, len + roll + offset).map(b => b[prop])
-    return zpcore.momentum(len, data, { roll, offset })
+    return indicators.momentum(len, data, { roll, offset })
   })
 
   // Averange True Range
   zpEnv.bind(ns + 'atr', (len, symbol, rest: any = {}) => {
     if (Array.isArray(len)) {
       if (isMeta) return 0
-      return zpcore.atr(len.length, len, {})
+      return indicators.atr(len.length, len, {})
     }
 
     const { roll, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
@@ -99,14 +99,14 @@ const load = (zpEnv: Env, as: string = '') => {
     }
 
     const data = getBars(zpEnv, symbol, len + roll + offset + 1)
-    return zpcore.atr(len, data, { roll, offset })
+    return indicators.atr(len, data, { roll, offset })
   })
 
   // Cummulative return
   zpEnv.bind(ns + 'cmr', (len, symbol, rest: any = {}) => {
     if (Array.isArray(len)) {
       if (isMeta) return 0
-      return zpcore.cmr(len.length, len.map(x => x.close), {})
+      return indicators.cmr(len.length, len.map(x => x.close), {})
     }
 
     const { roll, offset, prop } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
@@ -117,14 +117,14 @@ const load = (zpEnv: Env, as: string = '') => {
     }
 
     const data = getBars(zpEnv, symbol, len + roll + offset + 1).map(b => b[prop])
-    return zpcore.cmr(len, data, { roll, offset })
+    return indicators.cmr(len, data, { roll, offset })
   })
 
   // Standard deviation
   zpEnv.bind(ns + 'std', (len, symbol, rest: any = {}) => {
     if (Array.isArray(len)) {
       if (isMeta) return 0
-      return zpcore.std(len.length, len.map(x => x.close), {})
+      return indicators.std(len.length, len.map(x => x.close), {})
     }
 
     const { roll, prop, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
@@ -135,13 +135,13 @@ const load = (zpEnv: Env, as: string = '') => {
     }
 
     const data = getBars(zpEnv, symbol, len + roll + offset).map(b => b[prop])
-    return zpcore.std(len, data, { roll, offset })
+    return indicators.std(len, data, { roll, offset })
   })
 
   zpEnv.bind(ns + 'highest', (len, symbol, rest: any = {}) => {
     if (Array.isArray(len)) {
       if (isMeta) return 0
-      return zpcore.highest(len.length, len.map(x => x.close), {})
+      return indicators.highest(len.length, len.map(x => x.close), {})
     }
 
     const { roll, prop, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
@@ -152,13 +152,13 @@ const load = (zpEnv: Env, as: string = '') => {
     }
 
     const data = getBars(zpEnv, symbol, len + roll + offset).map(b => b[prop])
-    return zpcore.highest(len, data, { roll, offset })
+    return indicators.highest(len, data, { roll, offset })
   })
 
   zpEnv.bind(ns + 'lowest', (len, symbol, rest: any = {}) => {
     if (Array.isArray(len)) {
       if (isMeta) return 0
-      return zpcore.lowest(len.length, len.map(x => x.close), {})
+      return indicators.lowest(len.length, len.map(x => x.close), {})
     }
 
     const { roll, prop, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
@@ -169,7 +169,7 @@ const load = (zpEnv: Env, as: string = '') => {
     }
 
     const data = getBars(zpEnv, symbol, len + roll + offset).map(b => b[prop])
-    return zpcore.lowest(len, data, { roll, offset })
+    return indicators.lowest(len, data, { roll, offset })
   })
 
   // zpEnv.bind('donchian', (assets) => indicators.donchian(assets, assets.length))
