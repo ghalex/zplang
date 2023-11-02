@@ -1,5 +1,11 @@
 # zplang
 
+## 1.0.25
+
+### Patch Changes
+
+- update and, or to support multiple args
+
 ## 1.0.24
 
 ### Patch Changes
