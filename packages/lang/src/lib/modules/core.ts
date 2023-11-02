@@ -20,8 +20,8 @@ const load = (env: Env) => {
   env.bind('<', r.curry((a, b) => a < b))
   env.bind('<=', r.curry((a, b) => a <= b))
   env.bind('not', (a) => !a)
-  env.bind('and', (a, b) => a && b)
-  env.bind('or', (a, b) => a || b)
+  env.bind('and', (...args) => args.every(a => a))
+  env.bind('or', (...args) => args.some(a => a))
 
   env.bind('inc', (val) => val + 1)
   env.bind('identity', (val) => val)
@@ -82,6 +82,8 @@ const load = (env: Env) => {
     })
   })
 
+  env.bind('every', (lamda, arr) => arr.every(val => lamda.eval(env, [val])))
+  env.bind('some', (lamda, arr) => arr.some(val => lamda.eval(env, [val])))
   env.bind('size', (arr) => arr.length)
   env.bind('count', (arr: any[]) => arr.length)
   env.bind('map', (lamda, arr) => arr.map((val, i) => lamda.eval(env, [val, i])))
