@@ -1,5 +1,11 @@
 # zplang
 
+## 1.0.26
+
+### Patch Changes
+
+- add pragma keyword
+
 ## 1.0.25
 
 ### Patch Changes
