@@ -1,5 +1,5 @@
 import zp, { Env } from '../src/lib'
-import data from '../src/data'
+import data from '../src/data/stocks'
 // import * as r from 'ramda'
 
 const positions = [{
@@ -48,12 +48,12 @@ describe('trading', () => {
       openPositions: [...positions]
     })
 
-    const res = zp.evalCode(env, code)
+    zp.evalCode(env, code)
 
     // expect(res[0]).toEqual('core/trading')
     // expect(portfolio.orders.length).toEqual(3)
 
-    console.dir(res)
+    // console.dir(res)
   })
 
   // test('balance', () => {

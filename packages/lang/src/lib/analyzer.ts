@@ -65,6 +65,15 @@ const createSemantics = (grammar: Grammar, match: MatchResult) => {
     Asset (_l, symbol, daysAgo, _r) {
       return new Asset(symbol.ast(), daysAgo.ast()[0] ?? 0)
     },
+    AssetId_coin (left, _b, right) {
+      return left.sourceString + '/' + right.sourceString
+    },
+    AssetId_simple (left) {
+      return left.sourceString
+    },
+    AssetId_var (left) {
+      return left.ast()
+    },
     DaysAgo_nb (_c, daysAgo, _w) {
       return daysAgo.ast()
     },

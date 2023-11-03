@@ -1,5 +1,11 @@
 # zplang
 
+## 1.0.27
+
+### Patch Changes
+
+- add ability to use assets with "/"
+
 ## 1.0.26
 
 ### Patch Changes

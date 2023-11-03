@@ -1,6 +1,9 @@
 import zp, { Env } from '../src/lib'
-import data from '../src/data'
+import stocks from '../src/data/stocks'
+import cypto from '../src/data/crypto'
+
 import * as r from 'ramda'
+import e from 'express'
 
 describe('assets', () => {
   test('load module', () => {
@@ -11,8 +14,7 @@ describe('assets', () => {
       (sma 21 symbol)
     `)
 
-    const env = new Env()
-    env.loadBars(data)
+    const env = new Env({ bars: stocks })
 
     const res = ast.map(stmt => stmt.eval(env))
     expect(res[0]).toEqual('core/indicators')
@@ -33,7 +35,7 @@ describe('assets', () => {
 
     // env.loadModule(modules.indicators)
 
-    env.loadBars(data)
+    env.loadBars(stocks)
 
     const res = ast.map(stmt => stmt.eval(env))
 
@@ -75,7 +77,7 @@ describe('assets', () => {
 
   test('access asset close, open, volume', () => {
     const env = new Env()
-    env.loadBars(data)
+    env.loadBars(stocks)
 
     const ast = zp.getAst(String.raw`
       (:close {MSFT})
@@ -94,7 +96,7 @@ describe('assets', () => {
   test('get price for multiple days', () => {
     const env = new Env()
 
-    env.loadBars(data)
+    env.loadBars(stocks)
 
     env.bind('sma', (prices) => {
       return r.mean(prices)
@@ -113,7 +115,7 @@ describe('assets', () => {
 
   test('assets with variable', () => {
     const env = new Env()
-    env.loadBars(data)
+    env.loadBars(stocks)
 
     const ast = zp.getAst(String.raw`
       (def x 5)
@@ -162,7 +164,7 @@ describe('assets', () => {
 
   test('loop assets', () => {
     const env = new Env()
-    env.loadBars(data)
+    env.loadBars(stocks)
 
     const ast = zp.getAst(String.raw`
       (def assets ["AAPL", "MSFT"])
@@ -174,5 +176,24 @@ describe('assets', () => {
 
     const res = ast.map(stmt => stmt.eval(env))
     expect(res[1]).toEqual([[177.83], [323.46]])
+  })
+
+  test('crypto assets', () => {
+    const env = new Env({ bars: cypto })
+    const code = String.raw`
+      #pragma version "^0.1.0"
+      #pragma market "crypto"
+
+      {ETH/USD, 2 days ago}
+      {ETH/USD, 3 bars}
+
+      (def symbol "ETH/USD")
+
+      {symbol, yesterday}
+    `
+
+    const res = zp.evalCode(env, code)
+    expect(res[2].close).toEqual(1922.24)
+    // console.dir(res)
   })
 })

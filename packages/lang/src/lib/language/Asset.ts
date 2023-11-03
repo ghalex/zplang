@@ -9,7 +9,7 @@ class Asset {
   eval (env: Env) {
     const getBar = env.get('bar')
     const daysAgo = this.daysAgo instanceof Variable ? this.daysAgo.eval(env) : this.daysAgo
-    const symbol = this.symbol instanceof Variable ? this.symbol.eval(env) : this.symbol.join('')
+    const symbol = this.symbol instanceof Variable ? this.symbol.eval(env) : this.symbol
 
     if (!getBar) {
       throw new Error('"bar" function not defined')
@@ -26,7 +26,7 @@ class Asset {
   }
 
   toString () {
-    const symbol = this.symbol instanceof Variable ? this.symbol.toString() : this.symbol.join('')
+    const symbol = this.symbol instanceof Variable ? this.symbol.toString() : this.symbol
 
     if (this.daysAgo < 1) {
       return `{${symbol}}`
