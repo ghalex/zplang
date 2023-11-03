@@ -22,6 +22,7 @@ const load = (env: Env) => {
   env.bind('not', (a) => !a)
   env.bind('and', (...args) => args.every(a => a))
   env.bind('or', (...args) => args.some(a => a))
+  env.bind('abs', (val) => Math.abs(val))
 
   env.bind('inc', (val) => val + 1)
   env.bind('identity', (val) => val)

@@ -21,6 +21,7 @@ Zapant {
       | "(" defn id ListArgs Block ")"                          --fnDec3
       | "(" import strlit (as id)? ")"                          --import
       | "(" let Block ")"                                       --let
+      | "#" pragma id (Primary | List | Object)                 --pragma
       | Exp
 
   Block = Stmt+
@@ -72,6 +73,7 @@ Zapant {
   daysAgo = "days ago" ~alnum
   yesterday = "yesterday" ~alnum
   today = "today" ~alnum
+  pragma = "pragma" ~alnum
   import = "import" ~alnum
   as = ":as" ~alnum
   keywords

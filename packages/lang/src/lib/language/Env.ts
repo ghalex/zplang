@@ -23,6 +23,7 @@ class Env {
       $$bars: options.bars ?? [],
       $$isMeta: options.isMeta ?? false,
       $$assets: {},
+      $$settings: {},
       $$stdout: []
     }
 
@@ -32,6 +33,38 @@ class Env {
     this.registerModule(core.trading)
     this.registerModule(core.indicators)
   }
+
+  setPragma (key: string, value: any) {
+    this.env.$$settings[key] = value
+  }
+
+  getPragma (key?: string) {
+    if (key) {
+      return this.env.$$settings.get(key)
+    }
+
+    return {...this.env.$$settings}
+  }
+
+  
+  addAsset (symbol: string, window: number) {
+    if (this.parent) {
+      return this.parent.addAsset(symbol, window)
+    }
+
+    const asset = { symbol, window: Math.max(this.env.$$assets[symbol] ?? 1, window) }
+    this.env.$$assets[symbol] = asset.window
+    return asset
+  }
+
+  getAssets (): Record<string, number> {
+    return { ...this.env.$$assets }
+  }
+
+  getBars () {
+    return this.env.$$bars
+  }
+
 
   bind (name: string, value: unknown) {
     const [a, b] = name.split('/')
@@ -99,30 +132,12 @@ class Env {
     this.env.$$bars = bars
   }
 
-  addAsset (symbol: string, window: number) {
-    if (this.parent) {
-      return this.parent.addAsset(symbol, window)
-    }
-
-    const asset = { symbol, window: Math.max(this.env.$$assets[symbol] ?? 1, window) }
-    this.env.$$assets[symbol] = asset.window
-    return asset
-  }
-
   print (line: string) {
     this.env.$$stdout.push(line)
   }
 
   clear () {
     this.env.$$stdout = []
-  }
-
-  getAssets (): Record<string, number> {
-    return { ...this.env.$$assets }
-  }
-
-  getBars () {
-    return this.env.$$bars
   }
 
   // this could be replaced with parentEnv and "looking up" if something is not found

@@ -43,6 +43,25 @@ describe('core', () => {
     expect(ast.toString()).toEqual(codeToStr(code))
   })
 
+  test('pragma', () => {  
+    const env = new Env({ isMeta: true })
+    const code = String.raw`
+      #pragma version "^0.1.0"
+      #pragma test 1
+      #pragma start "2020-01-01"
+      #pragma end "2020-01-02"
+      #pragma assets { AMD: 5, AAPL: 10 }
+
+      (def age 22)
+    `
+
+    const res = zp.evalCode(env, code)
+    const settings = env.getPragma()
+
+    expect(settings.test).toBe(1)
+    expect(Object.keys(settings.assets)).toEqual(['AMD', 'AAPL'])
+  })
+
   test('function calls', () => {
     const env = new Env()
 

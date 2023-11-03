@@ -1,3 +1,9 @@
+#pragma zplang ^0.1.0
+#pragma test 1
+#pragma start "2020-01-01"
+#pragma end "2020-01-02"
+#pragma assets { AMD: 5, AAPL: 10 }
+
 ;; Loops a list a symbols and
 ;; buys one share
 (import "core/trading")
@@ -9,5 +15,7 @@
 
 (loop symbol in symbols
   (print "Buying: " symbol)
-  (buy {symbol} 1 {target: true})
+  ;; (buy {symbol} 1 {target: true})
 )
+
+(and true true true)

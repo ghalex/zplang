@@ -1,5 +1,5 @@
 import type { MatchResult, Grammar, Node } from 'ohm-js'
-import { FnCall, Expression, Variable, VarDec, Strlit, List, FnDec, IfElse, Loop, Obj, ObjGet, ObjSet, Asset, Assets, ArrayIdx, Import, Let } from './language'
+import { FnCall, Expression, Variable, VarDec, Strlit, List, FnDec, IfElse, Loop, Obj, ObjGet, ObjSet, Asset, Assets, ArrayIdx, Import, Let, Pragma } from './language'
 
 const createSemantics = (grammar: Grammar, match: MatchResult) => {
   const semantics = grammar.createSemantics()
@@ -46,6 +46,9 @@ const createSemantics = (grammar: Grammar, match: MatchResult) => {
     },
     Stmt_let (_l, _let, block, _r) {
       return new Let(block.ast())
+    },
+    Stmt_pragma (_c, _pragma, id, val) {
+      return new Pragma(id.sourceString, val.ast())
     },
     // Exp_binary (left, op, right) {
     //   return new BinaryExpression(op.sourceString, left.ast(), right.ast())
