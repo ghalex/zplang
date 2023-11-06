@@ -1,5 +1,6 @@
 import type { MatchResult, Grammar, Node } from 'ohm-js'
 import { FnCall, Expression, Variable, VarDec, Strlit, List, FnDec, IfElse, Loop, Obj, ObjGet, ObjSet, Asset, Assets, ArrayIdx, Import, Let, Pragma } from './language'
+import Do from './language/Do'
 
 const createSemantics = (grammar: Grammar, match: MatchResult) => {
   const semantics = grammar.createSemantics()
@@ -44,8 +45,11 @@ const createSemantics = (grammar: Grammar, match: MatchResult) => {
     Stmt_import (_l, _imp, name, _as, id, _r) {
       return new Import(name.ast(), id.children.map(c => c.sourceString)[0])
     },
-    Stmt_let (_l, _let, block, _r) {
-      return new Let(block.ast())
+    Stmt_let (_l, _let, args, block, _r) {
+      return new Let(args.ast(), block.ast())
+    },
+    Stmt_do (_l, _do, block, _r) {
+      return new Do(block.ast())
     },
     Stmt_pragma (_c, _pragma, id, val) {
       return new Pragma(id.sourceString, val.ast())
@@ -92,8 +96,17 @@ const createSemantics = (grammar: Grammar, match: MatchResult) => {
     ObjItem (id, _dots, exp) {
       return [id.sourceString, exp.ast()]
     },
+    LetItem (id, exp) {
+      const variable = new Variable(id.sourceString, 'any')
+      const initializer = exp.ast()
+
+      return new VarDec(variable, initializer)
+    },
     ListArgs (_l, args, _r) {
       return args.asIteration().children.map(c => c.sourceString)
+    },
+    LetList (_l, args, _r) {
+      return args.asIteration().children.map(c => c.ast())
     },
     Var (val) {
       return new Variable(val.sourceString, 'any')

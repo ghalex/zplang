@@ -110,4 +110,25 @@ describe('core', () => {
     expect(res[1]).toEqual(7)
     // expect(ast.toString()).toEqual(codeToStr(code))
   })
+
+  test('let and do keyword', () => {
+    const env = new Env()
+
+    const code = `
+      (def a 10)
+      (let [a 3, b 4]
+        (* 2 b)
+        (+ a b)
+      )
+
+      (do
+        (print "Hello")
+        "World"
+      )
+    `
+    const res = zp.evalCode(env, code)
+    expect(res[1][1]).toEqual(7)
+
+    console.log(res)
+  })
 })

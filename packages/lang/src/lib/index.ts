@@ -20,7 +20,8 @@ Zapant {
       | "(" def id (Stmt | Exp) ")"                             --varDec
       | "(" defn id ListArgs Block ")"                          --fnDec3
       | "(" import strlit (as id)? ")"                          --import
-      | "(" let Block ")"                                       --let
+      | "(" let LetList Block ")"                               --let
+      | "(" do Block ")"                                        --do
       | "#" pragma id (Primary | List | Object)                 --pragma
       | Exp
 
@@ -50,6 +51,8 @@ Zapant {
   ArrayIdx = id "[" intlit "]"
   List = "[" listOf<Exp, ","> "]"
   ListArgs = "[" listOf<id, ", "> "]"
+  LetItem = id Exp
+  LetList = "[" listOf<LetItem, ","> "]"
   Object = "{" listOf<ObjItem, ",">  "}"
   ObjItem = id ":" Exp
   Var = id
@@ -70,6 +73,7 @@ Zapant {
   loop = "loop" ~alnum
   in = "in" ~alnum
   let = "let" ~alnum
+  do = "do" ~alnum
   true = "true" ~alnum
   false = "false" ~alnum
   null = "null" ~alnum
@@ -91,6 +95,9 @@ Zapant {
       | in
       | yesterday
       | true
+      | let
+      | pragma
+      | do
       | bars
       | today
       | yesterday
