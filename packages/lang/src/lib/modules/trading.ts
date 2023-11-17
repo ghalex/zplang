@@ -1,9 +1,15 @@
 import { Lambda, type Env } from '../language'
-import { utils as zpUtils, type Order, type Position, type OrderOptions } from '@zapant/core'
+import type { Order, Position, Bar } from '@zapant/core'
+import * as zpCore from '@zapant/core'
 import { pick } from 'ramda'
 
 const name = 'trading'
 const namespace = 'core'
+
+interface OrderOptions {
+  round?: boolean
+  target?: boolean
+}
 
 const load = (zpEnv: Env, as: string = '') => {
   const isMeta = zpEnv.get('$$isMeta')
@@ -36,9 +42,9 @@ const load = (zpEnv: Env, as: string = '') => {
     return p ?? null
   })
 
-  zpEnv.bind(ns + 'balance', () => {
+  zpEnv.bind(ns + 'balance', ({ minAmount }: any = {}) => {
     const bars = zpEnv.get('$$bars')
-    portfolio.orders = zpUtils.trading.balance(portfolio.orders, portfolio.openPositions, { bars })
+    portfolio.orders = zpCore.balance(portfolio.orders, portfolio.openPositions, { bars, minAmount })
 
     return portfolio.orders
   })
@@ -54,23 +60,19 @@ const load = (zpEnv: Env, as: string = '') => {
     return false
   })
 
-  // zpEnv.bind(ns + 'execute', (orders?: Order[]) => {
-  //   return portfolio.execute(orders ?? portfolio.data.orders)
-  // })
-
   zpEnv.bind(ns + 'closePositions', (positions) => {
     const bars = zpEnv.get('$$bars')
     const positionsToClose = positions ?? portfolio.openPositions
 
     if (positionsToClose.length === 0) { return [] }
 
-    const orders = zpUtils.trading.closePositions(positionsToClose, { bars })
+    const orders = zpCore.position.closePositions(positionsToClose, { bars })
     portfolio.orders = [...portfolio.orders, ...orders]
 
     return orders
   })
 
-  zpEnv.bind(ns + 'order', (action, asset, qty, options: OrderOptions = {}) => {
+  zpEnv.bind(ns + 'order', (action: 'buy' | 'sell', asset: Bar, qty: number, options: OrderOptions = {}) => {
     if (isMeta) {
       return []
     }
@@ -78,10 +80,10 @@ const load = (zpEnv: Env, as: string = '') => {
     if (qty < 0) throw new Error(`${action} {${asset.symbol}}: Quantity cannot be negative`)
 
     const bars = zpEnv.get('$$bars')
-    const [order] = zpUtils.trading.createOrdersUnits([asset.symbol], { [asset.symbol]: 1 }, qty, { action, bars })
+    const [order] = zpCore.order.createOrdersUnits([asset.symbol], { [asset.symbol]: 1 }, qty, { action, bars })
 
     if (options.target) {
-      const [newOrder] = zpUtils.trading.balance([order], portfolio.openPositions.filter(p => p.symbol === order.symbol), { bars })
+      const [newOrder] = zpCore.balance([order], portfolio.openPositions.filter(p => p.symbol === order.symbol), { bars })
 
       portfolio.orders.push(newOrder)
       return newOrder
@@ -91,16 +93,26 @@ const load = (zpEnv: Env, as: string = '') => {
     }
   })
 
-  zpEnv.bind(ns + 'buy', (asset, qty, options = {}) => zpEnv.get(ns + 'order')('buy', asset, qty, options))
-  zpEnv.bind(ns + 'buyAmount', (asset, amount, options: any = {}) => {
-    const qty = options.round ? Math.floor(amount / asset.close) : amount / asset.close
-    return zpEnv.get(ns + 'buy')(asset, qty, options)
+  zpEnv.bind(ns + 'buy', (asset, qty, options = {}) => {
+    const order = zpEnv.get(ns + 'order')
+    return order('buy', asset, qty, options)
   })
 
-  zpEnv.bind(ns + 'sell', (asset, qty, options = {}) => zpEnv.get(ns + 'order')('sell', asset, qty, options))
+  zpEnv.bind(ns + 'buyAmount', (asset, amount, options: any = {}) => {
+    const qty = options.round ? Math.floor(amount / asset.close) : amount / asset.close
+    const buy = zpEnv.get(ns + 'buy')
+    return buy(asset, qty, options)
+  })
+
+  zpEnv.bind(ns + 'sell', (asset, qty, options = {}) => {
+    const order = zpEnv.get(ns + 'order')
+    return order('sell', asset, qty, options)
+  })
+
   zpEnv.bind(ns + 'sellAmount', (asset, amount, options: any = {}) => {
     const qty = options.round ? Math.floor(amount / asset.close) : amount / asset.close
-    return zpEnv.get(ns + 'sell')(asset, qty, options)
+    const sell = zpEnv.get(ns + 'sell')
+    return sell(asset, qty, options)
   })
 }
 

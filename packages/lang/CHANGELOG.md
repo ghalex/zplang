@@ -1,5 +1,11 @@
 # zplang
 
+## 1.0.29
+
+### Patch Changes
+
+- Add minAmount for balance
+
 ## 1.0.28
 
 ### Patch Changes

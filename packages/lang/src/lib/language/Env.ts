@@ -43,10 +43,9 @@ class Env {
       return this.env.$$settings.get(key)
     }
 
-    return {...this.env.$$settings}
+    return { ...this.env.$$settings }
   }
 
-  
   addAsset (symbol: string, window: number) {
     if (this.parent) {
       return this.parent.addAsset(symbol, window)
@@ -64,7 +63,6 @@ class Env {
   getBars () {
     return this.env.$$bars
   }
-
 
   bind (name: string, value: unknown) {
     const [a, b] = name.split('/')

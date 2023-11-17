@@ -17,13 +17,16 @@ const positions = [{
   openPrice: 300.00,
   closeDate: null,
   closePrice: null,
-  units: 1,
+  units: 5.1,
   side: 'long',
   accountType: 'paper'
 }]
 
 describe('trading', () => {
   test('load trading module', () => {
+    const env = new Env({ bars: data })
+    env.loadModuleByName('core/trading')
+
     const code = String.raw`
       (def symbols [
         "AAPL",
@@ -32,63 +35,98 @@ describe('trading', () => {
       ])
 
       (buy {AAPL} 1 {target: true})
-      (?? (:openPrice (getPosition "MSFT2")) 100)
+      (getPortfolio)
     `
-
-    // (print (json (portfolio/orders)))
-
-    // (:stats (portfolio/data))
-
-    const env = new Env({ bars: data })
-    env.loadModuleByName('core/trading')
 
     const changePortfolio = env.get('changePortfolio')
     changePortfolio({
-      initialCapital: 1000,
+      initialCapital: 2000,
       openPositions: [...positions]
     })
 
-    zp.evalCode(env, code)
+    // Eval code
+    const res = zp.evalCode(env, code)
 
-    // expect(res[0]).toEqual('core/trading')
-    // expect(portfolio.orders.length).toEqual(3)
+    // Get values from result
+    const order = res[1]
+    const portfolio = res[2]
 
-    // console.dir(res)
+    expect(order.units).toEqual(4)
+    expect(order.action).toEqual('sell')
+    expect(portfolio.orders.length).toEqual(1)
+    expect(portfolio.openPositions.length).toEqual(2)
+    expect(portfolio.initialCapital).toEqual(2000)
   })
 
-  // test('balance', () => {
-  //   const env = new Env({ bars: data })
-  //   env.loadModuleByName('core/trading')
+  test('balance', () => {
+    const env = new Env({ bars: data })
+    env.loadModuleByName('core/trading')
 
-  //   const portfolio = env.get('portfolio')
+    // Change portfolio
+    const changePortfolio = env.get('changePortfolio')
+    changePortfolio({
+      initialCapital: 2000,
+      openPositions: [...positions]
+    })
 
-  //   portfolio.change({
-  //     initialCapital: 1000,
-  //     positions: [...positions]
-  //   } as any)
+    // Eval code
+    const res = zp.evalCode(env, String.raw`
+      (def symbols [
+        "AAPL",
+        "MSFT",
+        "AMD"
+      ])
 
-  //   portfolio.update(data as any)
+      (loop symbol in symbols
+        (buy {symbol} 5)
+      )
 
-  //   const res = zp.evalCode(env, String.raw`
-  //     (def symbols [
-  //       "AAPL",
-  //       "MSFT",
-  //       "AMD"
-  //     ])
+      (balance)
+    `)
 
-  //     (loop symbol in symbols
-  //       (buy {symbol} 1 {target: true})
-  //     )
+    // Get values from result
+    const orders = res[1].map(r => r[0])
+    const ordersBalanced = res[2]
 
-  //     (execute)
-  //     (len (portfolio/orders))
-  //     (len (portfolio/openPositions))
-  //   `)
+    expect(orders.length).toEqual(3)
+    expect(orders[1].units).toEqual(5)
 
-  //   // console.dir(portfolio.data, { depth: null })
-  //   // console.log(res)
+    expect(ordersBalanced.length).toEqual(2)
+  })
 
-  //   expect(res[3]).toEqual(2)
-  //   expect(res[4]).toEqual(3)
-  // })
+  test('balance with minAmount', () => {
+    const env = new Env({ bars: data })
+    env.loadModuleByName('core/trading')
+
+    // Change portfolio
+    const changePortfolio = env.get('changePortfolio')
+    changePortfolio({
+      initialCapital: 2000,
+      openPositions: [...positions]
+    })
+
+    // Eval code
+    const res = zp.evalCode(env, String.raw`
+      (def symbols [
+        "AAPL",
+        "MSFT",
+        "AMD"
+      ])
+
+      (loop symbol in symbols
+        (buy {symbol} 5)
+      )
+
+      (balance {minAmount: 50})
+    `)
+
+    // Get values from result
+    const orders = res[1].map(r => r[0])
+    const ordersBalanced = res[2]
+
+    expect(orders.length).toEqual(3)
+    expect(orders[1].units).toEqual(5)
+
+    expect(ordersBalanced.length).toEqual(1)
+  })
 })
