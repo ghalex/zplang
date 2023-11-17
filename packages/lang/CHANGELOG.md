@@ -1,5 +1,11 @@
 # zplang
 
+## 1.0.30
+
+### Patch Changes
+
+- Update dependencies
+
 ## 1.0.29
 
 ### Patch Changes

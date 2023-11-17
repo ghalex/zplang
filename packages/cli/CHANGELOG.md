@@ -1,5 +1,12 @@
 # zplang-cli
 
+## 0.0.23
+
+### Patch Changes
+
+- Updated dependencies
+  - zplang@1.0.30
+
 ## 0.0.22
 
 ### Patch Changes

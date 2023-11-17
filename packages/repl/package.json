@@ -1,6 +1,6 @@
 {
   "name": "zplang-repl",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "",
   "main": "dist/zplang-repl.umd.js",
   "module": "dist/zplang-repl.es.js",
