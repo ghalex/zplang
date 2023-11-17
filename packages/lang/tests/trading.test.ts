@@ -8,7 +8,7 @@ const positions = [{
   openPrice: 200.00,
   closeDate: null,
   closePrice: null,
-  units: 5,
+  units: 5.5,
   side: 'long',
   accountType: 'paper'
 }, {
@@ -51,7 +51,7 @@ describe('trading', () => {
     const order = res[1]
     const portfolio = res[2]
 
-    expect(order.units).toEqual(4)
+    expect(order.units).toEqual(4.5)
     expect(order.action).toEqual('sell')
     expect(portfolio.orders.length).toEqual(1)
     expect(portfolio.openPositions.length).toEqual(2)
@@ -91,7 +91,7 @@ describe('trading', () => {
     expect(orders.length).toEqual(3)
     expect(orders[1].units).toEqual(5)
 
-    expect(ordersBalanced.length).toEqual(2)
+    expect(ordersBalanced.length).toEqual(3)
   })
 
   test('balance with minAmount', () => {
@@ -117,7 +117,8 @@ describe('trading', () => {
         (buy {symbol} 5)
       )
 
-      (balance {minAmount: 50})
+      ;; This will skip MSFT but not AAPL
+      (balance {minAmount: 40})
     `)
 
     // Get values from result
@@ -127,6 +128,9 @@ describe('trading', () => {
     expect(orders.length).toEqual(3)
     expect(orders[1].units).toEqual(5)
 
-    expect(ordersBalanced.length).toEqual(1)
+    expect(ordersBalanced[0].symbol).toEqual('AAPL')
+    expect(ordersBalanced[0].units).toEqual(0.5)
+    expect(ordersBalanced.length).toEqual(2)
+
   })
 })

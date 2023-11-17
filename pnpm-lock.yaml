@@ -106,8 +106,8 @@ importers:
   packages/lang:
     dependencies:
       '@zapant/core':
-        specifier: ^2.0.2
-        version: 2.0.2(@types/node@20.9.1)(ts-node@10.9.1)
+        specifier: ^2.0.4
+        version: 2.0.4(@types/node@20.9.1)(ts-node@10.9.1)
       '@zapant/indicators':
         specifier: ^1.0.0
         version: 1.0.0(@types/node@20.9.1)(ts-node@10.9.1)
@@ -4029,8 +4029,8 @@ packages:
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
     dev: true
 
-  /@zapant/core@2.0.2(@types/node@20.9.1)(ts-node@10.9.1):
-    resolution: {integrity: sha512-sIdmqLAPd1dcJ3iW46RboRighRwaAo0RKQMs5PMH2ZUiRJiDRY76Z6RdvHdgePRbr1A8PLurCnW+DGv7zgJijQ==}
+  /@zapant/core@2.0.4(@types/node@20.9.1)(ts-node@10.9.1):
+    resolution: {integrity: sha512-KNOtCKDh4vGE4r4pJTuGYZggoMR2xKWuW4rjMzmERA3POcKZzLShVB4yI4k0jSBYHmQvBGVFXaBNILVBoYEwLw==}
     dependencies:
       dayjs: 1.11.10
       jest: 29.7.0(@types/node@20.9.1)(ts-node@10.9.1)

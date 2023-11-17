@@ -1,5 +1,11 @@
 # zplang
 
+## 1.0.31
+
+### Patch Changes
+
+- Fix balance bug
+
 ## 1.0.30
 
 ### Patch Changes
