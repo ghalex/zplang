@@ -120,8 +120,8 @@ const createSemantics = (grammar: Grammar, match: MatchResult) => {
     intlit (sign, digits) {
       return parseInt(sign.sourceString + digits.sourceString)
     },
-    floatlit (digits1: Node, _dot, digits2: Node) {
-      return parseFloat(digits1.sourceString + '.' + digits2.sourceString)
+    floatlit (sign, digits1: Node, _dot, digits2: Node) {
+      return parseFloat(sign.sourceString + digits1.sourceString + '.' + digits2.sourceString)
     },
     strlit (_a1, chars: Node, _a2) {
       return new Strlit(chars.ast().join(''))

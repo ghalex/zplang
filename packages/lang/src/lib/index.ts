@@ -108,7 +108,7 @@ Zapant {
   char = ~"\"" ~"\n"  any
   boolean = true | false
   intlit = ("+" | "-")* digit+
-  floatlit = digit+ "." digit+
+  floatlit = ("+" | "-")* digit+ "." digit+
   id = ~keywords (letter | "_" | "$") idchar* "!"?
   idmodule = ~keywords letter idchar* "/" id
   idchar = letter | digit | "_" | "$"

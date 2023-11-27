@@ -43,6 +43,20 @@ describe('core', () => {
     expect(ast.toString()).toEqual(codeToStr(code))
   })
 
+  test('collections', () => {
+    const env = new Env()
+
+    const code = String.raw`
+      (+ 2 3)
+      (+ [2, 3, 4] [1, 1, 1] [2, 2, 2])
+      (- [2, 3, 4] [1, 1, 1])
+      (/ [2, 3, 4] [2, 2, 2])
+      (= [1, 2] [1, 2])
+    `
+    const res = zp.evalCode(env, code)
+    console.log(res)
+  })
+
   test('pragma', () => {
     const env = new Env({ isMeta: true })
     const code = String.raw`

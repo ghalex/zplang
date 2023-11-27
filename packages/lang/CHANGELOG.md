@@ -1,5 +1,11 @@
 # zplang
 
+## 1.0.32
+
+### Patch Changes
+
+- Add support for arrays on basic operations
+
 ## 1.0.31
 
 ### Patch Changes

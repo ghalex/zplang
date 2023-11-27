@@ -1,24 +1,54 @@
 import { Lambda, type Env } from '../language'
 import * as r from 'ramda'
+import nj from 'numjs'
 
 const name = 'base'
 const namespace = 'core'
 
 const load = (env: Env) => {
-  env.bind('+', (...args) => args.reduce((prev, curr) => prev + curr, 0))
-  env.bind('-', (...args) => args.slice(1).reduce((prev, curr) => prev - curr, args[0]))
-  env.bind('*', (...args) => args.slice(1).reduce((prev, curr) => prev * curr, args[0]))
-  env.bind('/', (...args) => args.slice(1).reduce((prev, curr) => prev / curr, args[0]))
-  env.bind('%', (a, b) => a % b)
-  env.bind('**', (a, b) => a ** b)
-  env.bind('??', (val, defaultValue) => val !== undefined && val !== null ? val : defaultValue)
 
-  env.bind('>', r.curry((a, b) => a > b))
-  env.bind('>=', r.curry((a, b) => a >= b))
-  env.bind('=', r.curry((a, b) => a === b))
-  env.bind('!=', r.curry((a, b) => a !== b))
-  env.bind('<', r.curry((a, b) => a < b))
-  env.bind('<=', r.curry((a, b) => a <= b))
+  env.bind('+', (...args) => {
+    const isArray = Array.isArray(args[0])
+    return args.slice(1).reduce((prev, curr) => isArray ? nj.array(prev).add(curr).tolist() : prev + curr, args[0])
+  })
+
+  env.bind('-', (...args) => {
+    const isArray = Array.isArray(args[0])
+    return args.slice(1).reduce((prev, curr) => isArray ? nj.array(prev).subtract(curr).tolist() : prev - curr, args[0])
+  })
+
+  env.bind('*', (...args) => {
+    const isArray = Array.isArray(args[0])
+    return args.slice(1).reduce((prev, curr) => isArray ? nj.array(prev).multiply(curr).tolist() : prev * curr, args[0])
+  })
+  
+  env.bind('/', (...args) => {
+    const isArray = Array.isArray(args[0])
+    return args.slice(1).reduce((prev, curr) => isArray ? nj.array(prev).divide(curr).tolist() : prev / curr, args[0])
+  })
+
+  env.bind('%', (a, b) => {
+    const isArray = Array.isArray(a)
+    return isArray ? nj.array(a).mod(b).tolist() : a % b
+  })
+
+  env.bind('**', (a, b) => {
+    const isArray = Array.isArray(a)
+    return isArray ? nj.array(a).pow(b).tolist() : a ** b
+  })
+
+  env.bind('=', (a, b) => {
+    const isArray = Array.isArray(a)
+    return isArray ? nj.array(a).equal(b) : a === b
+  })
+
+  env.bind('>', (a, b) => a > b)
+  env.bind('>=', (a, b) => a >= b)
+  env.bind('!=', (a, b) => a !== b)
+  env.bind('<', (a, b) => a < b)
+  env.bind('<=', (a, b) => a <= b)
+
+  env.bind('??', (val, defaultValue) => val !== undefined && val !== null ? val : defaultValue)
   env.bind('not', (a) => !a)
   env.bind('and', (...args) => args.every(a => a))
   env.bind('or', (...args) => args.some(a => a))
