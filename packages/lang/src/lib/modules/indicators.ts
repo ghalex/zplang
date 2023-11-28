@@ -18,7 +18,7 @@ const load = (zpEnv: Env, as: string = '') => {
   zpEnv.bind(ns + 'sma', (len, symbol, rest: any = {}) => {
     if (Array.isArray(len)) {
       if (isMeta) return 0
-      return indicators.sma(len.length, len.map(x => x.close), {})
+      return indicators.sma(len.length, len, {})
     }
 
     const { roll, prop, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
@@ -70,7 +70,7 @@ const load = (zpEnv: Env, as: string = '') => {
   zpEnv.bind(ns + 'mm', (len, symbol, rest: any = {}) => {
     if (Array.isArray(len)) {
       if (isMeta) return 0
-      return indicators.momentum(len.length, len.map(x => x.close), {})
+      return indicators.momentum(len.length, len, {})
     }
 
     const { roll, prop, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
@@ -106,7 +106,7 @@ const load = (zpEnv: Env, as: string = '') => {
   zpEnv.bind(ns + 'cmr', (len, symbol, rest: any = {}) => {
     if (Array.isArray(len)) {
       if (isMeta) return 0
-      return indicators.cmr(len.length, len.map(x => x.close), {})
+      return indicators.cmr(len.length, len, {})
     }
 
     const { roll, offset, prop } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
@@ -124,7 +124,7 @@ const load = (zpEnv: Env, as: string = '') => {
   zpEnv.bind(ns + 'std', (len, symbol, rest: any = {}) => {
     if (Array.isArray(len)) {
       if (isMeta) return 0
-      return indicators.std(len.length, len.map(x => x.close), {})
+      return indicators.std(len.length, len, {})
     }
 
     const { roll, prop, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
@@ -141,7 +141,7 @@ const load = (zpEnv: Env, as: string = '') => {
   zpEnv.bind(ns + 'highest', (len, symbol, rest: any = {}) => {
     if (Array.isArray(len)) {
       if (isMeta) return 0
-      return indicators.highest(len.length, len.map(x => x.close), {})
+      return indicators.highest(len.length, len, {})
     }
 
     const { roll, prop, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
@@ -158,7 +158,7 @@ const load = (zpEnv: Env, as: string = '') => {
   zpEnv.bind(ns + 'lowest', (len, symbol, rest: any = {}) => {
     if (Array.isArray(len)) {
       if (isMeta) return 0
-      return indicators.lowest(len.length, len.map(x => x.close), {})
+      return indicators.lowest(len.length, len, {})
     }
 
     const { roll, prop, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
