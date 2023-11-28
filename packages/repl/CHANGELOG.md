@@ -1,5 +1,12 @@
 # zplang-repl
 
+## 1.0.17
+
+### Patch Changes
+
+- Updated dependencies
+  - zplang@1.0.34
+
 ## 1.0.16
 
 ### Patch Changes

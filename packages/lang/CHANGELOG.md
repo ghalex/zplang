@@ -1,5 +1,11 @@
 # zplang
 
+## 1.0.34
+
+### Patch Changes
+
+- Fix indicators
+
 ## 1.0.33
 
 ### Patch Changes

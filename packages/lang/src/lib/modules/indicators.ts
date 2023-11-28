@@ -16,12 +16,12 @@ const load = (zpEnv: Env, as: string = '') => {
 
   // Simple Moving Avg
   zpEnv.bind(ns + 'sma', (len, symbol, rest: any = {}) => {
-    if (Array.isArray(len)) {
-      if (isMeta) return 0
-      return indicators.sma(len.length, len, {})
-    }
-
     const { roll, prop, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
+
+    if (Array.isArray(symbol)) {
+      if (isMeta) return 0
+      return indicators.sma(len, symbol, { roll, offset })
+    }
 
     if (isMeta) {
       zpEnv.addAsset(symbol, len + roll + offset)
@@ -34,12 +34,12 @@ const load = (zpEnv: Env, as: string = '') => {
 
   // Exponential moving averange
   zpEnv.bind(ns + 'ema', (len, symbol, rest: any = {}) => {
-    if (Array.isArray(len)) {
-      if (isMeta) return 0
-      return indicators.ema(len.length / 2, len, {})
-    }
-
     const { roll, prop, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
+
+    if (Array.isArray(symbol)) {
+      if (isMeta) return 0
+      return indicators.ema(len / 2, symbol, { roll, offset })
+    }
 
     if (isMeta) {
       zpEnv.addAsset(symbol, len * 2 + roll + offset)
@@ -52,12 +52,13 @@ const load = (zpEnv: Env, as: string = '') => {
 
   // Momentum Squeeze
   zpEnv.bind(ns + 'mms', (len, symbol, rest: any = {}) => {
-    if (Array.isArray(len)) {
+    const { roll, offset } = r.mergeRight({ roll: 0, offset: 0 }, rest)
+
+    if (Array.isArray(symbol)) {
       if (isMeta) return 0
-      return indicators.mms(len.length / 2, len, {})
+      return indicators.mms(len / 2, symbol, { roll, offset})
     }
 
-    const { roll, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
     if (isMeta) {
       zpEnv.addAsset(symbol, len * 2 + roll + offset)
       return roll ? [0] : 0
@@ -68,12 +69,12 @@ const load = (zpEnv: Env, as: string = '') => {
   })
 
   zpEnv.bind(ns + 'mm', (len, symbol, rest: any = {}) => {
-    if (Array.isArray(len)) {
-      if (isMeta) return 0
-      return indicators.momentum(len.length, len, {})
-    }
-
     const { roll, prop, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
+
+    if (Array.isArray(symbol)) {
+      if (isMeta) return 0
+      return indicators.momentum(len, symbol, { roll, offset })
+    }
 
     if (isMeta) {
       zpEnv.addAsset(symbol, len + roll + offset)
@@ -86,12 +87,12 @@ const load = (zpEnv: Env, as: string = '') => {
 
   // Averange True Range
   zpEnv.bind(ns + 'atr', (len, symbol, rest: any = {}) => {
-    if (Array.isArray(len)) {
-      if (isMeta) return 0
-      return indicators.atr(len.length, len, {})
-    }
+    const { roll, offset } = r.mergeRight({ roll: 0, offset: 0 }, rest)
 
-    const { roll, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
+    if (Array.isArray(symbol)) {
+      if (isMeta) return 0
+      return indicators.atr(len, symbol, { roll, offset })
+    }
 
     if (isMeta) {
       zpEnv.addAsset(symbol, len + roll + offset)
@@ -104,12 +105,12 @@ const load = (zpEnv: Env, as: string = '') => {
 
   // Cummulative return
   zpEnv.bind(ns + 'cmr', (len, symbol, rest: any = {}) => {
-    if (Array.isArray(len)) {
-      if (isMeta) return 0
-      return indicators.cmr(len.length, len, {})
-    }
-
     const { roll, offset, prop } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
+
+    if (Array.isArray(symbol)) {
+      if (isMeta) return 0
+      return indicators.cmr(len, symbol, { roll, offset })
+    }
 
     if (isMeta) {
       zpEnv.addAsset(symbol, len + roll + offset)
@@ -122,12 +123,12 @@ const load = (zpEnv: Env, as: string = '') => {
 
   // Standard deviation
   zpEnv.bind(ns + 'std', (len, symbol, rest: any = {}) => {
-    if (Array.isArray(len)) {
-      if (isMeta) return 0
-      return indicators.std(len.length, len, {})
-    }
-
     const { roll, prop, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
+
+    if (Array.isArray(symbol)) {
+      if (isMeta) return 0
+      return indicators.std(len, symbol, { roll, offset })
+    }
 
     if (isMeta) {
       zpEnv.addAsset(symbol, len + roll + offset)
@@ -139,12 +140,13 @@ const load = (zpEnv: Env, as: string = '') => {
   })
 
   zpEnv.bind(ns + 'highest', (len, symbol, rest: any = {}) => {
-    if (Array.isArray(len)) {
+    const { roll, prop, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
+
+    if (Array.isArray(symbol)) {
       if (isMeta) return 0
-      return indicators.highest(len.length, len, {})
+      return indicators.highest(len, symbol, { roll, offset })
     }
 
-    const { roll, prop, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
 
     if (isMeta) {
       zpEnv.addAsset(symbol, len + roll + offset)
@@ -156,12 +158,13 @@ const load = (zpEnv: Env, as: string = '') => {
   })
 
   zpEnv.bind(ns + 'lowest', (len, symbol, rest: any = {}) => {
-    if (Array.isArray(len)) {
+    const { roll, prop, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
+
+    if (Array.isArray(symbol)) {
       if (isMeta) return 0
-      return indicators.lowest(len.length, len, {})
+      return indicators.lowest(len, symbol, {})
     }
 
-    const { roll, prop, offset } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
 
     if (isMeta) {
       zpEnv.addAsset(symbol, len + roll + offset)
