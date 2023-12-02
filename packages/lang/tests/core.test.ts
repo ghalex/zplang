@@ -54,7 +54,10 @@ describe('core', () => {
       (= [1, 2] [1, 2])
     `
     const res = zp.evalCode(env, code)
-    console.log(res)
+
+    expect(res[0]).toEqual(5)
+    expect(res[1]).toEqual([5, 6, 7])
+    expect(res[2]).toEqual([1, 2, 3])
   })
 
   test('pragma', () => {

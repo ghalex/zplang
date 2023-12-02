@@ -1,6 +1,6 @@
 {
   "name": "zplang",
-  "version": "1.0.34",
+  "version": "1.0.35",
   "description": "",
   "main": "dist/zplang.umd.js",
   "module": "dist/zplang.es.js",
@@ -38,7 +38,6 @@
     "@zapant/core": "^2.0.4",
     "@zapant/indicators": "^1.0.0",
     "dayjs": "^1.11.10",
-    "numjs": "^0.16.1",
     "ohm-js": "^17.1.0",
     "ramda": "^0.29.1"
   }

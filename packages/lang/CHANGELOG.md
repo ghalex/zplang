@@ -1,5 +1,11 @@
 # zplang
 
+## 1.0.35
+
+### Patch Changes
+
+- Remove numjs
+
 ## 1.0.34
 
 ### Patch Changes
