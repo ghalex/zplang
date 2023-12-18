@@ -51,6 +51,7 @@ const load = (env: Env) => {
     return arrApply(fn, arr1, arr2)
   })
 
+  env.bind('nil', (val) => val === undefined || val === null)
   env.bind('>', (a, b) => a > b)
   env.bind('>=', (a, b) => a >= b)
   env.bind('!=', (a, b) => a !== b)
@@ -79,6 +80,10 @@ const load = (env: Env) => {
     obj1 = { ...obj1, ...obj2 }
   })
 
+  // Math
+  env.bind('max', (arr) => Array.isArray(arr) ? Math.max(...arr) : Math.max(arr))
+  env.bind('min', (arr) => Array.isArray(arr) ? Math.min(...arr) : Math.min(arr))
+
   // String
   env.bind('str', (...args) => args.map(a => a.toString()).join(' '))
   env.bind('clear', () => { env.clear() })
@@ -106,7 +111,8 @@ const load = (env: Env) => {
     return lamda instanceof Lambda ? arr.filter(val => lamda.eval(env, [val])) : arr.filter(lamda)
   })
   env.bind('take', (val, arr) => val > 0 ? r.take(val, arr) : r.takeLast(Math.abs(val), arr))
-
+  env.bind('reverse', (arr) => arr.reverse())
+  env.bind('concat', (arr1, arr2) => arr1.concat(arr2))
   env.bind('sortBy', (fn, arr) => {
     return r.sortBy(val => fn.eval(env, [val]), arr)
   })

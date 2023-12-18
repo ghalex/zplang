@@ -42,6 +42,11 @@ const load = (zpEnv: Env, as: string = '') => {
     return p ?? null
   })
 
+  zpEnv.bind('getOrder', (symbol) => {
+    const o = portfolio.orders.find(p => p.symbol === symbol)
+    return o ?? null
+  })
+
   zpEnv.bind(ns + 'balance', ({ minAmount }: any = { minAmount: 0 }) => {
     const bars = zpEnv.get('$$bars')
     portfolio.orders = zpCore.balance(portfolio.orders, portfolio.openPositions, { bars, minAmount })
