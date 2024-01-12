@@ -52,11 +52,29 @@ describe('array & objects', () => {
 
       ;; get age key
       (:age obj1)
-      (:age! 22 obj1)
+      (set {age: 22} obj1)
+
+      ;; define keys with string
+      (def obj2 {"name": "My Name", "age": 2})
     `)
 
     expect(res[0]).toEqual({ name: 'My Name', age: 2 })
     expect(res[1]).toEqual(['name', 'age'])
     expect(res[2]).toEqual(2)
+
+  })
+
+  test('keywords', () => {
+    const env = new Env()
+
+    const res = zp.evalCode(env, String.raw`
+      (defn myF [name] (return name))
+      (myF "Alex")
+      (return 2)
+      (return [] => 2)
+    `)
+
+    expect(res[1]).toEqual("Alex")
+    console.log(res)
   })
 })

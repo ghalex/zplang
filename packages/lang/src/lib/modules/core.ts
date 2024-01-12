@@ -76,7 +76,6 @@ const load = (env: Env) => {
   env.bind('get', (key: string, obj) => r.path(key.split('.'))(obj))
   env.bind('set', (obj1, obj2) => ({ ...obj2, ...obj1 }))
   env.bind('set!', (obj1, obj2) => {
-    console.log('in set ', obj1, obj2)
     obj1 = { ...obj1, ...obj2 }
   })
 
@@ -134,8 +133,16 @@ const load = (env: Env) => {
   env.bind('size', (arr) => arr.length)
   env.bind('count', (arr: any[]) => arr.length)
   env.bind('map', (lamda, arr) => arr.map((val, i) => lamda.eval(env, [val, i])))
-  env.bind('first', arr => arr[0])
-  env.bind('last', arr => arr[arr.length - 1])
+  env.bind('first', arr => {
+    if (arr.length === 0) return null
+    return arr[0]
+  })
+
+  env.bind('last', arr => {
+    if (arr.length === 0) return null
+    return arr[arr.length - 1]
+  })
+  
   env.bind('nth', (idx, arr) => {
     function getIdx (i, a) {
       if (Array.isArray(i)) {

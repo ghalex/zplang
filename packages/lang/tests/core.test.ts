@@ -12,6 +12,8 @@ describe('core', () => {
       (def name "Alex")
       age
       name
+      (def arr1 ["Alex", "John"])
+      (def name2 (first arr1))
     `
 
     const ast = zp.getAst(code)
@@ -22,6 +24,8 @@ describe('core', () => {
     expect(res[2]).toBe(1)
     expect(res[3]).toBe('Alex')
     expect(ast.toString()).toEqual(codeToStr(code))
+
+    console.log(res)
   })
 
   test('arithmetic operators', () => {
@@ -148,4 +152,5 @@ describe('core', () => {
 
     console.log(res)
   })
+
 })

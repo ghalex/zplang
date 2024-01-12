@@ -1,6 +1,7 @@
 import type { MatchResult, Grammar, Node } from 'ohm-js'
 import { FnCall, Expression, Variable, VarDec, Strlit, List, FnDec, IfElse, Loop, Obj, ObjGet, ObjSet, Asset, Assets, ArrayIdx, Import, Let, Pragma } from './language'
 import Do from './language/Do'
+import Return from './language/Return'
 
 const createSemantics = (grammar: Grammar, match: MatchResult) => {
   const semantics = grammar.createSemantics()
@@ -32,9 +33,9 @@ const createSemantics = (grammar: Grammar, match: MatchResult) => {
     Stmt_objGet (_l, _dots, id, obj, _r) {
       return new ObjGet(id.sourceString, obj.ast())
     },
-    Stmt_objSet (_l, _dots, id, write, value, obj, _r) {
-      return new ObjSet(id.sourceString, value.ast(), obj.ast(), write.ast().length > 0)
-    },
+    // Stmt_objSet (_l, _dots, id, write, value, obj, _r) {
+    //   return new ObjSet(id.sourceString, value.ast(), obj.ast(), write.ast().length > 0)
+    // },
     Stmt_varDec (_left, _def, id: Node, exp: Node, _right) {
       const variable = new Variable(id.sourceString, 'any')
       const initializer = exp.ast()
@@ -50,6 +51,9 @@ const createSemantics = (grammar: Grammar, match: MatchResult) => {
     },
     Stmt_do (_l, _do, block, _r) {
       return new Do(block.ast())
+    },
+    Stmt_return (_l, _return, exp, _r) {
+      return new Return(exp.ast())
     },
     Stmt_pragma (_c, _pragma, id, val) {
       return new Pragma(id.sourceString, val.ast())
@@ -127,6 +131,9 @@ const createSemantics = (grammar: Grammar, match: MatchResult) => {
       return new Strlit(chars.ast().join(''))
     },
     null (val) {
+      return null
+    },
+    nil (val) {
       return null
     },
     _terminal () {

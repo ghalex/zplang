@@ -5,6 +5,7 @@ import analyzer from './analyzer'
 import { Lambda, type Env } from './language'
 
 // const data = fs.readFileSync(path.join(__dirname, 'zapant.ohm'), { encoding: 'utf-8' })
+// | "(" ":" id "!"? Exp (Var | Asset | Assets) ")"          --objSet
 const grammar = ohm.grammar(String.raw`
 Zapant {
   Program = Stmt+
@@ -15,13 +16,13 @@ Zapant {
       | "(" loop id? in (List | Stmt_fnCall | Var) Block ")"    --loop
       | "(" fn ListArgs Block ")"                               --fnDec
       | ListArgs "=>" Exp                                       --fnDec2
-      | "(" ":" id "!"? Exp (Var | Asset | Assets) ")"          --objSet
-      | "(" ":" id (Var | Asset | Assets | Stmt_objSet | Stmt_fnCall) ")"     --objGet
+      | "(" ":" id (Var | Asset | Assets | Stmt_fnCall) ")"     --objGet
       | "(" def id (Stmt | Exp) ")"                             --varDec
       | "(" defn id ListArgs Block ")"                          --fnDec3
       | "(" import strlit (as id)? ")"                          --import
       | "(" let LetList Block ")"                               --let
       | "(" do Block ")"                                        --do
+      | "(" return Exp ")"                                      --return
       | "#" pragma id (Primary | List | Object)                 --pragma
       | Exp
 
@@ -47,6 +48,7 @@ Zapant {
       | intlit
       | boolean
       | null
+      | nil
 
   ArrayIdx = id "[" intlit "]"
   List = "[" listOf<Exp, ","> "]"
@@ -54,7 +56,7 @@ Zapant {
   LetItem = id Exp
   LetList = "[" listOf<LetItem, ","> "]"
   Object = "{" listOf<ObjItem, ",">  "}"
-  ObjItem = id ":" Exp
+  ObjItem = (id | strlit) ":" Exp
   Var = id
   AssetId = (upper+ "/" upper+)   --coin
   | (upper+)                      --simple
@@ -77,10 +79,12 @@ Zapant {
   true = "true" ~alnum
   false = "false" ~alnum
   null = "null" ~alnum
+  nil = "nil" ~alnum
   bars = "bars" ~alnum
   daysAgo = "days ago" ~alnum
   yesterday = "yesterday" ~alnum
   today = "today" ~alnum
+  return = "return" ~alnum
   pragma = "pragma" ~alnum
   import = "import" ~alnum
   as = ":as" ~alnum
@@ -102,6 +106,8 @@ Zapant {
       | today
       | yesterday
       | false
+      | return
+      | nil
       | null
 
   strlit = "\"" char* "\""
