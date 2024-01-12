@@ -113,12 +113,15 @@ const load = (zpEnv: Env, as: string = '') => {
     }
 
     if (isMeta) {
+      console.log('heeere')
       zpEnv.addAsset(symbol, len + roll + offset)
       return roll ? [0] : 0
     }
 
     const data = getBars(zpEnv, symbol, len + roll + offset + 1).map(b => b[prop])
-    return indicators.cmr(len, data, { roll, offset })
+    const res = indicators.cmr(len, data, { roll, offset })
+
+    return res ?? 0
   })
 
   // Standard deviation

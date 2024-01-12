@@ -133,4 +133,33 @@ describe('trading', () => {
     expect(ordersBalanced.length).toEqual(2)
 
   })
+
+  test('indicators', () => {
+    const env = new Env({ bars: data })
+    env.loadModuleByName('core/trading')
+    env.loadModuleByName('core/indicators')
+
+    const code = String.raw`
+      (def symbols [
+        "AAPL",
+        "MSFT",
+        "AMD"
+      ])
+
+      (def aaplToday (:close {AAPL}))
+      (def x (cmr 1 "AAPL"))
+    `
+
+    const changePortfolio = env.get('changePortfolio')
+    changePortfolio({
+      initialCapital: 2000,
+      openPositions: [...positions]
+    })
+
+    // Eval code
+    const res = zp.evalCode(env, code)
+
+    // Get values from result
+    console.log(res)
+  })
 })

@@ -1,5 +1,11 @@
 # zplang
 
+## 1.0.38
+
+### Patch Changes
+
+- fix cmr
+
 ## 1.0.37
 
 ### Patch Changes
