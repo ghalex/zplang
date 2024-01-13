@@ -113,7 +113,6 @@ const load = (zpEnv: Env, as: string = '') => {
     }
 
     if (isMeta) {
-      console.log('heeere')
       zpEnv.addAsset(symbol, len + roll + offset)
       return roll ? [0] : 0
     }

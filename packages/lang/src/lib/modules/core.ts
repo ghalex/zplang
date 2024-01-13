@@ -51,7 +51,7 @@ const load = (env: Env) => {
     return arrApply(fn, arr1, arr2)
   })
 
-  env.bind('nil', (val) => val === undefined || val === null)
+  env.bind('isNil', (val) => val === undefined || val === null)
   env.bind('>', (a, b) => a > b)
   env.bind('>=', (a, b) => a >= b)
   env.bind('!=', (a, b) => a !== b)
