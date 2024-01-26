@@ -1,5 +1,11 @@
 # zplang
 
+## 1.0.40
+
+### Patch Changes
+
+- zp-core
+
 ## 1.0.39
 
 ### Patch Changes
