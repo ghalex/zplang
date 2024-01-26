@@ -1,5 +1,11 @@
 # zplang
 
+## 1.0.41
+
+### Patch Changes
+
+- fix merge
+
 ## 1.0.40
 
 ### Patch Changes
