@@ -99,8 +99,26 @@ const load = (zpEnv: Env, as: string = '') => {
       return roll ? [0] : 0
     }
 
-    const data = getBars(zpEnv, symbol, len + roll + offset + 1)
+    const data = getBars(zpEnv, symbol, len + roll + offset)
     return indicators.atr(len, data, { roll, offset })
+  })
+
+  // RSI
+  zpEnv.bind(ns + 'rsi', (len, symbol, rest: any = {}) => {
+    const { roll, offset, prop } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
+
+    if (Array.isArray(symbol)) {
+      if (isMeta) return 0
+      return indicators.rsi(len, symbol, { roll, offset })
+    }
+
+    if (isMeta) {
+      zpEnv.addAsset(symbol, len + roll + offset + 1) // for RSI we need one more
+      return roll ? [0] : 0
+    }
+
+    const data = getBars(zpEnv, symbol, len + roll + offset + 1).map(b => b[prop])
+    return indicators.rsi(len, data, { roll, offset })
   })
 
   // Cummulative return
@@ -117,7 +135,7 @@ const load = (zpEnv: Env, as: string = '') => {
       return roll ? [0] : 0
     }
 
-    const data = getBars(zpEnv, symbol, len + roll + offset + 1).map(b => b[prop])
+    const data = getBars(zpEnv, symbol, len + roll + offset).map(b => b[prop])
     const res = indicators.cmr(len, data, { roll, offset })
 
     return res ?? 0

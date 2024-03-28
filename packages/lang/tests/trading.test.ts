@@ -1,6 +1,7 @@
 import zp, { Env } from '../src/lib'
 import data from '../src/data/stocks'
-// import * as r from 'ramda'
+import e from 'express'
+import * as r from 'ramda'
 
 const positions = [{
   symbol: 'AAPL',
@@ -135,7 +136,7 @@ describe('trading', () => {
   })
 
   test('indicators', () => {
-    const env = new Env({ bars: data })
+    const env = new Env({ bars: r.map(x => r.take(10, x), data) })
     env.loadModuleByName('core/trading')
     env.loadModuleByName('core/indicators')
 
@@ -146,8 +147,10 @@ describe('trading', () => {
         "AMD"
       ])
 
-      (def aaplToday (:close {AAPL}))
-      (def x (cmr 1 "AAPL"))
+      (def sma5 (sma 5 "AAPL"))
+      (def cmr5 (cmr 5 "AAPL"))
+      (def atr5 (atr 5 "AAPL"))
+      (def rsi5 (rsi 5 "AAPL"))
     `
 
     const changePortfolio = env.get('changePortfolio')
@@ -160,6 +163,9 @@ describe('trading', () => {
     const res = zp.evalCode(env, code)
 
     // Get values from result
-    console.log(res)
+    expect(res[1].toFixed(2)).toEqual('179.53')
+    expect(res[2].toFixed(2)).toEqual('-0.01')
+    expect(res[3].toFixed(2)).toEqual('4.00')
+    expect(res[4].toFixed(2)).toEqual('78.39')
   })
 })
