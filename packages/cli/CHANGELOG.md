@@ -1,5 +1,13 @@
 # zplang-cli
 
+## 0.0.35
+
+### Patch Changes
+
+- add rsi indicator
+- Updated dependencies
+  - zplang@1.0.42
+
 ## 0.0.34
 
 ### Patch Changes

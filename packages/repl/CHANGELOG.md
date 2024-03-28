@@ -1,5 +1,13 @@
 # zplang-repl
 
+## 1.0.25
+
+### Patch Changes
+
+- add rsi indicator
+- Updated dependencies
+  - zplang@1.0.42
+
 ## 1.0.24
 
 ### Patch Changes

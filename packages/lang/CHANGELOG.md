@@ -1,5 +1,11 @@
 # zplang
 
+## 1.0.42
+
+### Patch Changes
+
+- add rsi indicator
+
 ## 1.0.41
 
 ### Patch Changes
