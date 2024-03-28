@@ -1,5 +1,11 @@
 # zplang
 
+## 1.0.43
+
+### Patch Changes
+
+- bump version
+
 ## 1.0.42
 
 ### Patch Changes
