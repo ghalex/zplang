@@ -1,5 +1,11 @@
 # zplang
 
+## 1.0.44
+
+### Patch Changes
+
+- fix rsi
+
 ## 1.0.43
 
 ### Patch Changes
