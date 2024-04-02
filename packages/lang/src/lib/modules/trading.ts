@@ -42,7 +42,7 @@ const load = (zpEnv: Env, as: string = '') => {
     return p ?? null
   })
 
-  zpEnv.bind('getOrder', (symbol) => {
+  zpEnv.bind(ns + 'getOrder', (symbol) => {
     const o = portfolio.orders.find(p => p.symbol === symbol)
     return o ?? null
   })

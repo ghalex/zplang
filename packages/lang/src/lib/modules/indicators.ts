@@ -38,7 +38,7 @@ const load = (zpEnv: Env, as: string = '') => {
 
     if (Array.isArray(symbol)) {
       if (isMeta) return 0
-      return indicators.ema(len / 2, symbol, { roll, offset })
+      return indicators.ema(len, symbol, { roll, offset })
     }
 
     if (isMeta) {
@@ -50,13 +50,31 @@ const load = (zpEnv: Env, as: string = '') => {
     return indicators.ema(len, data, { roll, offset })
   })
 
+  // RSI
+  zpEnv.bind(ns + 'rsi', (len, symbol, rest: any = {}) => {
+    const { roll, offset, prop } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
+
+    if (Array.isArray(symbol)) {
+      if (isMeta) return 0
+      return indicators.rsi(len, symbol, { roll, offset })
+    }
+
+    if (isMeta) {
+      zpEnv.addAsset(symbol, len * 2 + roll + offset) // for RSI we need one more
+      return roll ? [0] : 0
+    }
+
+    const data = getBars(zpEnv, symbol, len * 2 + roll + offset).map(b => b[prop])
+    return indicators.rsi(len, data, { roll, offset })
+  })
+
   // Momentum Squeeze
   zpEnv.bind(ns + 'mms', (len, symbol, rest: any = {}) => {
     const { roll, offset } = r.mergeRight({ roll: 0, offset: 0 }, rest)
 
     if (Array.isArray(symbol)) {
       if (isMeta) return 0
-      return indicators.mms(len / 2, symbol, { roll, offset})
+      return indicators.mms(len, symbol, { roll, offset})
     }
 
     if (isMeta) {
@@ -101,24 +119,6 @@ const load = (zpEnv: Env, as: string = '') => {
 
     const data = getBars(zpEnv, symbol, len + roll + offset)
     return indicators.atr(len, data, { roll, offset })
-  })
-
-  // RSI
-  zpEnv.bind(ns + 'rsi', (len, symbol, rest: any = {}) => {
-    const { roll, offset, prop } = r.mergeRight({ roll: 0, offset: 0, prop: 'close' }, rest)
-
-    if (Array.isArray(symbol)) {
-      if (isMeta) return 0
-      return indicators.rsi(len, symbol, { roll, offset })
-    }
-
-    if (isMeta) {
-      zpEnv.addAsset(symbol, len + roll + offset + 1) // for RSI we need one more
-      return roll ? [0] : 0
-    }
-
-    const data = getBars(zpEnv, symbol, len + roll + offset + 1).map(b => b[prop])
-    return indicators.rsi(len, data, { roll, offset })
   })
 
   // Cummulative return
