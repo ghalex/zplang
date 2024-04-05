@@ -1,59 +1,53 @@
-import * as signale from 'signale'
-import { Args, Command } from '@oclif/core'
-import chalk from 'chalk'
-import shell from 'shelljs'
+import clc from 'cli-color'
 
-const log = new signale.Signale({ interactive: true, scope: 'zplang' })
+import { Command } from 'commander'
+import prompts from 'prompts'
+import ora from 'ora'
+import shell from 'shelljs'
+import fs from 'node:fs'
+
+const program = new Command('create')
 
 const createProject = async (name: string) => {
-  // return await new Promise((resolve, reject) => {
-  // const ls = spawn('git', ['clone', 'https://github.com/zapant-com/zplang-hello.git', name])
-  log.await('[%d/2] - Createing project %s', 1, chalk.cyanBright(name))
-  const res = shell.exec(`git clone https://github.com/zapant-com/zplang-hello.git ${name}`)
+  if (fs.existsSync(name)) {
+    console.log(`${clc.red('✖ Error: ')} Path ${name} already exists and is not an empty directory`)
+    return
+  }
+
+  const spinner = ora(`Creating project ${clc.bold.cyanBright(name)}`).start()
+  const res = shell.exec(`git clone https://github.com/zapant-com/zplang-hello.git ${name}`, { silent: true })
   if (res.code === 0) {
     shell.rm('-rf', name + '/.git')
+
+    spinner.succeed()
+    console.log(`${clc.green('✔ Success: ')} Project ${clc.bold.cyanBright(name)} created successfully`)
+
   } else {
-    throw new Error(res.stderr)
-  }
 
-  // child.stdout?.on('data', function (data) {
-  //   log.await(data.toString())
-  // })
-
-  // exec(`git clone https://github.com/zapant-com/zplang-hello.git ${name}`, (err, output) => {
-  // // once the command has completed, the callback function is called
-  //   if (err) {
-  //   // log and return if we encounter an error
-  //     reject(new Error('Could not create project with name ' + name))
-  //     return
-  //   }
-  //   // log the output received from the command
-  //   console.log(output)
-  //   resolve(output)
-  // })
-  // })
-}
-
-export default class CreateCommand extends Command {
-  static description = 'Create a new project'
-  static examples = [
-    '<%= config.bin %> <%= command.id %> {projectName}'
-  ]
-
-  static args = {
-    name: Args.string({ required: true })
-  }
-
-  async run (): Promise<any> {
-    const { args } = await this.parse(CreateCommand)
-    // const version = shell.exec('node --version', { silent: true }).stdout
-
-    try {
-      await createProject(args.name)
-      log.success('[%d/2] - Project %s created with success.', 2, chalk.cyanBright(args.name))
-    } catch (err: any) {
-      console.log(err)
-      log.error('[%d/2] - Could not create project with name %s.', 1, args.name)
-    }
+    spinner.fail()
+    console.log(`${clc.red('✖ Error: ')} Project ${name} could not be created`)
   }
 }
+
+program
+  .usage('name [options]')
+  .description('create a new zplang project')
+  .argument('name', 'project name')
+  .action(async (projectName, opts) => {
+      // const { name } = await prompts({ type: 'text', name: 'name', message: 'Enter project name', initial: projectName })
+      const { confirm } = await prompts({
+        type: 'toggle',
+        name: 'confirm',
+        message: `Are you sure you want to create project (${projectName})?`,
+        initial: true,
+        active: 'yes',
+        inactive: 'no'
+      })
+
+      if (confirm) {
+        const data = await createProject(projectName)
+      }
+
+  })
+
+export default program
