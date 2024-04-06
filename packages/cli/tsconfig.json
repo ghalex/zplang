@@ -9,6 +9,7 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "noImplicitAny": false,
     "resolveJsonModule": true,
     "skipLibCheck": true,
@@ -17,8 +18,7 @@
       "@/*": [
         "./src/*"
       ]
-    },
-    "esModuleInterop": true
+    }
   },
   "include": [
     "./src/**/*"

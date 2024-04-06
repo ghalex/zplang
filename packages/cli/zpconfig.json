@@ -1,0 +1,16 @@
+{
+	"dataDir": "test1/data",
+	"apiUrl": "http://devstation.home:5011/api",
+	"accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJfaWQiOiI2NTFkYjI0YzA1Yjg3NDUxZDhhMTkyMTgiLCJuYW1lIjoiQWxleCIsImVtYWlsIjoiYWRtaW5AemFwYW50LmNvbSIsInN1YnNjcmlwdGlvbiI6eyJwbGFuIjoicHJvIiwic3RhcnRBdCI6IjIwMjQtMDItMTlUMTA6MzE6MjkuOTgzWiJ9LCJyb2xlIjoiYWRtaW4iLCJteUludml0ZUNvZGUiOiJGNk02K1lyRWlCcz0iLCJpYXQiOjE3MTI0MzA5NDgsImV4cCI6MTcxMjUxNzM0OCwiaXNzIjoiemFwYW50LmNvbSJ9.9J8lTURm8qJ7uj55owvG53acxMfcHNdH39D1L_Wit7s",
+	"user": {
+		"_id": "651db24c05b87451d8a19218",
+		"name": "Alex",
+		"email": "admin@zapant.com",
+		"subscription": {
+			"plan": "pro",
+			"startAt": "2024-02-19T10:31:29.983Z"
+		},
+		"role": "admin",
+		"myInviteCode": "F6M6+YrEiBs="
+	}
+}

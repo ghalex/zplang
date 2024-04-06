@@ -5,6 +5,7 @@ import prompts from 'prompts'
 import ora from 'ora'
 import shell from 'shelljs'
 import fs from 'node:fs'
+import { type Api } from '@/api'
 
 const program = new Command('create')
 
@@ -29,25 +30,27 @@ const createProject = async (name: string) => {
   }
 }
 
-program
-  .usage('name [options]')
-  .description('create a new zplang project')
-  .argument('name', 'project name')
-  .action(async (projectName, opts) => {
-      // const { name } = await prompts({ type: 'text', name: 'name', message: 'Enter project name', initial: projectName })
-      const { confirm } = await prompts({
-        type: 'toggle',
-        name: 'confirm',
-        message: `Are you sure you want to create project (${projectName})?`,
-        initial: true,
-        active: 'yes',
-        inactive: 'no'
-      })
+export default (config: any, api: Api) => {
+  program
+    .usage('name [options]')
+    .description('create a new zplang project')
+    .argument('name', 'project name')
+    .action(async (projectName, opts) => {
+        // const { name } = await prompts({ type: 'text', name: 'name', message: 'Enter project name', initial: projectName })
+        const { confirm } = await prompts({
+          type: 'toggle',
+          name: 'confirm',
+          message: `Are you sure you want to create project (${projectName})?`,
+          initial: true,
+          active: 'yes',
+          inactive: 'no'
+        })
 
-      if (confirm) {
-        const data = await createProject(projectName)
-      }
+        if (confirm) {
+          const data = await createProject(projectName)
+        }
 
-  })
+    })
 
-export default program
+  return program
+}

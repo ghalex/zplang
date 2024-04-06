@@ -1,19 +1,21 @@
 #!/usr/bin/env node
 import figlet from 'figlet'
-import clc from 'cli-color'
 
 import { Command } from 'commander'
-
+import createApi from './api'
 import create from './commands/create'
-import runCommand from './commands/run'
+import executeCommand from './commands/execute'
 import login from './commands/login'
+import download from './commands/download'
 
 import Configstore from 'configstore'
 
 figlet("Zplang CLI", (err, data) => {
   const logoText = err ? 'zplang CLI' : data + '\n'
+  const config = new Configstore('zplang', { 'dataDir':  'data', 'apiUrl': 'https://zapant.com/api' }, { configPath: './zpconfig.json' })
+  const api = createApi(config)
+
   const program = new Command()
-  const config = new Configstore('zplang')
 
   program
     .name('zplang')
@@ -22,9 +24,10 @@ figlet("Zplang CLI", (err, data) => {
     .description('zplang CLI tool')
     .addHelpText('beforeAll', logoText)
 
-  program.addCommand(runCommand)
-  program.addCommand(create)
-  program.addCommand(login(config))
+  program.addCommand(executeCommand(config, api))
+  program.addCommand(create(config, api))
+  program.addCommand(login(config, api))
+  program.addCommand(download(config, api))
 
   program.parse(process.argv)
 })
