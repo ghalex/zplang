@@ -1,5 +1,11 @@
 # zplang
 
+## 1.0.45
+
+### Patch Changes
+
+- remove default and babel
+
 ## 1.0.44
 
 ### Patch Changes
