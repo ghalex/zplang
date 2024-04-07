@@ -67,7 +67,7 @@ export default (config: any, api: Api) => {
           console.log(`${clc.green('✔ Success:')} Orders saved successfully\n`)
         }
         
-        console.log(stdout.split('\n').map(l => clc.xterm(8) (l)).join('\n') + '\n')
+        console.log(stdout.split('\n').map(l => clc.xterm(8) (l)).join('\n'))
         console.dir(portfolio.orders, { depth: null, colors: true })
         
 

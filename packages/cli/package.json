@@ -1,6 +1,6 @@
 {
   "name": "zplang-cli",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "dist/zplang.es.mjs",
   "module": "dist/zplang.es.mjs",
@@ -43,7 +43,6 @@
     "typescript": "^5.4.3"
   },
   "dependencies": {
-    "@inquirer/prompts": "^4.3.1",
     "axios": "^1.6.8",
     "cli-color": "^2.0.4",
     "commander": "^12.0.0",
@@ -53,7 +52,6 @@
     "prompts": "^2.4.2",
     "ramda": "^0.29.1",
     "shelljs": "^0.8.5",
-    "zlib": "^1.0.5",
     "zplang": "workspace:*"
   }
 }

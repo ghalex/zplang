@@ -1,5 +1,11 @@
 # zplang-cli
 
+## 1.0.3
+
+### Patch Changes
+
+- use zlib from node
+
 ## 1.0.2
 
 ### Patch Changes
