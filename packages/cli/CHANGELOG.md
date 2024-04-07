@@ -1,5 +1,11 @@
 # zplang-cli
 
+## 1.0.5
+
+### Patch Changes
+
+- use homedir for config and data dir
+
 ## 1.0.4
 
 ### Patch Changes

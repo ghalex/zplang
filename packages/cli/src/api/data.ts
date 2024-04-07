@@ -6,7 +6,7 @@ import Axios, { type AxiosInstance } from 'axios'
 import ora from 'ora'
 
 export default (config: any) => {
-  const dataDir = path.join(process.cwd(), config.get('dataDir') ?? 'data')
+  
   const axios: AxiosInstance = Axios.create({
     baseURL: config.get('apiUrl') ?? 'https://zapant.com/api',
     timeout: 80000,
@@ -20,6 +20,7 @@ export default (config: any) => {
   }
 
   const get = (symbol: string, window: number, resolution?: number, end?: string) => {
+    const dataDir = config.get('dataDir')
     const key = `${parseSymbol(symbol)}_${resolution ?? 1440}_${end ?? 'last'}`
     const filePath = path.join(dataDir, key + '.data')
 
@@ -44,10 +45,15 @@ export default (config: any) => {
   }
 
   const save = async (symbol: string, resolution: number, end: string | null, data: any) => {
+    const dataDir = config.get('dataDir')
     const key = `${parseSymbol(symbol)}_${resolution ?? 1440}_${end ?? 'last'}`
     const filePath = path.join(dataDir, key + '.data')
     const jsonString = JSON.stringify(data, null, 2)
     const buffer = Buffer.from(jsonString, 'utf8')
+
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true })
+    }
 
     try {
       const compressedBuffer = gzipSync(buffer)
@@ -65,8 +71,9 @@ export default (config: any) => {
   }
 
   const download = async (symbols: string[], window: number, resolution?: number, end?: string) => {
+    const dataDir = config.get('dataDir')
+    const spinner = ora(`Downloading data for [ ${clc.bold.green(symbols.join(', '))} ]`).start()
     try {
-      const spinner = ora(`Downloading data for [ ${clc.bold.green(symbols.join(', '))} ]`).start()
 
       const { data } = await axios.get('/bars', {
         params: {
@@ -94,9 +101,11 @@ export default (config: any) => {
       return data
 
     } catch (e: any) {
+      spinner.fail()
+
       if (e.response) {
         if(e.response.status === 401) {
-          throw new Error('Unauthorized')
+          throw new Error('You must be logged in to download data. Please run `zplang login` command.')
         }
 
         throw new Error(e.response.data.message)

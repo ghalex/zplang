@@ -20,6 +20,7 @@ export default (config: any, api: Api) => {
         await api.data.download(symbols, window, resolution, end)
       } catch (e: any) {
         console.error(clc.red(`Error: ${e.message}`))
+        return process.exit(0)
       }
 
     })
