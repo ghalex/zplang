@@ -10,6 +10,7 @@ module.exports = [
       'figlet',
       'commander',
       'configstore',
+      'ora',
       'zlib',
       'prompts',
       'shelljs',
