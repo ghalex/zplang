@@ -16,9 +16,8 @@ export default (config: any, api: Api) => {
         const { window, resolution } = opts
         const symbols = opts.symbols.split(',')
         const end = opts.end ? new Date(opts.end).toISOString() : undefined
-        const data = await api.data.download(symbols, window, resolution, end)
-
-        console.log(symbols, window, resolution, end)
+        
+        await api.data.download(symbols, window, resolution, end)
       } catch (e: any) {
         console.error(clc.red(`Error: ${e.message}`))
       }

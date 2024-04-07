@@ -9,11 +9,15 @@ export default (config: any) => {
     const start = performance.now()
     const zpEnv = new Env({ bars })
 
+    zpEnv.loadModuleByName('core/indicators')
+    zpEnv.loadModuleByName('core/trading')
+
     const result = zp.evalCode(zpEnv, code)
     const stop = performance.now()
     const inSeconds = (stop - start) / 1000
 
     return {
+      portfolio: zpEnv.get('getPortfolio')(),
       result,
       stdout: zpEnv.stdout,
       time: inSeconds
@@ -50,8 +54,7 @@ export default (config: any) => {
         throw new Error(`File "${fileName}" does not exist`)
     }
 
-    const fileContents = fs.readFileSync(filePath, 'utf8')
-    return fileContents
+    return fs.readFileSync(filePath, 'utf8')
   }
 
   return { runCode, getSymbols, readCode }

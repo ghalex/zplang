@@ -1,0 +1,20 @@
+[
+  {
+    "symbol": "ETH/USD",
+    "date": 1712500285587,
+    "dateFormatted": "2024-04-07T14:31:25.587Z",
+    "price": 3405.5,
+    "units": 1,
+    "action": "buy",
+    "status": "created"
+  },
+  {
+    "symbol": "ADA/USD",
+    "date": 1712500285587,
+    "dateFormatted": "2024-04-07T14:31:25.587Z",
+    "price": 0.594401,
+    "units": 1,
+    "action": "buy",
+    "status": "created"
+  }
+]

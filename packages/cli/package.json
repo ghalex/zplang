@@ -2,17 +2,21 @@
   "name": "zplang-cli",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "module": "dist/zplang-cli.js",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "tsx --tsconfig ./tsconfig.json src/index.ts",
     "start": "node dist/index.js",
     "lint": "tsc",
-    "build": "rm -rf ./dist/ && tsc"
+    "build": "rm -rf ./dist/ && rollup -c --bundleConfigAsCjs"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.3",
     "@types/cli-color": "^2.0.6",
     "@types/cli-spinner": "^0.2.3",
     "@types/configstore": "^6.0.2",
@@ -24,6 +28,10 @@
     "@types/signale": "^1.4.7",
     "esbuild": "^0.20.2",
     "nodemon": "^3.1.0",
+    "rollup": "^4.13.2",
+    "rollup-plugin-dts": "^6.1.0",
+    "rollup-plugin-esbuild": "^6.1.1",
+    "rollup-plugin-node-externals": "^7.1.1",
     "ts-node": "^10.9.2",
     "tslib": "^2.6.2",
     "tsx": "^4.7.2",

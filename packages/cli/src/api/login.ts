@@ -19,11 +19,13 @@ export default (config: any) => {
    * @returns 
    */
   const login = (email: string, password: string) => {
-    // const spinner = new Spinner('Authenticating with credentials on zapant.com')
-    const spinner = ora('Authenticating with credentials on zapant.com').start()
+    const spinner = ora('Authenticating with credentials on zapant.com')
 
-    //spinner.setSpinnerString(2)
-    //spinner.start()
+    // spinner.prefixText = clc.bgCyan('[info]');
+	  spinner.spinner = 'circleHalves';
+    spinner.color = 'green'
+    spinner.start()
+
     return axios.post('/auth/login', { email, password, strategy: 'local' })
       .then(res => res.data)
       .then(data => {
