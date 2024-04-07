@@ -1,11 +1,11 @@
 {
   "name": "zplang-cli",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "",
-  "main": "dist/zplang.es.mjs",
-  "module": "dist/zplang.es.mjs",
+  "main": "dist/zplang-cli.es.mjs",
+  "module": "dist/zplang-cli.es.mjs",
   "bin": {
-    "zplang": "dist/zplang.es.mjs"
+    "zplang": "dist/zplang-cli.es.mjs"
   },
   "engines": {
     "node": ">=20.0.0"
