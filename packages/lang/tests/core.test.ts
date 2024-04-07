@@ -1,4 +1,4 @@
-import zp, { Env, Lambda } from '../src/lib'
+import { Env, Lambda, evalCode, getAst } from '../src/lib'
 
 const codeToStr = (code: string) => {
   return code.split('\n').map(v => v.replace(/\s{2}/g, '')).filter(s => s.length > 0).join(',')
@@ -16,7 +16,7 @@ describe('core', () => {
       (def name2 (first arr1))
     `
 
-    const ast = zp.getAst(code)
+    const ast = getAst(code)
     const res = ast.map(stmt => stmt.eval(env))
 
     expect(res[0]).toBe(1)
@@ -37,7 +37,7 @@ describe('core', () => {
       (def isBigger (> 10 5))
       (% 6 5)
     `
-    const ast = zp.getAst(code)
+    const ast = getAst(code)
     const res = ast.map(stmt => stmt.eval(env))
 
     expect(res[0]).toBe(8)
@@ -57,7 +57,7 @@ describe('core', () => {
       (/ [2, 3, 4] [2, 2, 2])
       (= [1, 2] [1, 2])
     `
-    const res = zp.evalCode(env, code)
+    const res = evalCode(env, code)
 
     expect(res[0]).toEqual(5)
     expect(res[1]).toEqual([5, 6, 7])
@@ -74,7 +74,7 @@ describe('core', () => {
       #pragma assets { AMD: 5, AAPL: 10 }
     `
 
-    zp.evalCode(env, code)
+    evalCode(env, code)
     const settings = env.getPragma()
 
     expect(settings.test).toBe(1)
@@ -86,7 +86,7 @@ describe('core', () => {
   test('function calls', () => {
     const env = new Env()
 
-    const ast = zp.getAst(`
+    const ast = getAst(`
       (+ 2 3)
       (str "Alex" "Ghiura")
     `)
@@ -107,7 +107,7 @@ describe('core', () => {
       (defn mul [a, b] (* a b))
       (mul 2 3)
     `
-    const ast = zp.getAst(code)
+    const ast = getAst(code)
     const res = ast.map(stmt => stmt.eval(env))
 
     expect(res[0]).toBeInstanceOf(Lambda)
@@ -126,7 +126,7 @@ describe('core', () => {
       (def add [a, b] => (+ a b))
       (add 3 4)
     `
-    const res = zp.evalCode(env, code)
+    const res = evalCode(env, code)
 
     expect(res[1]).toEqual(7)
     // expect(ast.toString()).toEqual(codeToStr(code))
@@ -147,7 +147,7 @@ describe('core', () => {
         "World"
       )
     `
-    const res = zp.evalCode(env, code)
+    const res = evalCode(env, code)
     expect(res[1][1]).toEqual(7)
 
     console.log(res)

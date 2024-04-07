@@ -9,16 +9,20 @@ const name = pkg.name
 module.exports = [
   {
     input: 'src/lib/index.ts',
-    external: [],
+    external: [
+      'ohm-js',
+      'ramda',
+      '@zapant/core',
+      '@zapant/indicators'
+    ],
     plugins: [
       esbuild()
     ],
     output: [
       {
         name,
-        file: path.resolve(__dirname, `dist/${name}.umd.js`),
-        format: 'umd',
-        globals: {}
+        file: path.resolve(__dirname, `dist/${name}.cjs.js`),
+        format: 'cjs'
       },
       {
         file: path.resolve(__dirname, `dist/${name}.es.js`),

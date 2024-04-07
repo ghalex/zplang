@@ -174,7 +174,7 @@ const evalCode = (env: Env, code: string) => {
 
 export * from './language'
 export * as modules from './modules'
-export default {
+export {
   parse,
   getAst,
   getMatcher,

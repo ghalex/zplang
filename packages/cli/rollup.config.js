@@ -1,6 +1,5 @@
 const path = require('path')
 const esbuild = require('rollup-plugin-esbuild').default
-// const nodeExternals = require("rollup-plugin-node-externals").default
 
 const name = 'zplang-cli'
 
@@ -11,7 +10,6 @@ module.exports = [
       'figlet',
       'commander',
       'configstore',
-      'ora',
       'zlib',
       'prompts',
       'shelljs',
@@ -23,12 +21,11 @@ module.exports = [
       'zplang'
     ],
     plugins: [
-      // nodeExternals(),
       esbuild()
     ],
     output: [
       {
-        file: path.resolve(__dirname, `dist/${name}.es.js`),
+        file: path.resolve(__dirname, `dist/${name}.es.mjs`),
         format: 'es'
       }
     ]

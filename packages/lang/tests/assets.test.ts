@@ -1,4 +1,4 @@
-import zp, { Env } from '../src/lib'
+import { Env, getAst, evalCode } from '../src/lib'
 import stocks from '../src/data/stocks'
 import cypto from '../src/data/crypto'
 
@@ -7,7 +7,7 @@ import e from 'express'
 
 describe('assets', () => {
   test('load module', () => {
-    const ast = zp.getAst(String.raw`
+    const ast = getAst(String.raw`
       (import "core/indicators")
 
       (def symbol "AMD")
@@ -21,7 +21,7 @@ describe('assets', () => {
   })
 
   test('define an asset', () => {
-    const ast = zp.getAst(String.raw`
+    const ast = getAst(String.raw`
       {MSFT}
       {MSFT, today}
       {MSFT, yesterday}
@@ -79,7 +79,7 @@ describe('assets', () => {
     const env = new Env()
     env.loadBars(stocks)
 
-    const ast = zp.getAst(String.raw`
+    const ast = getAst(String.raw`
       (:close {MSFT})
       (:close {MSFT, 3 days ago})
       (def vol (:volume {MSFT, 2 days ago}))
@@ -102,7 +102,7 @@ describe('assets', () => {
       return r.mean(prices)
     })
 
-    const ast = zp.getAst(String.raw`
+    const ast = getAst(String.raw`
       (:close {MSFT, 2 bars})
       (sma (:close {AAPL, 10 bars}))
     `)
@@ -117,7 +117,7 @@ describe('assets', () => {
     const env = new Env()
     env.loadBars(stocks)
 
-    const ast = zp.getAst(String.raw`
+    const ast = getAst(String.raw`
       (def x 5)
       {MSFT, x bars}
       {MSFT, x days ago}
@@ -141,7 +141,7 @@ describe('assets', () => {
   test('assets list and window', () => {
     const metaEnv = new Env({ isMeta: true })
 
-    const ast = zp.getAst(String.raw`
+    const ast = getAst(String.raw`
       {AAPL, 2 days ago}
       {AMD, 10 days ago}
       (:close {MSFT, 10 bars})
@@ -166,7 +166,7 @@ describe('assets', () => {
     const env = new Env()
     env.loadBars(stocks)
 
-    const ast = zp.getAst(String.raw`
+    const ast = getAst(String.raw`
       (def assets ["AAPL", "MSFT"])
 
       (loop a in (map (fn [x] {x}) assets)
@@ -192,7 +192,7 @@ describe('assets', () => {
       {symbol, yesterday}
     `
 
-    const res = zp.evalCode(env, code)
+    const res = evalCode(env, code)
     expect(res[2].close).toEqual(1922.24)
     // console.dir(res)
   })

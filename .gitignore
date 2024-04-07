@@ -7,3 +7,4 @@ coverage
 .env.development
 
 dist
+test1

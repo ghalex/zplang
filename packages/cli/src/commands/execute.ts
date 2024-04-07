@@ -55,7 +55,6 @@ export default (config: any, api: Api) => {
           }
         }
 
-        
         const { portfolio, time, stdout } = api.code.runCode(code, bars)
 
         console.log(`${clc.green('✔ Success:')} Code was executed successfully`)

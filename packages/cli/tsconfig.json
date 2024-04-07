@@ -1,26 +1,32 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Node",
   "compilerOptions": {
+    /* Base */
     "target": "esnext",
-    "module": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
-    "outDir": "./dist",
+    "sourceMap": false,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    /* Strictness */
     "strict": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
     "noImplicitAny": false,
-    "skipLibCheck": true,
+    /* Paths */
     "baseUrl": ".",
+    "outDir": "dist",
     "paths": {
       "@/*": [
         "./src/*"
       ]
     }
   },
+  "exclude": [
+    "node_modules"
+  ],
   "include": [
-    "./src/**/*"
+    "./src/**/*",
+    "./tests/**/*"
   ]
 }

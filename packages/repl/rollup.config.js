@@ -9,7 +9,8 @@ const name = pkg.name
 module.exports = [
   {
     input: 'src/index.ts',
-    external: [],
+    external: [
+    ],
     plugins: [
       esbuild()
     ],

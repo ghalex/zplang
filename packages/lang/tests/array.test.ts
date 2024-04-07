@@ -1,11 +1,11 @@
-import zp, { Env } from '../src/lib'
+import { Env, evalCode } from '../src/lib'
 // import * as fs from 'node:fs'
 
 describe('array & objects', () => {
   test('defines an access arrays', () => {
     const env = new Env()
 
-    const res = zp.evalCode(env, String.raw`
+    const res = evalCode(env, String.raw`
       (def arr1 [1, 2, 3])
       (len arr1)
       
@@ -25,7 +25,7 @@ describe('array & objects', () => {
   test('array functions', () => {
     const env = new Env()
 
-    const res = zp.evalCode(env, String.raw`
+    const res = evalCode(env, String.raw`
       (def arr1 [1, 2, 3])
       
       (push 5 arr1)
@@ -46,7 +46,7 @@ describe('array & objects', () => {
   test('defines an access objects', () => {
     const env = new Env()
 
-    const res = zp.evalCode(env, String.raw`
+    const res = evalCode(env, String.raw`
       (def obj1 {name: "My Name", age: 2})
       (keys obj1)
 
@@ -67,7 +67,7 @@ describe('array & objects', () => {
   test('keywords', () => {
     const env = new Env()
 
-    const res = zp.evalCode(env, String.raw`
+    const res = evalCode(env, String.raw`
       (defn myF [name] (return name))
       (myF "Alex")
       (return 2)

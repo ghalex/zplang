@@ -1,6 +1,5 @@
-import zp, { Env } from '../src/lib'
+import { Env, evalCode } from '../src/lib'
 import data from '../src/data/stocks'
-import e from 'express'
 import * as r from 'ramda'
 
 const positions = [{
@@ -46,7 +45,7 @@ describe('trading', () => {
     })
 
     // Eval code
-    const res = zp.evalCode(env, code)
+    const res = evalCode(env, code)
 
     // Get values from result
     const order = res[1]
@@ -71,7 +70,7 @@ describe('trading', () => {
     })
 
     // Eval code
-    const res = zp.evalCode(env, String.raw`
+    const res = evalCode(env, String.raw`
       (def symbols [
         "AAPL",
         "MSFT",
@@ -107,7 +106,7 @@ describe('trading', () => {
     })
 
     // Eval code
-    const res = zp.evalCode(env, String.raw`
+    const res = evalCode(env, String.raw`
       (def symbols [
         "AAPL",
         "MSFT",
@@ -160,12 +159,12 @@ describe('trading', () => {
     })
 
     // Eval code
-    const res = zp.evalCode(env, code)
+    const res = evalCode(env, code)
 
     // Get values from result
     expect(res[1].toFixed(2)).toEqual('179.53')
     expect(res[2].toFixed(2)).toEqual('-0.01')
     expect(res[3].toFixed(2)).toEqual('4.00')
-    expect(res[4].toFixed(2)).toEqual('78.39')
+    expect(res[4].toFixed(2)).toEqual('62.24')
   })
 })

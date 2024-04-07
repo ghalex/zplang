@@ -1,5 +1,4 @@
-import zp from 'zplang'
-import { Env } from 'zplang'
+import { Env, evalCode } from 'zplang'
 import { uniq } from 'ramda'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
@@ -12,7 +11,7 @@ export default (config: any) => {
     zpEnv.loadModuleByName('core/indicators')
     zpEnv.loadModuleByName('core/trading')
 
-    const result = zp.evalCode(zpEnv, code)
+    const result = evalCode(zpEnv, code)
     const stop = performance.now()
     const inSeconds = (stop - start) / 1000
 
@@ -35,7 +34,7 @@ export default (config: any) => {
       openPositions
     })
 
-    zp.evalCode(metaEnv, code)
+    evalCode(metaEnv, code)
 
     const settings = metaEnv.getPragma()
     const allOpenPositions = [...openPositions, ...(settings.openPositions ?? [])] as any
