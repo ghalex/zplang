@@ -32,7 +32,7 @@ const createProject = async (name: string) => {
 
 export default (config: any, api: Api) => {
   program
-    .usage('name [options]')
+    .usage('<name> [options]')
     .description('create a new zplang project')
     .argument('name', 'project name')
     .action(async (projectName, opts) => {

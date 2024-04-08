@@ -6,7 +6,7 @@ const program = new Command('download')
 
 export default (config: any, api: Api) => {
   program
-    .description('Download data from zapant.com')
+    .description('download data from zapant.com')
     .option('-s, --symbols <symbols>', 'comma separated list of symbols')
     .option('-w, --window <window>', 'window size')
     .option('-r, --resolution [resolution]', 'resolution', '1440' )

@@ -19,6 +19,8 @@ module.exports = [
       'cli-color',
       'node:fs',
       'node:path',
+      'node:os',
+      'node:zlib',
       'zplang'
     ],
     plugins: [
