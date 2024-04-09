@@ -4,6 +4,7 @@ import { gzipSync, gunzipSync } from 'node:zlib'
 import clc from 'cli-color'
 import Axios, { type AxiosInstance } from 'axios'
 import ora from 'ora'
+import dayjs from 'dayjs'
 
 export default (config: any) => {
   
@@ -21,7 +22,9 @@ export default (config: any) => {
 
   const get = (symbol: string, window: number, resolution?: number, end?: string) => {
     const dataDir = config.get('dataDir')
-    const key = `${parseSymbol(symbol)}_${resolution ?? 1440}_${end ?? 'last'}`
+    const date = end ? dayjs(end) : dayjs()
+
+    const key = `${parseSymbol(symbol)}_${resolution ?? 1440}_${date.format('YYYYMMDD')}`
     const filePath = path.join(dataDir, key + '.data')
 
     if (!fs.existsSync(filePath)) {
@@ -46,7 +49,9 @@ export default (config: any) => {
 
   const save = async (symbol: string, resolution: number, end: string | null, data: any) => {
     const dataDir = config.get('dataDir')
-    const key = `${parseSymbol(symbol)}_${resolution ?? 1440}_${end ?? 'last'}`
+    const date = end ? dayjs(end) : dayjs()
+
+    const key = `${parseSymbol(symbol)}_${resolution ?? 1440}_${date.format('YYYYMMDD')}`
     const filePath = path.join(dataDir, key + '.data')
     const jsonString = JSON.stringify(data, null, 2)
     const buffer = Buffer.from(jsonString, 'utf8')

@@ -1,6 +1,6 @@
 {
   "name": "zplang-cli",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "",
   "main": "dist/zplang-cli.es.mjs",
   "module": "dist/zplang-cli.es.mjs",
@@ -47,6 +47,7 @@
     "cli-color": "^2.0.4",
     "commander": "^12.0.0",
     "configstore": "^6.0.0",
+    "dayjs": "^1.11.10",
     "figlet": "^1.7.0",
     "ora": "^8.0.1",
     "prompts": "^2.4.2",

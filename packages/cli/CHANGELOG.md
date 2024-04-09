@@ -1,5 +1,11 @@
 # zplang-cli
 
+## 1.0.7
+
+### Patch Changes
+
+- user today date not last
+
 ## 1.0.6
 
 ### Patch Changes
