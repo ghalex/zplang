@@ -1,5 +1,11 @@
 # zplang
 
+## 1.0.46
+
+### Patch Changes
+
+- add local config to cli & improve print
+
 ## 1.0.45
 
 ### Patch Changes

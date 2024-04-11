@@ -14,8 +14,14 @@ import { exit } from 'node:process'
 
 figlet("zplang-cli", (err, data) => {
   const homedir = os.homedir()
+  const currdir = process.cwd()
+
   const logoText = err ? 'zplang CLI' : data + '\n'
+  const localConfig = new Configstore('zplang', {}, { configPath: currdir + '/zpconfig.json' })
   const config = new Configstore('zplang', { 'dataDir':  homedir + '/.zp/data', 'apiUrl': 'https://zapant.com/api' }, { configPath: homedir + '/.zp/zpconfig.json' })
+
+  config.set(localConfig.all)
+
   const api = createApi(config)
 
   const program = new Command()

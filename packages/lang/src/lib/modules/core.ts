@@ -87,7 +87,7 @@ const load = (env: Env) => {
   env.bind('str', (...args) => args.map(a => a.toString()).join(' '))
   env.bind('clear', () => { env.clear() })
   env.bind('print', (...args) => {
-    const str = args.join('')
+    const str = args.map(x => typeof x === 'string' ? x : JSON.stringify(x, null, 2)).join(' ')
     env.print(str)
     return str
   })

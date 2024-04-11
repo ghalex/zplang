@@ -1,11 +1,12 @@
 {
   "name": "zplang",
-  "version": "1.0.45",
+  "version": "1.0.46",
   "description": "",
   "main": "dist/zplang.cjs.js",
   "module": "dist/zplang.es.js",
   "types": "dist/zplang.d.ts",
   "scripts": {
+    "start": "rollup -c -w",
     "build": "rm -rf ./dist/ && rollup -c --bundleConfigAsCjs",
     "lint": "eslint src --ext js,ts",
     "test": "jest --verbose",

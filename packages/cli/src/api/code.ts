@@ -12,6 +12,7 @@ export default (config: any) => {
     zpEnv.loadModuleByName('core/trading')
 
     const result = evalCode(zpEnv, code)
+    console.log(result)
     const stop = performance.now()
     const inSeconds = (stop - start) / 1000
 

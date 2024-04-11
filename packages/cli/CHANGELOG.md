@@ -1,5 +1,13 @@
 # zplang-cli
 
+## 1.0.8
+
+### Patch Changes
+
+- add local config to cli & improve print
+- Updated dependencies
+  - zplang@1.0.46
+
 ## 1.0.7
 
 ### Patch Changes
