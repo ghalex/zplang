@@ -21,7 +21,8 @@ module.exports = [
       'node:path',
       'node:os',
       'node:zlib',
-      'zplang'
+      'zplang',
+      'dayjs'
     ],
     plugins: [
       esbuild()
