@@ -5,6 +5,11 @@
   "main": "dist/zplang.cjs.js",
   "module": "dist/zplang.es.js",
   "types": "dist/zplang.d.ts",
+  "files": [
+    "dist",
+    "package.json",
+    "CHANGELOG.md"
+  ],
   "scripts": {
     "start": "rollup -c -w",
     "build": "rm -rf ./dist/ && rollup -c --bundleConfigAsCjs",
