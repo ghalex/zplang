@@ -21,7 +21,8 @@ describe('assets', () => {
   })
 
   test('define an asset', () => {
-    const ast = getAst(String.raw`
+    
+    const code = String.raw`
       {MSFT}
       {MSFT, today}
       {MSFT, yesterday}
@@ -29,15 +30,14 @@ describe('assets', () => {
 
       (def asset "AMD")
       {asset, yesterday}
-    `)
+    `
 
     const env = new Env()
-
-    // env.loadModule(modules.indicators)
-
     env.loadBars(stocks)
 
-    const res = ast.map(stmt => stmt.eval(env))
+    const res = evalCode(env, code)
+
+    console.log(res)
 
     expect(res[0]).toMatchObject({
       symbol: 'MSFT',

@@ -16,7 +16,7 @@ class Assets {
     }
 
     // add assets
-    env.addAsset(symbol, window + daysAgo)
+    env.addAsset(symbol, window + (daysAgo > 0 ? daysAgo + 1: 0))
 
     try {
       return getBars(symbol, window, daysAgo)

@@ -16,7 +16,7 @@ class Asset {
     }
 
     // add assets
-    env.addAsset(symbol, daysAgo)
+    env.addAsset(symbol, daysAgo + 1)
 
     try {
       return getBar(symbol, daysAgo)

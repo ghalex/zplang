@@ -52,6 +52,7 @@ const load = (env: Env) => {
   })
 
   env.bind('isNil', (val) => val === undefined || val === null)
+  env.bind('isNotNil', (val) => val !== undefined && val !== null)
   env.bind('>', (a, b) => a > b)
   env.bind('>=', (a, b) => a >= b)
   env.bind('!=', (a, b) => a !== b)

@@ -1,5 +1,12 @@
 # zplang
 
+## 1.0.47
+
+### Patch Changes
+
+- fix days ago for assets
+- fix asset days ago
+
 ## 1.0.46
 
 ### Patch Changes

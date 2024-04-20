@@ -1,6 +1,6 @@
 {
   "name": "zplang-cli",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "A CLI tool for zplang",
   "main": "dist/zplang-cli.es.mjs",
   "module": "dist/zplang-cli.es.mjs",
