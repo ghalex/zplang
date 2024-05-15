@@ -8,4 +8,5 @@ coverage
 
 dist
 test1
+packages/cli/example/data/**/*
 packages/cli/data/**/*

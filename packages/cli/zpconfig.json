@@ -1,4 +1,4 @@
 {
-	"dataDir": "./data",
-	"apiUrl": "http://devstation.home:5011/api"
+	"dataDir": "./example/data",
+	"apiUrl": "http://zapant.com/api"
 }

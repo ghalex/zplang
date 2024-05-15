@@ -1,0 +1,30 @@
+{
+  "startCash": 10000,
+  "endCash": 9980.51,
+  "totalPl": -19.49,
+  "totalPlPct": -0.002,
+  "positions": [
+    {
+      "symbol": "AAPL",
+      "openDate": 1711080000000,
+      "openPrice": 171.53052185058596,
+      "openBar": 1,
+      "closeDate": 1711598400000,
+      "closePrice": 171.48,
+      "closeBar": 5,
+      "units": 15,
+      "side": "long"
+    },
+    {
+      "symbol": "MSFT",
+      "openDate": 1711080000000,
+      "openPrice": 420.74327148437504,
+      "openBar": 1,
+      "closeDate": 1711598400000,
+      "closePrice": 420.72,
+      "closeBar": 5,
+      "units": 15,
+      "side": "long"
+    }
+  ]
+}

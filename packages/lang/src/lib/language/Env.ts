@@ -29,9 +29,8 @@ class Env {
 
     this.loadModule(core.core)
     this.loadModule(core.assets)
-
-    this.registerModule(core.trading)
-    this.registerModule(core.indicators)
+    this.loadModule(core.trading)
+    this.loadModule(core.indicators)
   }
 
   setPragma (key: string, value: any) {
@@ -107,23 +106,22 @@ class Env {
     return this.env[a]
   }
 
-  loadModule (m: Module, as?: string) {
-    m.load(this, as)
-  }
+  call (...args) {
+    const [name, ...rest] = args
+    const fn = this.get(name)
 
-  loadModuleByName (name: string, as?: string) {
-    const m = this.modules[name]
-
-    if (!m) {
-      throw new Error(`Module ${name} not registered`)
+    if (fn && typeof fn === 'function') {
+      return fn(...rest)
     }
-
-    m.load(this, as)
   }
 
-  registerModule (m: Module) {
+  loadModule (m: Module, as?: string) {
     const ns = m.namespace + '/' + m.name
+    // store
     this.modules[ns] = m
+
+    // load
+    m.load(this, as)
   }
 
   loadBars (bars = {}) {

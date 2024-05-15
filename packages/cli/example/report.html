@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Report</title>
+</head>
+
+<body>
+    <h1>Report</h1>
+    <p>Report generated on: <span id="date"></span></p>
+
+    <div id="myplot"></div>
+    <script type="module">
+
+        import * as Plot from "https://cdn.jsdelivr.net/npm/@observablehq/plot@0.6/+esm";
+
+        fetch('./data.json')
+            .then(response => response.json())
+            .then(data => {
+                run(data)
+            })
+
+        function run(data) {
+            const plot = Plot.rectY({ length: 10000 }, Plot.binX({ y: "count" }, { x: Math.random })).plot();
+
+            const div = document.querySelector("#myplot");
+            div.append(plot);
+
+            console.log(data);
+        }
+
+        document.getElementById('date').textContent = new Date().toLocaleString();
+    </script>
+</body>
+
+</html>

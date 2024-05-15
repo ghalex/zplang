@@ -5,6 +5,7 @@ import clc from 'cli-color'
 import Axios, { type AxiosInstance } from 'axios'
 import ora from 'ora'
 import dayjs from 'dayjs'
+import prompts from 'prompts'
 
 export default (config: any) => {
   
@@ -78,8 +79,8 @@ export default (config: any) => {
   const download = async (symbols: string[], window: number, resolution?: number, end?: string) => {
     const dataDir = config.get('dataDir')
     const spinner = ora(`Downloading data for [ ${clc.bold.green(symbols.join(', '))} ]`).start()
-    try {
 
+    try {
       const { data } = await axios.get('/bars', {
         params: {
           symbols: symbols.join(','),
@@ -123,5 +124,40 @@ export default (config: any) => {
 
   }
 
-  return { get, save, download }
+  const downloadBars = async (symbols: string[], maxWindow: number, resolution?: number, end?: string) => {
+    let bars = {}
+    const missing: string[] = []
+  
+    for (const s of symbols) {
+      const cachedData = await get(s, maxWindow, resolution, end)
+      
+      if (cachedData.length === 0) {
+        missing.push(s)
+      } else {
+        bars[s] = cachedData
+      }
+    }
+  
+    if (missing.length > 0) {
+      console.log(`You need to download data for the following symbols: [ ${clc.bold.green(missing.join(', '))} ]`)
+  
+      const response = await prompts({
+        type: 'toggle',
+        name: 'value',
+        message: 'Do you want to download the missing data?',
+        initial: true,
+        active: 'yes',
+        inactive: 'no'
+      })
+  
+      if (response.value) {
+        const data = await download(missing, maxWindow, resolution, end)
+        bars = { ...bars, ...data }
+      }
+    }
+
+    return bars
+  }
+
+  return { get, save, download, downloadBars }
 }

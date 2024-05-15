@@ -7,9 +7,9 @@ class Import {
 
   eval (env: Env) {
     const moduleName = this.name.eval(env)
-    env.loadModuleByName(moduleName, this.as)
-
-    return moduleName + (this.as ? ' :as ' + this.as : '')
+    // env.loadModuleByName(moduleName, this.as)
+    // return moduleName + (this.as ? ' :as ' + this.as : '')
+    throw new Error('import not implemented')
   }
 
   toString () {

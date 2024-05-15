@@ -1,7 +1,6 @@
 import { Lambda, type Env } from '../language'
 import type { Order, Position, Bar } from '@zapant/core'
 import * as zpCore from '@zapant/core'
-import { pick } from 'ramda'
 
 const name = 'trading'
 const namespace = 'core'
@@ -14,48 +13,40 @@ interface OrderOptions {
 const load = (zpEnv: Env, as: string = '') => {
   const isMeta = zpEnv.get('$$isMeta')
   const ns = as.length > 0 ? as + '/' : ''
-  let portfolio = {
+  const data = {
+    cash: 0,
     orders: [] as Order[],
-    openPositions: [] as Position[],
-    initialCapital: 0,
-    totalCapital: 0,
-    availableCapital: 0
+    positions: [] as Position[]
   }
 
-  zpEnv.bind(ns + 'getPortfolio', () => portfolio)
-  zpEnv.bind(ns + 'changePortfolio', (obj) => {
-    portfolio = { ...portfolio, ...pick(['openPositions', 'initialCapital', 'totalCapital', 'availableCapital'], obj) }
-  })
-
-  zpEnv.bind(ns + 'getOpenPositions', (lamda) => {
-    if (lamda) {
-      return portfolio.openPositions.filter(pos => {
-        return lamda instanceof Lambda ? lamda.eval(zpEnv, [pos]) : lamda(pos)
-      })
-    }
-
-    return portfolio.openPositions
-  })
-
+  zpEnv.bind(ns + 'getCash', () => data.cash)
+  zpEnv.bind(ns + 'getOrders', () => data.orders.concat())
+  zpEnv.bind(ns + 'getPositions', () => data.positions.concat())
   zpEnv.bind(ns + 'getPosition', (symbol) => {
-    const p = portfolio.openPositions.find(p => p.symbol === symbol)
+    const p = data.positions.find(p => p.symbol === symbol)
     return p ?? null
   })
 
+  zpEnv.bind(ns + 'setCash', (value) => data.cash = value)
+  zpEnv.bind(ns + 'setOrders', (orders) => data.orders = [...orders])
+  zpEnv.bind(ns + 'setPositions', (positions) => {
+    data.positions = [...positions]
+})
+
   zpEnv.bind(ns + 'getOrder', (symbol) => {
-    const o = portfolio.orders.find(p => p.symbol === symbol)
+    const o = data.orders.find(p => p.symbol === symbol)
     return o ?? null
   })
 
   zpEnv.bind(ns + 'balance', ({ minAmount }: any = { minAmount: 0 }) => {
     const bars = zpEnv.get('$$bars')
-    portfolio.orders = zpCore.balance(portfolio.orders, portfolio.openPositions, { bars, minAmount })
+    data.orders = zpCore.balance(data.orders, data.positions, { bars, minAmount })
 
-    return portfolio.orders
+    return data.orders
   })
 
   zpEnv.bind(ns + 'checkPosition', (symbol, side) => {
-    const p = portfolio.openPositions.find(p => p.symbol === symbol)
+    const p = data.positions.find(p => p.symbol === symbol)
 
     if (p) {
       if (side && p.side !== side) return false
@@ -65,16 +56,16 @@ const load = (zpEnv: Env, as: string = '') => {
     return false
   })
 
-  zpEnv.bind(ns + 'closePositions', (positions) => {
+  zpEnv.bind(ns + 'closePositions', (value) => {
     const bars = zpEnv.get('$$bars')
-    const positionsToClose = positions ?? portfolio.openPositions
+    const positionsToClose = value ?? data.positions
 
     if (positionsToClose.length === 0) { return [] }
 
-    const orders = zpCore.position.closePositions(positionsToClose, { bars })
-    portfolio.orders = [...portfolio.orders, ...orders]
+    const newOrders = zpCore.position.closePositions(positionsToClose, { bars })
+    data.orders = [...data.orders, ...newOrders]
 
-    return orders
+    return data.orders
   })
 
   zpEnv.bind(ns + 'order', (action: 'buy' | 'sell', asset: Bar, qty: number, options: OrderOptions = {}) => {
@@ -88,12 +79,12 @@ const load = (zpEnv: Env, as: string = '') => {
     const [order] = zpCore.order.createOrdersUnits([asset.symbol], { [asset.symbol]: 1 }, qty, { action, bars })
 
     if (options.target) {
-      const [newOrder] = zpCore.balance([order], portfolio.openPositions.filter(p => p.symbol === order.symbol), { bars })
+      const [newOrder] = zpCore.balance([order], data.positions.filter(p => p.symbol === order.symbol), { bars })
 
-      portfolio.orders.push(newOrder)
+      data.orders.push(newOrder)
       return newOrder
     } else {
-      portfolio.orders.push(order)
+      data.orders.push(order)
       return order
     }
   })

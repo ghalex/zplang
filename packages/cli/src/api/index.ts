@@ -1,6 +1,6 @@
 import code from './code'
 import data from './data'
-import auth  from './login'
+import auth from './login'
 
 const createApi = (config: any) => {
   return {

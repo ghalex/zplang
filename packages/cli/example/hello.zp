@@ -1,0 +1,16 @@
+;; Loops a list a symbols and buys 1 share of each
+;; #pragma timeframe 15
+
+(def symbols [
+  "AAPL",
+  "MSFT"
+])
+
+
+(loop symbol in symbols
+  ;; (def pos (getPosition symbol))
+  ;; (if (or (isNil pos) (< (:units pos) 2))
+  (def sma5 (sma 2 symbol))
+  (buy {symbol} 1)
+  ;; )
+)

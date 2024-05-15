@@ -4,20 +4,15 @@ import * as fs from 'node:fs'
 import * as path from 'node:path'
 
 export default (config: any) => {
-  const runCode = (code: string, bars: any) => {
+  const runCode = (code: string, zpEnv: Env) => {
     const start = performance.now()
-    const zpEnv = new Env({ bars })
-
-    zpEnv.loadModuleByName('core/indicators')
-    zpEnv.loadModuleByName('core/trading')
 
     const result = evalCode(zpEnv, code)
-    console.log(result)
     const stop = performance.now()
     const inSeconds = (stop - start) / 1000
 
     return {
-      portfolio: zpEnv.get('getPortfolio')(),
+      orders: zpEnv.call('getOrders'),
       result,
       stdout: zpEnv.stdout,
       time: inSeconds
@@ -27,13 +22,8 @@ export default (config: any) => {
   const getSymbols = (code: string, openPositions: any = []) => {
     const metaEnv = new Env({ isMeta: true })
 
-    metaEnv.loadModuleByName('core/indicators')
-    metaEnv.loadModuleByName('core/trading')
-
-    // Init portfolio
-    metaEnv.get('changePortfolio')({
-      openPositions
-    })
+    // Set positions
+    metaEnv.call('setPositions', [openPositions])
 
     evalCode(metaEnv, code)
 
