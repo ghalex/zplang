@@ -1,5 +1,11 @@
 # zplang-cli
 
+## 1.0.16
+
+### Patch Changes
+
+- add install dependencies to create
+
 ## 1.0.15
 
 ### Patch Changes
