@@ -1,5 +1,11 @@
 # zplang-cli
 
+## 1.0.13
+
+### Patch Changes
+
+- refactor to load config if needed
+
 ## 1.0.12
 
 ### Patch Changes

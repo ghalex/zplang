@@ -5,7 +5,7 @@ const config = {
   apiUrl: "http://zapant.com/api",
   backtest: {
     date: "2024-04-01",
-    window: 10,
+    window: 5,
     analyzers: [
       new RetursAnalyzer()
     ]
