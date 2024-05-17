@@ -1,4 +1,4 @@
-const { RetursAnalyzer } = require('zplang-backtest')
+import { RetursAnalyzer } from 'zplang-backtest'
 
 const config = {
   dataDir: "./example/data",
@@ -12,4 +12,4 @@ const config = {
   }
 }
 
-module.exports = config;
+export default config;

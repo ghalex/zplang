@@ -1,14 +1,11 @@
+import cache from './cache'
 import code from './code'
 import data from './data'
 import auth from './login'
 
-const createApi = (config: any) => {
-  return {
-    code: code(),
-    data: data(config),
-    auth: auth(config)
-  }
+export {
+  cache,
+  code,
+  data,
+  auth
 }
-
-export type Api = ReturnType<typeof createApi>
-export default createApi

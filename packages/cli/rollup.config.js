@@ -22,7 +22,9 @@ module.exports = [
       'node:os',
       'node:zlib',
       'zplang',
-      'dayjs'
+      'zplang-backtest',
+      'dayjs',
+      'voca'
     ],
     plugins: [
       esbuild()

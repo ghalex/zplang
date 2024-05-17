@@ -1,23 +1,18 @@
 #!/usr/bin/env node
 import figlet from 'figlet'
 
+import clc from 'cli-color'
 import { Command } from 'commander'
-import createApi from './api'
 import create from './commands/create'
 import executeCommand from './commands/execute'
 import login from './commands/login'
 import download from './commands/download'
 import backtest from './commands/backtest'
-import config from './config'
+import view from './commands/view'
 
-import { exit } from 'node:process'
-
-figlet("zplang-cli", (err, data) => {
-
+figlet("zplang-cli", async (err, data) => {
 
   const logoText = err ? 'zplang CLI' : data + '\n'
-  const api = createApi(config)
-
   const program = new Command()
 
   program
@@ -26,11 +21,13 @@ figlet("zplang-cli", (err, data) => {
     .usage("command [options]")
     .addHelpText('beforeAll', logoText)
 
-  program.addCommand(login(config, api))
-  program.addCommand(create(config, api))
-  program.addCommand(executeCommand(config, api))
-  program.addCommand(download(config, api))
-  program.addCommand(backtest(config, api))
+  program.addCommand(login())
+  program.addCommand(create())
+  program.addCommand(executeCommand())
+  program.addCommand(download())
+  program.addCommand(backtest())
+  program.addCommand(view())
 
   return program.parse(process.argv)
+
 })

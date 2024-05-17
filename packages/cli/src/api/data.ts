@@ -1,14 +1,11 @@
-import * as fs from 'node:fs'
-import * as path from 'node:path'
-import { gzipSync, gunzipSync } from 'node:zlib'
 import clc from 'cli-color'
 import Axios, { type AxiosInstance } from 'axios'
 import ora from 'ora'
-import dayjs from 'dayjs'
 import prompts from 'prompts'
+import cache from './cache'
+import storage from '@/storage'
 
-export default (config: any) => {
-  
+export default (config) => {
   const axios: AxiosInstance = Axios.create({
     baseURL: config.apiUrl ?? 'https://zapant.com/api',
     timeout: 80000,
@@ -17,70 +14,19 @@ export default (config: any) => {
     }
   })
 
-  const parseSymbol = (symbol: string) => {
-    return symbol.replace(/\//g, '_')
-  }
-
-  const get = (symbol: string, window: number, resolution?: number, end?: string) => {
-    const dataDir = config.dataDir
-    const date = end ? dayjs(end) : dayjs()
-
-    const key = `${parseSymbol(symbol)}_${resolution ?? 1440}_${date.format('YYYYMMDD')}`
-    const filePath = path.join(dataDir, key + '.data')
-
-    if (!fs.existsSync(filePath)) {
-      return []
-    }
-
-    try {
-      const fileContents = fs.readFileSync(filePath);
-      const buffer = gunzipSync(fileContents);
-
-      const data = JSON.parse(buffer.toString('utf8'));
-
-      if (data.length < window) {
-          return [];
-      }
-
-      return data.slice(0, window);
-    } catch (err: any) {
-      throw new Error(`Error reading compressed data from ${filePath}: ${err.message}`)
-    }
-  }
-
-  const save = async (symbol: string, resolution: number, end: string | null, data: any) => {
-    const dataDir = config.dataDir
-    const date = end ? dayjs(end) : dayjs()
-
-    const key = `${parseSymbol(symbol)}_${resolution ?? 1440}_${date.format('YYYYMMDD')}`
-    const filePath = path.join(dataDir, key + '.data')
-    const jsonString = JSON.stringify(data, null, 2)
-    const buffer = Buffer.from(jsonString, 'utf8')
-
-    if (!fs.existsSync(dataDir)) {
-      fs.mkdirSync(dataDir, { recursive: true })
-    }
-
-    try {
-      const compressedBuffer = gzipSync(buffer)
-      fs.writeFileSync(filePath, compressedBuffer)
-
-      const size = compressedBuffer.length;
-      const kiloBytes = size / 1024;
-      console.log(`→ Data for ${clc.bold.green(symbol)} symbol was saved successfully ${clc.green(`(${kiloBytes.toFixed(2)} KB)`)}`);
-
-      return filePath;
-    } catch (err: any) {
-        console.error(`Error writing compressed data to ${filePath}: ${err.message}`);
-        throw err;
-    }
-  }
-
+  /**
+   * Download bars
+   * @param symbols 
+   * @param window 
+   * @param resolution 
+   * @param end 
+   * @returns 
+   */
   const download = async (symbols: string[], window: number, resolution?: number, end?: string) => {
     const dataDir = config.dataDir
     const spinner = ora(`Downloading data for [ ${clc.bold.green(symbols.join(', '))} ]`).start()
 
-    if (!config.storage.get('accessToken')) {
+    if (!storage.get('accessToken')) {
       spinner.fail()
       throw new Error('You must be logged in to download data. Please run `zplang login` command.')
     }
@@ -94,7 +40,7 @@ export default (config: any) => {
           end: end
         },
         headers: {
-          Authorization: `Bearer ${config.storage.get('accessToken')}`
+          Authorization: `Bearer ${storage.get('accessToken')}`
         }
       })
 
@@ -103,7 +49,7 @@ export default (config: any) => {
 
       for (const symbol of symbols) {
         if (data[symbol] && data[symbol].length > 0) {
-          await save(symbol, resolution ?? 1440, end ?? null, data[symbol])
+          await cache(config).save(symbol, resolution ?? 1440, end ?? null, data[symbol])
         }
       }
 
@@ -129,12 +75,21 @@ export default (config: any) => {
 
   }
 
+  /**
+   * Get data from cache or download
+   * from provider
+   * @param symbol 
+   * @param window 
+   * @param resolution 
+   * @param end 
+   * @returns 
+   */
   const downloadBars = async (symbols: string[], maxWindow: number, resolution?: number, end?: string) => {
     let bars = {}
     const missing: string[] = []
-  
+
     for (const s of symbols) {
-      const cachedData = await get(s, maxWindow, resolution, end)
+      const cachedData = await cache(config).get(s, maxWindow, resolution, end)
       
       if (cachedData.length === 0) {
         missing.push(s)
@@ -142,10 +97,10 @@ export default (config: any) => {
         bars[s] = cachedData
       }
     }
-  
+
     if (missing.length > 0) {
       console.log(`You need to download data for the following symbols: [ ${clc.bold.green(missing.join(', '))} ]`)
-  
+
       const response = await prompts({
         type: 'toggle',
         name: 'value',
@@ -154,7 +109,7 @@ export default (config: any) => {
         active: 'yes',
         inactive: 'no'
       })
-  
+
       if (response.value) {
         const data = await download(missing, maxWindow, resolution, end)
         bars = { ...bars, ...data }
@@ -164,5 +119,5 @@ export default (config: any) => {
     return bars
   }
 
-  return { get, save, download, downloadBars }
+  return { download, downloadBars }
 }

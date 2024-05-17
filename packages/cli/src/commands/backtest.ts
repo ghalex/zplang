@@ -1,12 +1,13 @@
 import * as path from 'node:path'
 import * as fs from 'node:fs'
-import { type Api } from '@/api'
 import clc from 'cli-color'
 import { Command } from 'commander'
 import { init, map } from 'ramda'
 import dayjs from 'dayjs'
 import voca from 'voca'
 import { Strategy } from 'zplang-backtest'
+import loadConfig from '@/config'
+import * as api from '@/api'
 
 const program = new Command('backtest')
 
@@ -22,8 +23,7 @@ class LoggerAnalyzer {
   }
 }
 
-export default (config: any, api: Api) => {
-
+export default () => {
   program
     .usage('<file> [options]')
     .description('run a backtest using a zplang file and display the result')
@@ -34,6 +34,7 @@ export default (config: any, api: Api) => {
     .action(async (file, opts) => {
 
       try {
+        const config = await loadConfig()
         console.log(clc.cyanBright(`→ Backtesting using file: `) + clc.underline(file) + '\n')
 
         // add defaults
@@ -41,14 +42,14 @@ export default (config: any, api: Api) => {
         opts.date = opts.date ?? config.backtest?.date ?? dayjs().format('YYYY-MM-DD')
 
         // 1. Download bars
-        const code = api.code.readCode(file)
+        const code = api.code().readCode(file)
         const strategy = new Strategy({ code })
 
         //strategy.addAnalyzer(new LoggerAnalyzer())
         strategy.addAnalyzers(config.backtest?.analyzers ?? [])
 
-        const { symbols, maxWindow, settings } = api.code.getSymbols(code, [])
-        const bars: Record<string, any[]> = await api.data.downloadBars(symbols, maxWindow + parseInt(opts.window), settings.timeframe ?? 1440, opts.date)
+        const { symbols, maxWindow, settings } = api.code().getSymbols(code, [])
+        const bars: Record<string, any[]> = await api.data(config).downloadBars(symbols, maxWindow + parseInt(opts.window), settings.timeframe ?? 1440, opts.date)
 
         // 2. Run backtest
         const allDatas: any[] = Object.values(bars)

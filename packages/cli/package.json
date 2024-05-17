@@ -19,7 +19,8 @@
     "dev": "tsx src/index.ts",
     "start": "node dist/index.js",
     "lint": "tsc",
-    "build": "rm -rf ./dist/ && rollup -c --bundleConfigAsCjs"
+    "build": "rm -rf ./dist/ && rollup -c --bundleConfigAsCjs",
+    "prepack": "pnpm build"
   },
   "keywords": [],
   "author": "",

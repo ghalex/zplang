@@ -3,18 +3,32 @@ import os from 'node:os'
 
 const homedir = os.homedir()
 const currdir = process.cwd()
-const storage = new Configstore('zplang', { 'accessToken': null, 'user': null }, { configPath: homedir + '/.zp/zpstorage.json' })
-const config = require(currdir + '/zp.config.js')
 
-const mainConfig = {
-  dataDir: "./example/data",
-  apiUrl: "http://zapant.com/api",
-  backtest: {
-    analyzers: []
-  },
-  ...config,
-  storage
+const loadConfig = async () => {
+  try {
+    const config = await import(currdir + '/zp.config.js')
+
+    const mainConfig = {
+      dataDir: "./example/data",
+      apiUrl: "http://zapant.com/api",
+      backtest: {
+        analyzers: []
+      },
+      ...config.default
+    }
+
+    return mainConfig
+  } catch (e) {
+    console.error('Error loading config file. Please make sure you have a zp.config.js file in the root of your project.')
+    return {
+      dataDir: "./data",
+      apiUrl: "http://zapant.com/api",
+      backtest: {
+        analyzers: []
+      }
+    }
+  }
 }
 
 
-export default mainConfig
+export default loadConfig

@@ -5,7 +5,6 @@ import prompts from 'prompts'
 import ora from 'ora'
 import shell from 'shelljs'
 import fs from 'node:fs'
-import { type Api } from '@/api'
 
 const program = new Command('create')
 
@@ -30,7 +29,7 @@ const createProject = async (name: string) => {
   }
 }
 
-export default (config: any, api: Api) => {
+export default () => {
   program
     .usage('<name> [options]')
     .description('create a new zplang project')

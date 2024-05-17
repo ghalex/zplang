@@ -12,3 +12,5 @@
     (buy {symbol} 10)
   )
 )
+
+(print (getOrders))
