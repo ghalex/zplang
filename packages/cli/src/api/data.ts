@@ -10,7 +10,7 @@ import prompts from 'prompts'
 export default (config: any) => {
   
   const axios: AxiosInstance = Axios.create({
-    baseURL: config.get('apiUrl') ?? 'https://zapant.com/api',
+    baseURL: config.apiUrl ?? 'https://zapant.com/api',
     timeout: 80000,
     headers: {
       'Content-Type': 'application/json'
@@ -22,7 +22,7 @@ export default (config: any) => {
   }
 
   const get = (symbol: string, window: number, resolution?: number, end?: string) => {
-    const dataDir = config.get('dataDir')
+    const dataDir = config.dataDir
     const date = end ? dayjs(end) : dayjs()
 
     const key = `${parseSymbol(symbol)}_${resolution ?? 1440}_${date.format('YYYYMMDD')}`
@@ -49,7 +49,7 @@ export default (config: any) => {
   }
 
   const save = async (symbol: string, resolution: number, end: string | null, data: any) => {
-    const dataDir = config.get('dataDir')
+    const dataDir = config.dataDir
     const date = end ? dayjs(end) : dayjs()
 
     const key = `${parseSymbol(symbol)}_${resolution ?? 1440}_${date.format('YYYYMMDD')}`
@@ -77,8 +77,13 @@ export default (config: any) => {
   }
 
   const download = async (symbols: string[], window: number, resolution?: number, end?: string) => {
-    const dataDir = config.get('dataDir')
+    const dataDir = config.dataDir
     const spinner = ora(`Downloading data for [ ${clc.bold.green(symbols.join(', '))} ]`).start()
+
+    if (!config.storage.get('accessToken')) {
+      spinner.fail()
+      throw new Error('You must be logged in to download data. Please run `zplang login` command.')
+    }
 
     try {
       const { data } = await axios.get('/bars', {
@@ -89,7 +94,7 @@ export default (config: any) => {
           end: end
         },
         headers: {
-          Authorization: `Bearer ${config.get('accessToken')}`
+          Authorization: `Bearer ${config.storage.get('accessToken')}`
         }
       })
 

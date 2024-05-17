@@ -5,7 +5,7 @@ import Axios, { type AxiosInstance } from 'axios'
 export default (config: any) => {
 
   const axios: AxiosInstance = Axios.create({
-    baseURL: config.get('apiUrl') ?? 'https://zapant.com/api',
+    baseURL: config.apiUrl ?? 'https://zapant.com/api',
     timeout: 80000,
     headers: {
       'Content-Type': 'application/json'

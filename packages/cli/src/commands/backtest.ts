@@ -5,9 +5,8 @@ import clc from 'cli-color'
 import { Command } from 'commander'
 import { init, map } from 'ramda'
 import dayjs from 'dayjs'
-import { Env } from 'zplang'
-import { floor } from '../utils'
-import Strategy from '@/backtest/strategy'
+import voca from 'voca'
+import { Strategy } from 'zplang-backtest'
 
 const program = new Command('backtest')
 
@@ -23,22 +22,13 @@ class LoggerAnalyzer {
   }
 }
 
-class RetursAnalyzer {
-  name: string = 'returns'
-  returns: any = {}
-
-  next ({ strategy, date, barIndex, bars, orders }) {
-    this.returns[date] = strategy.broker.getValue()
-  }
-}
-
 export default (config: any, api: Api) => {
 
   program
     .usage('<file> [options]')
     .description('run a backtest using a zplang file and display the result')
     .argument('file', 'strategy to backtest')
-    .option('-d, --end <date>', 'backtest end date')
+    .option('-d, --date <date>', 'backtest end date')
     .option('-w, --window <window>', 'bars to load for backtest')
     .option('-r, --result <result>', 'result output file')
     .action(async (file, opts) => {
@@ -46,16 +36,19 @@ export default (config: any, api: Api) => {
       try {
         console.log(clc.cyanBright(`→ Backtesting using file: `) + clc.underline(file) + '\n')
 
+        // add defaults
+        opts.window = opts.window ?? config.backtest?.window ?? 5
+        opts.date = opts.date ?? config.backtest?.date ?? dayjs().format('YYYY-MM-DD')
+
         // 1. Download bars
         const code = api.code.readCode(file)
         const strategy = new Strategy({ code })
 
-
         //strategy.addAnalyzer(new LoggerAnalyzer())
-        strategy.addAnalyzer(new RetursAnalyzer())
+        strategy.addAnalyzers(config.backtest?.analyzers ?? [])
 
         const { symbols, maxWindow, settings } = api.code.getSymbols(code, [])
-        const bars: Record<string, any[]> = await api.data.downloadBars(symbols, maxWindow + parseInt(opts.window), settings.timeframe ?? 1440, opts.end)
+        const bars: Record<string, any[]> = await api.data.downloadBars(symbols, maxWindow + parseInt(opts.window), settings.timeframe ?? 1440, opts.date)
 
         // 2. Run backtest
         const allDatas: any[] = Object.values(bars)
@@ -67,8 +60,10 @@ export default (config: any, api: Api) => {
           const date = dates[index];
           const barIndex = index + 1
           const currentBars = map(arr => arr.concat().reverse().slice(0, index + maxWindow + 1).reverse(), bars)
-          const context = { bars: currentBars, code, date, barIndex }
+          const context = { code, date, barIndex }
 
+          strategy.setBarIndex(barIndex)
+          strategy.setBars(currentBars)
           strategy.prenext(context)
           strategy.next(context)
 
@@ -77,19 +72,28 @@ export default (config: any, api: Api) => {
         // 3. Finalize backtest
         strategy.end()
 
-        // console.log(`${clc.green('✔ Success:')} Code was executed successfully`)
-        // console.log(`${clc.green('✔ Execution time:')} ${clc.bold(result.time.toFixed(2))} seconds\n`)
+        console.log('')
+        console.log(`${clc.green('✔ Success:')} Backtest was executed successfully`)
+        console.log(`${clc.green('✔ Execution time:')} ${clc.bold(strategy.duration.toFixed(2))} seconds\n`)
 
-        const result = {
+        const result: any = {
           startCash: strategy.broker.getCashStart(),
           endCash: strategy.broker.getCash(),
-          totalPl: strategy.broker.getPL(),
-          totalPlPct: floor(strategy.broker.getPL() / strategy.broker.getCashStart(), 4),
-          positions: strategy.broker.getPositions()
+          pl: strategy.broker.getPL(),
         }
 
-        console.log(result)
-        console.log(strategy.getAnalyzer('returns').returns)
+        console.log(clc.cyanBright(`→ Result: `))
+        console.dir(result, { depth: null, colors: true })
+        console.log('')
+
+        result.analyzers = {}
+
+        for (const analyzer of strategy.analyzers) {
+          result.analyzers[analyzer.name] = analyzer.data
+          console.log(clc.cyanBright(`→ Analyzer: `) + clc.underline(voca.capitalize(analyzer.name)))
+          console.dir(analyzer.data, { depth: null, colors: true })
+          console.log('')
+        }
 
         if (opts.result) {
           const filePath = path.join(process.cwd(), opts.result)
@@ -98,12 +102,7 @@ export default (config: any, api: Api) => {
           fs.writeFileSync(filePath, JSON.stringify(result, null, 2))
           console.log(`${clc.green('✔ Success:')} Result saved successfully\n`)
         }
-        
-        // if (result.stdout) {
-        //   console.log(clc.cyanBright(`→ Output: `))
-        //   console.log(result.stdout.split('\n').map(l => clc.xterm(8) (l)).join('\n'))
-        // }
-        // console.dir(portfolio.orders, { depth: null, colors: true })
+
         
 
       } catch (e: any) {

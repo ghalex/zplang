@@ -3,7 +3,14 @@ import { uniq } from 'ramda'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 
-export default (config: any) => {
+export default () => {
+
+  /**
+   * Run Code
+   * @param code 
+   * @param zpEnv 
+   * @returns 
+   */
   const runCode = (code: string, zpEnv: Env) => {
     const start = performance.now()
 
@@ -19,8 +26,15 @@ export default (config: any) => {
     }
   }
 
+  /**
+   * Get Symbols
+   * @param code 
+   * @param openPositions 
+   * @returns 
+   */
   const getSymbols = (code: string, openPositions: any = []) => {
     const metaEnv = new Env({ isMeta: true })
+    metaEnv.bind('barIndex', 1)
 
     // Set positions
     metaEnv.call('setPositions', [openPositions])
@@ -37,6 +51,11 @@ export default (config: any) => {
     return { symbols, maxWindow, settings }
   }
 
+  /**
+   * Read Code
+   * @param fileName 
+   * @returns 
+   */
   const readCode = (fileName: string) => {
     const filePath = path.join(process.cwd(), fileName)
 

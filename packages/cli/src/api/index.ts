@@ -4,7 +4,7 @@ import auth from './login'
 
 const createApi = (config: any) => {
   return {
-    code: code(config),
+    code: code(),
     data: data(config),
     auth: auth(config)
   }

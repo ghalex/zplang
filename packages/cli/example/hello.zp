@@ -6,11 +6,9 @@
   "MSFT"
 ])
 
-
 (loop symbol in symbols
-  ;; (def pos (getPosition symbol))
-  ;; (if (or (isNil pos) (< (:units pos) 2))
-  (def sma5 (sma 2 symbol))
-  (buy {symbol} 1)
-  ;; )
+  
+  (if (= 1 barIndex)
+    (buy {symbol} 10)
+  )
 )

@@ -17,8 +17,8 @@ export default (config: any, api: Api) => {
           const accessToken = data.accessToken
           const user = data.user
 
-          config.set('accessToken', accessToken)
-          config.set('user', user)
+          config.storage.set('accessToken', accessToken)
+          config.storage.set('user', user)
         }
     })
 
