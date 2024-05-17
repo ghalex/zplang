@@ -1,5 +1,14 @@
 # zplang-cli
 
+## 1.0.12
+
+### Patch Changes
+
+- add backtest
+- Updated dependencies
+  - zplang@1.0.48
+  - zplang-backtest@1.0.1
+
 ## 1.0.11
 
 ### Patch Changes

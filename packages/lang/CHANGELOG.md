@@ -1,5 +1,11 @@
 # zplang
 
+## 1.0.48
+
+### Patch Changes
+
+- add backtest
+
 ## 1.0.47
 
 ### Patch Changes
