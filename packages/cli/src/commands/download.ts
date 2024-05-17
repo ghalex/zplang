@@ -1,8 +1,7 @@
 import clc from 'cli-color'
 import { Command } from 'commander'
-import { data } from '@/api'
-import { config } from 'process'
-import loadConfig from '@/config'
+import { data } from '../api'
+import loadConfig from '../config'
 
 const program = new Command('download')
 

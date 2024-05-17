@@ -1,10 +1,10 @@
-import loadConfig from '@/config'
 import clc from 'cli-color'
 import { Command } from 'commander'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { Env } from 'zplang'
-import * as api from '@/api'
+import loadConfig from '../config'
+import * as api from '../api'
 
 const program = new Command('execute')
 

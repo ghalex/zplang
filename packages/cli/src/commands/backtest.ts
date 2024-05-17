@@ -6,8 +6,8 @@ import { init, map } from 'ramda'
 import dayjs from 'dayjs'
 import voca from 'voca'
 import { Strategy } from 'zplang-backtest'
-import loadConfig from '@/config'
-import * as api from '@/api'
+import loadConfig from '../config'
+import * as api from '../api'
 
 const program = new Command('backtest')
 

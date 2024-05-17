@@ -1,8 +1,8 @@
-import loadConfig from '@/config'
 import { Command } from 'commander'
 import prompts from 'prompts'
-import { auth } from '@/api'
-import storage from '@/storage'
+import loadConfig from '../config'
+import { auth } from '../api'
+import storage from '../storage'
 
 const program = new Command('login')
 

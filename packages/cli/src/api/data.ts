@@ -3,7 +3,7 @@ import Axios, { type AxiosInstance } from 'axios'
 import ora from 'ora'
 import prompts from 'prompts'
 import cache from './cache'
-import storage from '@/storage'
+import storage from '../storage'
 
 export default (config) => {
   const axios: AxiosInstance = Axios.create({
