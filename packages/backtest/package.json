@@ -1,6 +1,6 @@
 {
   "name": "zplang-backtest",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "dist/zplang-backtest.cjs.js",
   "module": "dist/zplang-backtest.es.js",
@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "dayjs": "^1.11.11",
-    "ramda": "^0.30.0",
+    "ramda": "~0.30.0",
     "zplang": "workspace:*"
   }
 }

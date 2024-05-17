@@ -39,7 +39,7 @@ importers:
         specifier: ^1.11.11
         version: 1.11.11
       ramda:
-        specifier: ^0.30.0
+        specifier: ~0.30.0
         version: 0.30.0
       zplang:
         specifier: workspace:*
