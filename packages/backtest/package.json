@@ -1,6 +1,6 @@
 {
   "name": "zplang-backtest",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "dist/zplang-backtest.cjs.js",
   "module": "dist/zplang-backtest.es.js",
