@@ -11,6 +11,9 @@ module.exports = [
     input: 'src/index.ts',
     external: [
       'ramda',
+      'dayjs',
+      'zplang',
+      'zptrade'
     ],
     plugins: [
       esbuild()

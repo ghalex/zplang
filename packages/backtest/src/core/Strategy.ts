@@ -1,21 +1,24 @@
 import { Env, evalCode } from 'zplang'
+import { createJsEnv } from 'zptrade'
 import Broker from "./Broker"
 
 class Strategy {
   code: string
+  lang: string
   barIndex: number = 0
   broker: Broker
   bars: Record<string, any[]> = {}
-  env: Env
+  env: any | null = null
   analyzers: any[] = []
   startTime: number = 0
   endTime: number = 0
 
-  constructor({ code }) {
+  constructor({ code, lang }) {
     this.code = code
+    this.lang = lang
     this.broker = new Broker()
     this.broker.eventHandler = this
-    this.env = new Env({})
+    
   }
 
   get currentBar () {
@@ -65,6 +68,32 @@ class Strategy {
     this.endTime = performance.now()
   }
 
+  createEnv () {
+    switch (this.lang) {
+      case 'js':
+        this.env = createJsEnv(this.bars)
+        this.env.barIndex = this.barIndex
+
+        this.env.setCash(this.broker.getCash())
+        this.env.setPositions(this.broker.getOpenPositions())
+        this.env.setOrders([])
+        break
+
+      case 'zp':
+        this.env = new Env({ bars: this.bars})
+
+        this.env.bind('barIndex', this.barIndex)
+        this.env.call('setCash', this.broker.getCash())
+        this.env.call('setPositions', this.broker.getOpenPositions())
+        this.env.call('setOrders', [])
+        break
+
+      default:
+        throw new Error('Invalid language')
+    }
+    
+  }
+
   prenext (context) {
     const { code, date } = context
 
@@ -73,11 +102,7 @@ class Strategy {
     this.broker.setBars(this.bars)
 
     // set env
-    this.env.loadBars(this.bars)
-    this.env.bind('barIndex', this.barIndex)
-    this.env.call('setCash', this.broker.getCash())
-    this.env.call('setPositions', this.broker.getOpenPositions())
-    this.env.call('setOrders', [])
+    this.createEnv()
 
     // update time
     this.endTime = performance.now()
@@ -101,10 +126,14 @@ class Strategy {
     return executedOrders
   }
 
-  runCode = (code: string) => {
-    const start = performance.now()
+  private runZpCode (code: string) {
+    if (!this.env) {
+      throw new Error('Env is not created')
+    }
 
+    const start = performance.now()
     const result = evalCode(this.env, code)
+
     const stop = performance.now()
     const inSeconds = (stop - start) / 1000
 
@@ -113,6 +142,43 @@ class Strategy {
       result,
       stdout: this.env.stdout,
       time: inSeconds
+    }
+  }
+
+  private runJsCode (code: string) {
+    if (!this.env) {
+      throw new Error('Env is not created')
+    }
+
+    const start = performance.now()
+
+    const execFunc = new Function(code)
+    const { run } = execFunc()
+
+    // run code here
+    const result = run.call(this.env)
+
+    const stop = performance.now()
+    const inSeconds = (stop - start) / 1000
+
+    return {
+      orders: this.env.getOrders(),
+      result,
+      stdout: this.env.stdout.join('\n'),
+      time: inSeconds
+    }
+  }
+
+  private runCode (code: string) {
+    switch (this.lang) {
+      case 'js':
+        return this.runJsCode(code)
+
+      case 'zp':
+        return this.runZpCode(code)
+
+      default:
+        throw new Error('Invalid file extension. It should be .js or .zp')
     }
   }
 

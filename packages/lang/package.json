@@ -37,10 +37,10 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@zapant/core": "^2.0.8",
     "@zapant/indicators": "^1.0.8",
     "dayjs": "^1.11.11",
     "ohm-js": "^17.1.0",
-    "ramda": "^0.30.0"
+    "ramda": "^0.30.0",
+    "zptrade": "workspace:*"
   }
 }

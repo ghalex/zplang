@@ -1,5 +1,7 @@
 import * as r from 'ramda'
-import { floor } from '../utils'
+import { helpers } from 'zptrade'
+
+const { floorNumber } = helpers
 
 class Broker {
   cash: number = 10_000
@@ -37,23 +39,23 @@ class Broker {
   }
 
   getCash() {
-    return floor(this.cash, 2)
+    return floorNumber(this.cash, 2)
   }
 
   getCashStart() {
-    return floor(this.cashStart, 2)
+    return floorNumber(this.cashStart, 2)
   }
 
   getValue() {
-    return floor(this.cash + this.getOpenPositions().reduce((acc, p) => acc + (p.units * this.bars[p.symbol][0].close), 0), 2)
+    return floorNumber(this.cash + this.getOpenPositions().reduce((acc, p) => acc + (p.units * this.bars[p.symbol][0].close), 0), 2)
   }
 
   getInvested() {
-    return floor(this.getOpenPositions().reduce((acc, p) => acc + (p.units * p.openPrice), 0), 2)
+    return floorNumber(this.getOpenPositions().reduce((acc, p) => acc + (p.units * p.openPrice), 0), 2)
   }
 
   getPL() {
-    return floor(this.getValue() - this.cashStart, 2)
+    return floorNumber(this.getValue() - this.cashStart, 2)
   }
 
   getPositions() {
@@ -62,37 +64,6 @@ class Broker {
 
   getOpenPositions() {
     return this.positions.filter(p => !p.closeDate)
-  }
-
-  openPosition (order: any) {
-    const data: any = {
-      symbol: order.symbol,
-      openDate: order.fillDate,
-      openPrice: order.fillPrice,
-      openBar: order.fillBar,
-      closeDate: null,
-      closePrice: null,
-      closeBar: null,
-      units: order.fillUnits,
-      side: order.action === 'buy' ? 'long' : 'short' as 'long' | 'short'
-    }
-
-    return data
-  }
-
-  closePosition (position: any, order: any) {
-    const data: any = {
-      symbol: position.symbol,
-      openDate: position.openDate,
-      openPrice: position.openPrice,
-      closeDate: order.fillDate,
-      closePrice: order.fillPrice,
-      closeBar: order.fillBar,
-      units: position.units,
-      side: position.side
-    }
-
-    return data
   }
 
   closeAllPositions () {
@@ -189,11 +160,11 @@ class Broker {
 
         this.cash -= order.fillCost + order.fillCommision
       } else {
-        if (floor(p.units, 6) > floor(order.fillUnits, 6)) {
+        if (floorNumber(p.units, 6) > floorNumber(order.fillUnits, 6)) {
           // Close part of the position
           p.units -= order.fillUnits
           this.cash += order.fillCost - order.fillCommision
-          this.positions.push(this.closePosition(p, order))
+          this.positions.push(helpers.position.closePosition(p, order))
 
         } else {
           // Close the position
@@ -203,10 +174,10 @@ class Broker {
 
           this.cash += order.fillCost - order.fillCommision
 
-          const diffAmmount = floor((order.fillUnits - p.units) * order.fillPrice, 2)
+          const diffAmmount = floorNumber((order.fillUnits - p.units) * order.fillPrice, 2)
 
           if (diffAmmount > 2) {
-            const newPosition = {...this.openPosition(order), units: order.fillUnits - p.units}
+            const newPosition = {...helpers.position.openPosition(order), units: order.fillUnits - p.units}
 
             this.positions.push(newPosition)
             this.cash -= diffAmmount + (diffAmmount * this.comission)
@@ -219,7 +190,7 @@ class Broker {
       
       this.eventHandler?.onPosition(p)
     } else {
-      const newPosition = this.openPosition(order)
+      const newPosition = helpers.position.openPosition(order)
       this.positions.push(newPosition)
       this.cash -= order.fillCost + order.fillCommision
 

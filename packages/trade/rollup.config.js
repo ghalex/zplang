@@ -8,12 +8,10 @@ const name = pkg.name
 
 module.exports = [
   {
-    input: 'src/lib/index.ts',
+    input: 'src/index.ts',
     external: [
-      'ohm-js',
       'ramda',
-      'zptrade',
-      '@zapant/indicators'
+      'dayjs'
     ],
     plugins: [
       esbuild()
@@ -31,7 +29,7 @@ module.exports = [
     ]
   },
   {
-    input: 'src/lib/index.ts',
+    input: 'src/index.ts',
     plugins: [dts()],
     external: [],
     output: {
