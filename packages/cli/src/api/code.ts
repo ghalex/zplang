@@ -2,17 +2,20 @@ import { Env, evalCode } from 'zplang'
 import { uniq } from 'ramda'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
-
+import { createJsEnv } from 'zptrade'
 
 export default () => {
   /**
    * Run Code
    * @param code 
-   * @param zpEnv 
+   * @param bars 
    * @returns 
    */
-  const runCode = (code: string, zpEnv: Env) => {
+  const runZpCode = (code: string, bars) => {
     const start = performance.now()
+    
+    const zpEnv = new Env({ bars })
+    zpEnv.bind('barIndex', 1)
 
     const result = evalCode(zpEnv, code)
     const stop = performance.now()
@@ -26,13 +29,48 @@ export default () => {
     }
   }
 
+  const runJsCode = (code: string, bars) => {
+    const start = performance.now()
+    const env = createJsEnv(bars)
+
+    const execFunc = new Function(code)
+    const { run } = execFunc()
+
+    // run code here
+    const result = run.call(env)
+
+
+    const stop = performance.now()
+    const inSeconds = (stop - start) / 1000
+
+    return {
+      orders: [],
+      result: {},
+      stdout: env.stdout.join('\n'),
+      time: inSeconds
+    }
+  }
+
+  const runCode = (code: string, lang: string, bars: any) => {
+    switch (lang) {
+      case 'js':
+        return runJsCode(code, bars)
+
+      case 'zp':
+        return runZpCode(code, bars)
+
+      default:
+        throw new Error('Invalid file extension. It should be .js or .zp')
+    }
+  }
+
   /**
    * Get Symbols
    * @param code 
    * @param openPositions 
    * @returns 
    */
-  const getSymbols = (code: string, openPositions: any = []) => {
+  const getZpSymbols = (code: string, openPositions: any = []) => {
     const metaEnv = new Env({ isMeta: true })
     metaEnv.bind('barIndex', 1)
 
@@ -49,6 +87,26 @@ export default () => {
     const maxWindow = maxAssets.length > 0 ? Math.max(...maxAssets) : 1
 
     return { symbols, maxWindow, settings }
+  }
+
+  function getJsSymbols (code: string, openPositions: any = []) {
+    const execFunc = new Function(code)
+    const res = execFunc()
+
+    return { symbols: res.assets, maxWindow: res.window ?? 1, settings: res.settings ?? {} }
+  }
+
+  const getSymbols = (code: string, lang: string, openPositions: any) => {
+    switch (lang) {
+      case 'js':
+        return getJsSymbols(code, openPositions)
+
+      case 'zp':
+        return getZpSymbols(code, openPositions)
+
+      default:
+        throw new Error('Invalid file extension. It should be .js or .zp')
+    }
   }
 
   /**

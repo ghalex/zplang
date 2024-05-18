@@ -6,6 +6,7 @@ const currdir = process.cwd()
 
 const loadConfig = async () => {
   try {
+    console.log(currdir + '/zp.config.js')
     const config = await import(currdir + '/zp.config.js')
 
     const mainConfig = {
@@ -20,6 +21,7 @@ const loadConfig = async () => {
     return mainConfig
   } catch (e) {
     console.error('Error loading config file. Please make sure you have a zp.config.js file in the root of your project.')
+    console.log(e)
     return {
       dataDir: "./data",
       apiUrl: "http://zapant.com/api",

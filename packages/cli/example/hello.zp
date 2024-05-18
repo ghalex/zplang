@@ -6,11 +6,10 @@
   "MSFT"
 ])
 
+(print (:close {AAPL, 2 days ago}))
+
 (loop symbol in symbols
-  
-  (if (= 1 barIndex)
-    (buy {symbol} 10)
-  )
+  (buy {symbol} 1)
 )
 
-;; (print (getOrders))
+(print (getOrders))

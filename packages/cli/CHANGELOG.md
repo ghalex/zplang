@@ -1,4 +1,4 @@
-# zplang-cli
+# zptrade-cli
 
 ## 1.0.16
 

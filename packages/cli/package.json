@@ -1,16 +1,16 @@
 {
-  "name": "zplang-cli",
+  "name": "zptrade-cli",
   "version": "1.0.16",
-  "description": "A CLI tool for zplang",
-  "main": "dist/zplang-cli.es.mjs",
-  "module": "dist/zplang-cli.es.mjs",
+  "description": "A CLI tool for backtesting and trading",
+  "main": "dist/zptrade-cli.es.mjs",
+  "module": "dist/zptrade-cli.es.mjs",
   "files": [
     "dist",
     "package.json",
     "CHANGELOG.md"
   ],
   "bin": {
-    "zplang": "dist/zplang-cli.es.mjs"
+    "zptrade": "dist/zptrade-cli.es.mjs"
   },
   "engines": {
     "node": ">=20.0.0"
@@ -61,6 +61,7 @@
     "shelljs": "^0.8.5",
     "voca": "^1.4.1",
     "zplang": "workspace:*",
-    "zplang-backtest": "workspace:*"
+    "zptrade": "workspace:*",
+    "zptrade-backtest": "workspace:*"
   }
 }

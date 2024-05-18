@@ -10,14 +10,14 @@ import download from './commands/download'
 import backtest from './commands/backtest'
 import view from './commands/view'
 
-figlet("zplang-cli", async (err, data) => {
+figlet("zptrade-cli", async (err, data) => {
 
-  const logoText = err ? 'zplang CLI' : data + '\n'
+  const logoText = err ? 'zptrade CLI' : data + '\n'
   const program = new Command()
 
   program
-    .name('zplang')
-    .version('1.0.6')
+    .name('zptrade')
+    .version('1.0.18')
     .usage("command [options]")
     .addHelpText('beforeAll', logoText)
 

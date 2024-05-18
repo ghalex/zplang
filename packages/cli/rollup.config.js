@@ -1,7 +1,7 @@
 const path = require('path')
 const esbuild = require('rollup-plugin-esbuild').default
 
-const name = 'zplang-cli'
+const name = 'zptrade-cli'
 
 module.exports = [
   {
@@ -22,7 +22,8 @@ module.exports = [
       'node:os',
       'node:zlib',
       'zplang',
-      'zplang-backtest',
+      'zptrade',
+      'zptrade-backtest',
       'dayjs',
       'voca'
     ],

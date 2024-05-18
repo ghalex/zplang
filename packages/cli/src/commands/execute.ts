@@ -22,15 +22,13 @@ export default () => {
         console.log(clc.cyanBright(`→ Executing file: `) + clc.underline(file) + '\n')
 
         const config = await loadConfig()
+        const extension = path.extname(file)
+        const lang = extension === '.js' ? 'js' : 'zp'
         const code = api.code().readCode(file)
-        const requirements = api.code().getSymbols(code, [])
+        const requirements = api.code().getSymbols(code, lang, [])
 
         const bars = await api.data(config).downloadBars(requirements.symbols, requirements.maxWindow, requirements?.settings?.timeframe ?? 1440, opts.date)
-
-        const env = new Env({ bars })
-        env.bind('barIndex', 1)
-
-        const result = api.code().runCode(code, env)
+        let result = api.code().runCode(code, lang, bars)
 
         console.log(`${clc.green('✔ Success:')} Code was executed successfully`)
         console.log(`${clc.green('✔ Execution time:')} ${clc.bold(result.time.toFixed(2))} seconds\n`)
