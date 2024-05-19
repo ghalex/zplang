@@ -4,6 +4,7 @@ import ora from 'ora'
 import prompts from 'prompts'
 import cache from './cache'
 import storage from '../storage'
+import dayjs from 'dayjs'
 
 export default (config) => {
   const axios: AxiosInstance = Axios.create({
@@ -37,7 +38,7 @@ export default (config) => {
           symbols: symbols.join(','),
           window,
           resolution: resolution ?? 1440,
-          end: end
+          end: end && resolution?.toString() === '1440' ? dayjs(end).endOf('D').toISOString() : end
         },
         headers: {
           Authorization: `Bearer ${storage.get('accessToken')}`

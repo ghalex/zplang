@@ -1,9 +1,5 @@
+import { RollingConfig } from '../types'
 import * as r from 'ramda'
-
-interface RollingConfig {
-  window: number
-  partial: boolean
-}
 
 const rolling = <T>({ window, partial }: RollingConfig, func: (val: T[]) => any, arr: T[]): any[] => {
   const iRange = r.range(0, arr.length)

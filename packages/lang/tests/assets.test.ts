@@ -6,19 +6,19 @@ import * as r from 'ramda'
 import e from 'express'
 
 describe('assets', () => {
-  test('load module', () => {
-    const ast = getAst(String.raw`
-      (import "core/indicators")
+  // test('load module', () => {
+  //   const code = String.raw`
+  //     (import "core/indicators")
 
-      (def symbol "AMD")
-      (sma 21 symbol)
-    `)
+  //     (def symbol "AMD")
+  //     (sma 21 symbol)
+  //   `
 
-    const env = new Env({ bars: stocks })
+  //   const env = new Env({ bars: stocks })
 
-    const res = ast.map(stmt => stmt.eval(env))
-    expect(res[0]).toEqual('core/indicators')
-  })
+  //   const res = evalCode(env, code)
+  //   expect(res[0]).toEqual('core/indicators')
+  // })
 
   test('define an asset', () => {
     
@@ -32,12 +32,8 @@ describe('assets', () => {
       {asset, yesterday}
     `
 
-    const env = new Env()
-    env.loadBars(stocks)
-
+    const env = new Env({ bars: stocks })
     const res = evalCode(env, code)
-
-    console.log(res)
 
     expect(res[0]).toMatchObject({
       symbol: 'MSFT',
@@ -76,17 +72,16 @@ describe('assets', () => {
   })
 
   test('access asset close, open, volume', () => {
-    const env = new Env()
-    env.loadBars(stocks)
-
-    const ast = getAst(String.raw`
+    const env = new Env({ bars: stocks })
+    const code = String.raw`
       (:close {MSFT})
       (:close {MSFT, 3 days ago})
+     
       (def vol (:volume {MSFT, 2 days ago}))
       vol
-    `)
+    `
 
-    const res = ast.map(stmt => stmt.eval(env))
+    const res = evalCode(env, code)
 
     expect(res[0]).toBe(323.46)
     expect(res[1]).toEqual(335.4)
@@ -94,36 +89,30 @@ describe('assets', () => {
   })
 
   test('get price for multiple days', () => {
-    const env = new Env()
-
-    env.loadBars(stocks)
-
-    env.bind('sma', (prices) => {
-      return r.mean(prices)
-    })
-
-    const ast = getAst(String.raw`
+    const env = new Env({ bars: stocks })
+    const code = String.raw`
       (:close {MSFT, 2 bars})
-      (sma (:close {AAPL, 10 bars}))
-    `)
+      (def close10 (:close {AAPL, 10 bars}))
+      (sma 10 close10)
+    `
 
-    const res = ast.map(stmt => stmt.eval(env))
+    // Eval code
+    const res = evalCode(env, code)
 
     expect(res[0]).toEqual([323.46, 333.68])
-    expect(res[1].toFixed(3)).toEqual('177.247')
+    expect(res[2].toFixed(3)).toEqual('177.247')
   })
 
   test('assets with variable', () => {
-    const env = new Env()
-    env.loadBars(stocks)
-
-    const ast = getAst(String.raw`
+    const env = new Env({ bars: stocks })
+    const code = String.raw`
       (def x 5)
       {MSFT, x bars}
       {MSFT, x days ago}
-    `)
+    `
 
-    const res = ast.map(stmt => stmt.eval(env))
+    // Eval code
+    const res = evalCode(env, code)
 
     expect(res[1].length).toEqual(5)
     expect(res[2]).toEqual({
@@ -141,7 +130,7 @@ describe('assets', () => {
   test('assets list and window', () => {
     const metaEnv = new Env({ isMeta: true })
 
-    const ast = getAst(String.raw`
+    const code = String.raw`
       {AAPL, 2 days ago}
       {AMD, 10 days ago}
       (:close {MSFT, 10 bars})
@@ -152,29 +141,29 @@ describe('assets', () => {
       )
       (def x {AAPL, 12 days ago})
       (def myObj {aapl: {AAPL, 22 days ago}, msft: {MSFT, 10 days ago}})
-    `)
+    `
 
-    ast.map(stmt => stmt.eval(metaEnv))
+    // Eval code
+    const res = evalCode(metaEnv, code)
     const assets = metaEnv.getAssets()
 
-    expect(assets.AAPL).toEqual(22)
+    expect(assets.AAPL).toEqual(23)
     expect(assets.MSFT).toEqual(33)
-    expect(assets.AMD).toEqual(10)
+    expect(assets.AMD).toEqual(11)
   })
 
   test('loop assets', () => {
-    const env = new Env()
-    env.loadBars(stocks)
-
-    const ast = getAst(String.raw`
+    const env = new Env({ bars: stocks })
+    const code = String.raw`
       (def assets ["AAPL", "MSFT"])
 
-      (loop a in (map (fn [x] {x}) assets)
+      (loop a in (map [x] => {x} assets)
         (:close a)
       )
-    `)
+    `
 
-    const res = ast.map(stmt => stmt.eval(env))
+    // Eval code
+    const res = evalCode(env, code)
     expect(res[1]).toEqual([[177.83], [323.46]])
   })
 

@@ -1,18 +1,14 @@
 import * as r from 'ramda'
-import { IndicatorOptions, type Bar } from '../types'
+import { Bars, IndicatorOptions, type Bar } from '../types'
 import highest from './highest'
 import lowest from './lowest'
 
-const donchian = (len: number = 5, data: Bar[], op: IndicatorOptions): any => {
-  const minLen = len + (op.roll ?? 0) + (op.offset ?? 0)
-  if (data.length < minLen) {
-    throw new Error(`data.length must be bigger then ${minLen}`)
+const donchian = (bars: Bars) =>
+  (len: number = 5, symbol: string | number[], op: IndicatorOptions = {}): any => {
+    const h = highest (bars) (len, symbol, {...op, prop: 'high'})
+    const l = lowest (bars) (len, symbol, {...op, prop: 'low'})
+
+    return [h, l]
   }
-
-  const h = highest(len, data, {...op, prop: 'high'})
-  const l = lowest(len, data, {...op, prop: 'low'})
-
-  return [h, l]
-}
 
 export default donchian

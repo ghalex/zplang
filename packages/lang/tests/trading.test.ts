@@ -23,9 +23,11 @@ const positions = [{
 }]
 
 describe('trading', () => {
-  test('load trading module', () => {
+  test('trading module', () => {
     const env = new Env({ bars: data })
-    env.loadModuleByName('core/trading')
+    
+    env.call('setCash', 2000)
+    env.call('setPositions', positions)
 
     const code = String.raw`
       (def symbols [
@@ -35,39 +37,29 @@ describe('trading', () => {
       ])
 
       (buy {AAPL} 1 {target: true})
-      (getPortfolio)
+      (getOrders)
+      (getPositions)
     `
-
-    const changePortfolio = env.get('changePortfolio')
-    changePortfolio({
-      initialCapital: 2000,
-      openPositions: [...positions]
-    })
 
     // Eval code
     const res = evalCode(env, code)
 
     // Get values from result
-    const order = res[1]
-    const portfolio = res[2]
+    const orders = res[2]
+    const openPositions = res[3]
+    const order = orders[0]
 
     expect(order.units).toEqual(4.5)
     expect(order.action).toEqual('sell')
-    expect(portfolio.orders.length).toEqual(1)
-    expect(portfolio.openPositions.length).toEqual(2)
-    expect(portfolio.initialCapital).toEqual(2000)
+    expect(orders.length).toEqual(1)
+    expect(openPositions.length).toEqual(2)
   })
 
   test('balance', () => {
     const env = new Env({ bars: data })
-    env.loadModuleByName('core/trading')
 
-    // Change portfolio
-    const changePortfolio = env.get('changePortfolio')
-    changePortfolio({
-      initialCapital: 2000,
-      openPositions: [...positions]
-    })
+    env.call('setCash', 2000)
+    env.call('setPositions', positions)
 
     // Eval code
     const res = evalCode(env, String.raw`
@@ -85,25 +77,19 @@ describe('trading', () => {
     `)
 
     // Get values from result
-    const orders = res[1].map(r => r[0])
-    const ordersBalanced = res[2]
+    const orders = env.call('getOrders')
 
     expect(orders.length).toEqual(3)
-    expect(orders[1].units).toEqual(5)
+    expect(orders[0].units).toEqual(0.5)
+    expect(orders[2].units).toEqual(5)
 
-    expect(ordersBalanced.length).toEqual(3)
   })
 
   test('balance with minAmount', () => {
     const env = new Env({ bars: data })
-    env.loadModuleByName('core/trading')
 
-    // Change portfolio
-    const changePortfolio = env.get('changePortfolio')
-    changePortfolio({
-      initialCapital: 2000,
-      openPositions: [...positions]
-    })
+    env.call('setCash', 2000)
+    env.call('setPositions', positions)
 
     // Eval code
     const res = evalCode(env, String.raw`
@@ -122,22 +108,20 @@ describe('trading', () => {
     `)
 
     // Get values from result
-    const orders = res[1].map(r => r[0])
-    const ordersBalanced = res[2]
+    const orders = env.call('getOrders')
 
-    expect(orders.length).toEqual(3)
+    expect(orders.length).toEqual(2)
     expect(orders[1].units).toEqual(5)
 
-    expect(ordersBalanced[0].symbol).toEqual('AAPL')
-    expect(ordersBalanced[0].units).toEqual(0.5)
-    expect(ordersBalanced.length).toEqual(2)
-
+    expect(orders[0].symbol).toEqual('AAPL')
+    expect(orders[0].units).toEqual(0.5)
   })
 
   test('indicators', () => {
     const env = new Env({ bars: r.map(x => r.take(10, x), data) })
-    env.loadModuleByName('core/trading')
-    env.loadModuleByName('core/indicators')
+
+    env.call('setCash', 2000)
+    env.call('setPositions', positions)
 
     const code = String.raw`
       (def symbols [
@@ -151,12 +135,6 @@ describe('trading', () => {
       (def atr5 (atr 5 "AAPL"))
       (def rsi5 (rsi 5 "AAPL"))
     `
-
-    const changePortfolio = env.get('changePortfolio')
-    changePortfolio({
-      initialCapital: 2000,
-      openPositions: [...positions]
-    })
 
     // Eval code
     const res = evalCode(env, code)

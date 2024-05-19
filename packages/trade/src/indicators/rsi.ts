@@ -1,6 +1,6 @@
 import * as r from 'ramda'
 import array from '../helpers/array'
-import { type IndicatorOptions } from '../types'
+import { Bar, Bars, type IndicatorOptions } from '../types'
 
 const changes = (arr: number[]): number[] => {
   return arr.map((val: any, idx: number) => {
@@ -61,25 +61,26 @@ const rsi = (len: number, data: number[]) => {
   return rsiValues[0]
 }
 
-const rsiCalc = (len: number, bars: number[], { roll, offset, prop }: IndicatorOptions): any => {
-  const window = len * 2
-  const minDataLength = window + (roll ?? 0) + (offset ?? 0)
-  const data = r.pluck(prop ?? 'close', bars)
+const rsiCalc = (bars: Bars) =>
+  (len: number, symbol: string | number[], { roll, offset, prop }: IndicatorOptions = {}): any => {
+    const window = len * 2
+    const minDataLength = window + (roll ?? 0) + (offset ?? 0)
+    const data: number[] = Array.isArray(symbol) ? symbol : r.pluck(prop ?? 'close', bars[symbol] as Bar[])
 
-  if (data.length < minDataLength) {
-    throw new Error(`rsi: data.length ${data.length} must be bigger then ${minDataLength}`)
-  }
+    if (data.length < minDataLength) {
+      throw new Error(`rsi: data.length ${data.length} must be bigger then ${minDataLength}`)
+    }
 
-  const res = array.rolling(
-    { window, partial: false },
-    (arr: any[]) => {
-      return rsi(len, arr)
-    },
-    r.take(window + (roll ?? 0), data.slice(offset ?? 0))
-  )
-  .filter((val: any) => val)
+    const res = array.rolling(
+      { window, partial: false },
+      (arr: any[]) => {
+        return rsi(len, arr)
+      },
+      r.take(window + (roll ?? 0), data.slice(offset ?? 0))
+    )
+    .filter((val: any) => val)
 
-  return roll ? res : res[0]
-}
+    return roll ? res : res[0]
+    }
 
 export default rsiCalc

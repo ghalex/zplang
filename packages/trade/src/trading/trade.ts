@@ -28,8 +28,31 @@ const zpTrade = (env) => {
   const setOrders = (orders: Order[]) => data.orders = [...orders]
   const setPositions = (positions: Position[]) => data.positions = [...positions]
 
-  
-  const balance = (settings: any) => {
+  const balanceOne = (order: Order, position?: Position) => {
+    const minDiff = 0.1000
+
+    if (!position) {
+      return order
+    } else {
+      const symbol = order.symbol
+      const posDirection = position?.side === 'long' ? 1 : -1
+      const orderDirection = order.action === 'buy' ? 1 : -1
+      const diff = (orderDirection * order.units) - (position.units * posDirection)
+      const diffAmount = diff * order.price
+
+      if (Math.abs(diffAmount) > minDiff) {
+        const action = diff > 0 ? 'buy' : 'sell'
+        const [diffOrder] = helpers.order.createOrdersUnits([symbol], { [symbol]: 1 }, Math.abs(diff), action, bars)
+        diffOrder.isClose = true
+
+        return diffOrder
+      }
+
+      return order
+    }
+  }
+
+  const balance = (settings: any = {}) => {
     const resultOrders: Order[] = []
     const minDiff = settings.minAmount ?? 0.1000
     const positions = settings.positions ?? data.positions
@@ -107,8 +130,7 @@ const zpTrade = (env) => {
     const [order] = helpers.order.createOrdersUnits([asset.symbol], { [asset.symbol]: 1 }, qty, action, bars, options.round)
 
     if (options.target) {
-      const [newOrder] = balance({orders: [order], positions: data.positions.filter(p => p.symbol === order.symbol)})
-
+      const newOrder = balanceOne(order, data.positions.find(p => p.symbol === order.symbol))
       data.orders.push(newOrder)
       return newOrder
     } else {

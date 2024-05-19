@@ -3,7 +3,9 @@ const zpAssets = (env) => {
   const { bars } = env
 
   return {
-    asset: (symbol: string, daysAgo: number = 0) => {
+    asset: (symbol: string, op = {}) => {
+      const { prop, daysAgo } = { prop: null, daysAgo: 0, ...op }
+
       if (!bars[symbol]) {
         throw new Error(`Bars for asset ${symbol} was not loaded`)
       }
@@ -12,19 +14,23 @@ const zpAssets = (env) => {
         throw new Error(`Only ${bars[symbol].length} bars available for asset ${symbol} require ${daysAgo}`)
       }
 
-      return bars[symbol][daysAgo]
+      return prop ? bars[symbol][daysAgo][prop] : bars[symbol][daysAgo]
     },
 
-    assets: (symbol: string, window: number, daysAgo: number = 0) => {
+    assets: (symbol: string, window: number, op = {}) => {
+      const { prop, daysAgo } = { prop: null, daysAgo: 0, ...op }
+
       if (!bars[symbol]) {
         throw new Error(`Bars for asset ${symbol} was not loaded`)
       }
 
-      if (bars[symbol].length < window) {
-        throw new Error(`Only ${bars[symbol].length} bars available for asset ${symbol} require ${window}`)
+      if (bars[symbol].length < window + daysAgo) {
+        throw new Error(`Only ${bars[symbol].length} bars available for asset ${symbol} require ${window + daysAgo}`)
       }
 
-      return bars[symbol].slice(daysAgo, window + daysAgo)
+      const data = bars[symbol].slice(daysAgo, window + daysAgo)
+
+      return prop ? data.map(b => b[prop]) : data
     }
   }
 }

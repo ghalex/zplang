@@ -62,3 +62,9 @@ export interface IndicatorOptions {
   offset?: number
   prop?: string
 }
+
+export interface RollingConfig {
+  window: number
+  partial: boolean
+}
+

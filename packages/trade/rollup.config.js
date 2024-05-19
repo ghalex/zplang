@@ -11,7 +11,8 @@ module.exports = [
     input: 'src/index.ts',
     external: [
       'ramda',
-      'dayjs'
+      'dayjs',
+      'simple-statistics'
     ],
     plugins: [
       esbuild()

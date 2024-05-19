@@ -1,4 +1,4 @@
-import type { Bar, IndicatorOptions } from '../types'
+import type { Bar, Bars, IndicatorOptions } from '../types'
 import { take } from 'ramda'
 import array from '../helpers/array'
 import * as ss from 'simple-statistics'
@@ -18,24 +18,25 @@ const momentumOne = (data: number[]) => {
   return slope * Math.pow(b, 2)
 }
 
-const momentum = (len: number, bars: Bar[], { roll, offset, prop }: IndicatorOptions): any => {
-  const minLen = len + (roll ?? 0) + (offset ?? 0)
-  const data = r.pluck(prop ?? 'close', bars)
+const momentum = (bars: Bars) =>
+  (len: number, symbol: string | number[], { roll, offset, prop }: IndicatorOptions = {}): any => {
+    const minLen = len + (roll ?? 0) + (offset ?? 0)
+    const data: number[] = Array.isArray(symbol) ? symbol : r.pluck(prop ?? 'close', bars[symbol] as Bar[])
 
-  if (data.length < len + (roll ?? 0) + (offset ?? 0)) {
-    throw new Error(`sma: data.length ${data.length} must be bigger then ${len}`)
+    if (data.length < minLen) {
+      throw new Error(`momentum: data.length ${data.length} must be bigger then ${minLen}`)
+    }
+
+    const res = array.rolling(
+      { window: len, partial: false },
+      (arr: any[]) => {
+        return momentumOne((arr as number[]).concat())
+      },
+      take(len + (roll ?? 0), data.slice(offset ?? 0))
+    )
+    .filter((val: any) => val)
+
+    return roll ? res : res[0]
   }
-
-  const res = array.rolling(
-    { window: len, partial: false },
-    (arr: any[]) => {
-      return momentumOne((arr as number[]).concat())
-    },
-    take(len + (roll ?? 0), data.slice(offset ?? 0))
-  )
-  .filter((val: any) => val)
-
-  return roll ? res : res[0]
-}
 
 export default momentum

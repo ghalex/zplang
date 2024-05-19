@@ -1,15 +1,19 @@
 const assets = ["AAPL", "MSFT"]
-const window = 1
+const window = 10
 const settings = {}
 
 function run() {
-  this.sma(14, "AAPL", { roll: 2, prop: "close" })
+  let close5 = this.assets("AAPL", 5, { prop: 'close', daysAgo: 0 })
 
-  for (const symbol of assets) {
-    this.buy(this.asset(symbol), 1)
-  }
+  this.print(close5)
 
-  this.print(this.getOrders())
+  let sma5 = this.ema(5, "AAPL")
+  this.print(`AAPL sma => ${sma5}`)
+
+  // for (const symbol of assets) {
+  //   this.buy(this.asset(symbol), 1)
+  // }
+
 }
 
 return { assets, window, run }

@@ -1,5 +1,13 @@
 # zplang
 
+## 1.0.51
+
+### Patch Changes
+
+- refactor indicators
+- Updated dependencies
+  - zptrade@1.0.3
+
 ## 1.0.50
 
 ### Patch Changes

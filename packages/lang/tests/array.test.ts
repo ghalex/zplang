@@ -75,6 +75,5 @@ describe('array & objects', () => {
     `)
 
     expect(res[1]).toEqual("Alex")
-    console.log(res)
   })
 })
