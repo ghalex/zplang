@@ -1,6 +1,6 @@
 {
   "name": "zplang",
-  "version": "1.0.49",
+  "version": "1.0.50",
   "description": "",
   "main": "dist/zplang.cjs.js",
   "module": "dist/zplang.es.js",

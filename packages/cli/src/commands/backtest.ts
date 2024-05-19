@@ -26,7 +26,7 @@ class LoggerAnalyzer {
 export default () => {
   program
     .usage('<file> [options]')
-    .description('run a backtest using a zplang file and display the result')
+    .description('run a backtest using a .zp or .js file and display the result')
     .argument('file', 'strategy to backtest')
     .option('-d, --date <date>', 'backtest end date')
     .option('-w, --window <window>', 'bars to load for backtest')

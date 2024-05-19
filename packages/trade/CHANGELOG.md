@@ -4,6 +4,12 @@
 
 ### Patch Changes
 
+- add indicators
+
+## 1.0.2
+
+### Patch Changes
+
 - Updated dependencies [a8b0966]
   - zplang@1.0.49
 

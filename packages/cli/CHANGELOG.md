@@ -1,5 +1,14 @@
 # zptrade-cli
 
+## 1.0.17
+
+### Patch Changes
+
+- Updated dependencies
+  - zptrade@1.0.2
+  - zptrade-backtest@1.0.4
+  - zplang@1.0.50
+
 ## 1.0.16
 
 ### Patch Changes

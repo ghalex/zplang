@@ -48,7 +48,7 @@ const installDependencies = async (projectName:string, pkName: string) => {
 export default () => {
   program
     .usage('<name> [options]')
-    .description('create a new zplang project')
+    .description('create a new project')
     .argument('name', 'project name')
     .action(async (projectName, opts) => {
         // const { name } = await prompts({ type: 'text', name: 'name', message: 'Enter project name', initial: projectName })

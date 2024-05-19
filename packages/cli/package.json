@@ -1,6 +1,6 @@
 {
   "name": "zptrade-cli",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "A CLI tool for backtesting and trading",
   "main": "dist/zptrade-cli.es.mjs",
   "module": "dist/zptrade-cli.es.mjs",

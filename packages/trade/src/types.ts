@@ -56,3 +56,9 @@ export interface OrderOptions {
   round?: boolean
   target?: boolean
 }
+
+export interface IndicatorOptions {
+  roll?: number
+  offset?: number
+  prop?: string
+}

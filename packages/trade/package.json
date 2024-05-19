@@ -1,6 +1,6 @@
 {
   "name": "zptrade",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "",
   "main": "dist/zptrade.cjs.js",
   "module": "dist/zptrade.es.js",
@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "dayjs": "^1.11.11",
-    "ramda": "~0.30.0"
+    "ramda": "~0.30.0",
+    "simple-statistics": "^7.8.3"
   }
 }
