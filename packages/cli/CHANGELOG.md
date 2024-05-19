@@ -1,5 +1,11 @@
 # zptrade-cli
 
+## 1.0.19
+
+### Patch Changes
+
+- update cache to combine data
+
 ## 1.0.18
 
 ### Patch Changes

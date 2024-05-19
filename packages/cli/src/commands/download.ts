@@ -1,6 +1,6 @@
 import clc from 'cli-color'
 import { Command } from 'commander'
-import { data } from '../api'
+import { data, cache } from '../api'
 import loadConfig from '../config'
 
 const program = new Command('download')
@@ -20,6 +20,8 @@ export default () => {
         const end = opts.end ? new Date(opts.end).toISOString() : undefined
         
         await data(config).download(symbols, window, resolution, end)
+        // const d = cache(config).get("TSLA", 5, 1440, "2024-05-14")
+        // console.log(d)
       } catch (e: any) {
         console.error(clc.red(`Error: ${e.message}`))
         return process.exit(0)

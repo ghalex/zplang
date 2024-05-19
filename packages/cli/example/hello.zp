@@ -8,8 +8,6 @@
 
 (print (:close {AAPL, 2 days ago}))
 
-(sma 14 "AAPL")
-
 (loop symbol in symbols
   (buy {symbol} 1)
 )

@@ -50,7 +50,7 @@ export default (config) => {
 
       for (const symbol of symbols) {
         if (data[symbol] && data[symbol].length > 0) {
-          await cache(config).save(symbol, resolution ?? 1440, end ?? null, data[symbol])
+          await cache(config).save(symbol, resolution ?? 1440, data[symbol])
         }
       }
 

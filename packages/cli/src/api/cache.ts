@@ -15,6 +15,26 @@ export default (config) => {
     return symbol.replace(/\//g, '_')
   }
   
+  const getAll = (symbol: string, resolution?: number) => {
+    const dataDir = config.dataDir
+    const key = `${parseSymbol(symbol)}_${resolution ?? 1440}`
+    const filePath = path.join(dataDir, key + '.data')
+  
+    if (!fs.existsSync(filePath)) {
+      return []
+    }
+  
+    try {
+      const fileContents = fs.readFileSync(filePath)
+      const buffer = gunzipSync(fileContents)
+  
+      
+      const data = JSON.parse(buffer.toString('utf8'))
+      return data
+    } catch (err: any) {
+      throw new Error(`Error reading compressed data from ${filePath}: ${err.message}`)
+    }
+  }
   /**
    * Get from cache
    * @param symbol 
@@ -23,33 +43,56 @@ export default (config) => {
    * @param end 
    * @returns 
    */
-  const get = (symbol: string, window: number, resolution?: number, end?: string) => {
-    const dataDir = config.dataDir
+  const get = (symbol: string, window: number, resolution: number = 1440, end?: string) => {
+    const allData = getAll(symbol, resolution)
     const date = end ? dayjs(end) : dayjs()
-  
-    const key = `${parseSymbol(symbol)}_${resolution ?? 1440}_${date.format('YYYYMMDD')}`
-    const filePath = path.join(dataDir, key + '.data')
-  
-    if (!fs.existsSync(filePath)) {
-      return []
+    const data = allData.filter((item) => item.date <= (resolution === 1440 ? date.endOf('D').valueOf() : date.valueOf()))
+
+    if (data.length < window) {
+      return [];
     }
-  
-    try {
-      const fileContents = fs.readFileSync(filePath);
-      const buffer = gunzipSync(fileContents);
-  
-      const data = JSON.parse(buffer.toString('utf8'));
-  
-      if (data.length < window) {
-          return [];
-      }
-  
-      return data.slice(0, window);
-    } catch (err: any) {
-      throw new Error(`Error reading compressed data from ${filePath}: ${err.message}`)
-    }
+
+    return data.slice(0, window)
   }
   
+  const canCombine = (oldData: any, newData: any) => {
+    // Find the date range of oldData
+    const oldDataDates = oldData.map(item => item.date)
+    const oldMinDate = Math.min(...oldDataDates)
+    const oldMaxDate = Math.max(...oldDataDates)
+
+    // Find the date range of newData
+    const newDataDates = newData.map(item => item.date)
+    const newMinDate = Math.min(...newDataDates)
+    const newMaxDate = Math.max(...newDataDates)
+
+    if (oldMaxDate < newMinDate || newMaxDate < oldMinDate) {
+      return false
+    }
+    
+    return true
+  }
+
+  const combineData = (oldData: any, newData: any) => {
+    if (!canCombine(oldData, newData)) return newData
+
+    const dataMap = new Map<number, any>()
+
+    // Add all entries from oldData to the map
+    oldData.forEach(item => {
+      dataMap.set(item.date, { ...item })
+    })
+
+    // Add or merge entries from newData to the map
+    newData.forEach(item => {
+      if (!dataMap.has(item.date)) {
+        dataMap.set(item.date, { ...item })
+      }
+    })
+
+    return Array.from(dataMap.values()).sort((a, b) => b.date - a.date)
+  }
+
   /**
    * Save to cache
    * @param symbol 
@@ -58,11 +101,12 @@ export default (config) => {
    * @param data 
    * @returns 
    */
-  const save = async (symbol: string, resolution: number, end: string | null, data: any) => {
+  const save = async (symbol: string, resolution: number, newData: any) => {
     const dataDir = config.dataDir
-    const date = end ? dayjs(end) : dayjs()
-  
-    const key = `${parseSymbol(symbol)}_${resolution ?? 1440}_${date.format('YYYYMMDD')}`
+    const data = combineData(getAll(symbol, resolution), newData)
+    const key = `${parseSymbol(symbol)}_${resolution ?? 1440}`
+
+    console.log('Saved data:', data)
     const filePath = path.join(dataDir, key + '.data')
     const jsonString = JSON.stringify(data, null, 2)
     const buffer = Buffer.from(jsonString, 'utf8')

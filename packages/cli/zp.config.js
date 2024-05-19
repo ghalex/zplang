@@ -7,7 +7,7 @@ const config = {
     date: "2024-04-01",
     window: 5,
     analyzers: [
-      // new RetursAnalyzer()
+      new RetursAnalyzer()
     ]
   }
 }
