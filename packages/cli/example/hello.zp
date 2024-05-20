@@ -11,6 +11,7 @@
   (buy {symbol} 1)
 )
 
+(print "inputs assets" (inputs/assets ))
 (print "price AAPL:" (:close {AAPL}))
 (print "cash:" (getCash))
 (print "total:" (getTotalCapital))

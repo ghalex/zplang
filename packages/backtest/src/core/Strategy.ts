@@ -12,13 +12,16 @@ class Strategy {
   analyzers: any[] = []
   startTime: number = 0
   endTime: number = 0
+  verbose: boolean = false
+  inputs: Record<string, any> = {}
 
-  constructor({ code, lang }) {
+  constructor({ code, lang, verbose, inputs = {} }) {
     this.code = code
     this.lang = lang
     this.broker = new Broker()
+    this.verbose = verbose
     this.broker.eventHandler = this
-    
+    this.inputs = inputs ?? {}
   }
 
   get currentBar () {
@@ -73,6 +76,8 @@ class Strategy {
       case 'js':
         this.env = createJsEnv(this.bars)
         this.env.barIndex = this.barIndex
+        this.env.date = this.currentDate
+        this.env.inputs = this.inputs
 
         this.env.setCash(this.broker.getCash())
         this.env.setPositions(this.broker.getOpenPositions())
@@ -82,7 +87,11 @@ class Strategy {
       case 'zp':
         this.env = new Env({ bars: this.bars})
 
-        this.env.bind('barIndex', this.barIndex)
+        this.env.bind('inputs', this.inputs)
+        this.env.bind('barIndex', this.currentBar)
+        this.env.bind('date', this.currentDate)
+
+
         this.env.call('setCash', this.broker.getCash())
         this.env.call('setPositions', this.broker.getOpenPositions())
         this.env.call('setOrders', [])
@@ -117,7 +126,7 @@ class Strategy {
     // execute orders
     const executedOrders = this.broker.fillOrders(orders)
 
-    if (stdout) {
+    if (stdout && stdout.length > 0 && this.verbose) {
       console.log(stdout)
     }
 

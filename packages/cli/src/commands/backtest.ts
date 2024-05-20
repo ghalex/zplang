@@ -5,7 +5,7 @@ import { Command } from 'commander'
 import { init, map } from 'ramda'
 import dayjs from 'dayjs'
 import voca from 'voca'
-import { Strategy } from 'zptrade-backtest'
+import { Strategy, analyzers } from 'zptrade-backtest'
 import loadConfig from '../config'
 import * as api from '../api'
 
@@ -30,7 +30,9 @@ export default () => {
     .argument('file', 'strategy to backtest')
     .option('-d, --date <date>', 'backtest end date')
     .option('-w, --window <window>', 'bars to load for backtest')
-    .option('-r, --result <result>', 'result output file')
+    .option('-s, --save <file>', 'save result to file')
+    .option('-v, --verbose', 'verbose mode', false)
+    .option('-a, --analyzers <analyzers...>', 'analyzers to use')
     .action(async (file, opts) => {
 
       try {
@@ -38,20 +40,40 @@ export default () => {
         const extension = path.extname(file)
         const lang = extension === '.js' ? 'js' : 'zp'
 
-        console.log(clc.cyanBright(`→ Backtesting using file: `) + clc.underline(file) + '\n')
+        console.log(clc.cyanBright(`→ Backtesting using file: `) + clc.underline(file))
 
         // add defaults
         opts.window = opts.window ?? config.backtest?.window ?? 5
         opts.date = opts.date ?? config.backtest?.date ?? dayjs().format('YYYY-MM-DD')
+        opts.save = opts.save ?? config.backtest?.saveResult
 
         // 1. Download bars
         const code = api.code().readCode(file)
-        const strategy = new Strategy({ code, lang })
+        const strategy = new Strategy({ code, lang, verbose: opts.verbose, inputs: config.backtest?.inputs ?? {} })
 
         //strategy.addAnalyzer(new LoggerAnalyzer())
-        strategy.addAnalyzers(config.backtest?.analyzers ?? [])
+        const availableAnalyzers = Object.values(analyzers).reduce((result, AnalyzerClass) => {
+          try {
+            const analyzer = new AnalyzerClass()
+            result[analyzer.name] = analyzer
+            return result
+          } catch (e) {
+            return result
+          }
+        }, {} as any)
 
-        const { symbols, maxWindow, settings } = api.code().getSymbols(code, lang, [])
+        const analyzersList = [...config.backtest?.analyzers ?? [], ...(opts.analyzers ?? []).map(name => {
+          if (!availableAnalyzers[name]) {
+            console.warn(clc.yellow(`→ Warning: Analyzer ${clc.underline.bold(name)} not found`))
+          }
+
+          return availableAnalyzers[name]
+        }).filter(x => x)]
+
+        strategy.addAnalyzers(analyzersList)
+        console.log('')
+
+        const { symbols, maxWindow, settings } = api.code().getSymbols(code, lang, [], config.inputs ?? {})
         const bars: Record<string, any[]> = await api.data(config).downloadBars(symbols, maxWindow + parseInt(opts.window), settings.timeframe ?? 1440, opts.date)
 
         // 2. Run backtest
@@ -64,6 +86,8 @@ export default () => {
         const dates = allDatas[0].map(x => dayjs(x.date).format('YYYY-MM-DD')).slice(0, parseInt(opts.window)).reverse()
 
         strategy.start()
+
+        console.log(clc.cyanBright(`→ Running backtest from ${clc.green(dates[0])} to ${clc.green(dates[dates.length - 1])}. ${clc.underline(dates.length + ' bars\n')}`))
 
         for (let index = 0; index < dates.length; index++) {
           const date = dates[index];
@@ -104,8 +128,8 @@ export default () => {
           console.log('')
         }
 
-        if (opts.result) {
-          const filePath = path.join(process.cwd(), opts.result)
+        if (opts.save) {
+          const filePath = path.join(process.cwd(), opts.save)
           console.log(clc.cyanBright(`→ Saving result to file: `) + clc.underline(filePath))
 
           fs.writeFileSync(filePath, JSON.stringify(result, null, 2))

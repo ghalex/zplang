@@ -17,6 +17,7 @@ export default () => {
     const zpEnv = new Env({ bars })
     zpEnv.bind('inputs', inputs)
     zpEnv.bind('barIndex', 1)
+    zpEnv.bind('date', new Date(Object.values(bars)?.[0]?.[0].date))
 
     zpEnv.call('setCash', inputs.initialCapital ?? 10_000)
     zpEnv.call('setPositions', inputs.openPositions ?? [])
@@ -35,10 +36,11 @@ export default () => {
 
   const runJsCode = (code: string, bars, inputs: any = {}) => {
     const start = performance.now()
-    const env = createJsEnv(bars)
+    const env: any = createJsEnv(bars)
 
     env.inputs = inputs
     env.barIndex = 1
+    env.date = new Date(Object.values(bars)?.[0]?.[0].date)
 
     env.setCash(inputs.initialCapital ?? 10_000)
     env.setPositions(inputs.openPositions ?? [])
@@ -83,6 +85,7 @@ export default () => {
   const getZpSymbols = (code: string, openPositions: any = [], inputs: any = {}) => {
     const metaEnv = new Env({ isMeta: true })
     metaEnv.bind('barIndex', 1)
+    metaEnv.bind('date', new Date())
     metaEnv.bind('inputs', inputs)
     metaEnv.call('setCash', inputs.initialCapital ?? 10_000)
 

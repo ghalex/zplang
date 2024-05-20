@@ -1,4 +1,4 @@
-import { RetursAnalyzer } from 'zptrade-backtest'
+import { analyzers } from 'zptrade-backtest'
 
 const config = {
   dataDir: "./example/data",
@@ -18,10 +18,15 @@ const config = {
     }]
   },
   backtest: {
-    date: "2024-04-01",
-    window: 5,
+    date: "2024-05-01",
+    window: 10,
+    saveResult: "./example/result.json",
+    inputs: {
+      assets: []
+    },
     analyzers: [
-      new RetursAnalyzer()
+      // new RetursAnalyzer()
+      // new analyzers.PositionsAnalyzer()
     ]
   }
 }

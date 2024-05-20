@@ -5,13 +5,14 @@ import loadConfig from '../config'
 
 const program = new Command('download')
 
+// -d parameter ()
 export default () => {
   program
     .description('download data from zapant.com')
     .option('-s, --symbols <symbols>', 'comma separated list of symbols')
     .option('-w, --window <window>', 'window size')
     .option('-r, --resolution [resolution]', 'resolution', '1440' )
-    .option('-e, --end [end]', 'end date', undefined)
+    .option('-d, --date [date]', 'download data until the specified date (YYYY-MM-DD)', undefined)
     .action(async (opts) => {
       try {
         const config = await loadConfig()

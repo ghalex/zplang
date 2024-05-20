@@ -1,5 +1,13 @@
 # zptrade-cli
 
+## 1.0.21
+
+### Patch Changes
+
+- add analyzer option and fix cache
+- Updated dependencies
+  - zptrade-backtest@1.0.7
+
 ## 1.0.20
 
 ### Patch Changes
