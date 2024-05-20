@@ -13,6 +13,14 @@ const zpTrade = (env) => {
   const getCash = () => data.cash
   const getOrders = () => data.orders.concat()
   const getPositions = () => data.positions.concat()
+  const getTotalCapital = () => {
+    if (data.positions.length === 0) return data.cash
+
+    return data.cash + data.positions.reduce((acc, p) => {
+      const bar = bars[p.symbol]?.[0] ?? { close: p.openPrice }
+      return acc + p.units * bar.close
+    }, 0)
+  }
 
   const getPosition = (symbol: string) => {
     const p = data.positions.find(p => p.symbol === symbol)
@@ -159,6 +167,7 @@ const zpTrade = (env) => {
 
   return {
     getCash,
+    getTotalCapital,
     getOrders,
     getPositions,
     getPosition,

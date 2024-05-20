@@ -1,5 +1,13 @@
 # zplang
 
+## 1.0.52
+
+### Patch Changes
+
+- add inputs and total capital
+- Updated dependencies
+  - zptrade@1.0.4
+
 ## 1.0.51
 
 ### Patch Changes

@@ -106,7 +106,6 @@ export default (config) => {
     const data = combineData(getAll(symbol, resolution), newData)
     const key = `${parseSymbol(symbol)}_${resolution ?? 1440}`
 
-    console.log('Saved data:', data)
     const filePath = path.join(dataDir, key + '.data')
     const jsonString = JSON.stringify(data, null, 2)
     const buffer = Buffer.from(jsonString, 'utf8')

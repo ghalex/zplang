@@ -1,5 +1,15 @@
 # zptrade-cli
 
+## 1.0.20
+
+### Patch Changes
+
+- add inputs and total capital
+- Updated dependencies
+  - zptrade@1.0.4
+  - zplang@1.0.52
+  - zptrade-backtest@1.0.6
+
 ## 1.0.19
 
 ### Patch Changes

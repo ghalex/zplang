@@ -1,5 +1,11 @@
 # zplang-backtest
 
+## 1.0.4
+
+### Patch Changes
+
+- add inputs and total capital
+
 ## 1.0.3
 
 ### Patch Changes

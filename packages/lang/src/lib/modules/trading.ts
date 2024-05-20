@@ -17,6 +17,7 @@ const load = (zpEnv: Env, as: string = '') => {
   const ns = as.length > 0 ? as + '/' : ''
 
   zpEnv.bind(ns + 'getCash', js.getCash)
+  zpEnv.bind(ns + 'getTotalCapital', js.getTotalCapital)
   zpEnv.bind(ns + 'getOrders', js.getOrders)
   zpEnv.bind(ns + 'getPositions', js.getPositions)
   zpEnv.bind(ns + 'getPosition', js.getPosition)

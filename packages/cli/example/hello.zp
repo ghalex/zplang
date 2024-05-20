@@ -6,10 +6,12 @@
   "MSFT"
 ])
 
-(print (:close {AAPL, 2 days ago}))
 
 (loop symbol in symbols
   (buy {symbol} 1)
 )
 
-(print (getOrders))
+(print "price AAPL:" (:close {AAPL}))
+(print "cash:" (getCash))
+(print "total:" (getTotalCapital))
+(print "positions:" (getPositions))
