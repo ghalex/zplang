@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import figlet from 'figlet'
 
-import clc from 'cli-color'
 import { Command } from 'commander'
 import create from './commands/create'
 import executeCommand from './commands/execute'
@@ -14,10 +13,11 @@ figlet("zptrade-cli", async (err, data) => {
 
   const logoText = err ? 'zptrade CLI' : data + '\n'
   const program = new Command()
+  const pk = await import('../package.json')
 
   program
     .name('zptrade')
-    .version('1.0.18')
+    .version(pk.version, '-v, --version', 'output the current version')
     .usage("command [options]")
     .addHelpText('beforeAll', logoText)
 
