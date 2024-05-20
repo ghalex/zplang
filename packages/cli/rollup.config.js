@@ -1,5 +1,6 @@
 const path = require('path')
 const esbuild = require('rollup-plugin-esbuild').default
+const json = require('@rollup/plugin-json')
 
 const name = 'zptrade-cli'
 
@@ -25,10 +26,12 @@ module.exports = [
       'zptrade',
       'zptrade-backtest',
       'dayjs',
+      'dayjs/plugin/duration',
       'voca'
     ],
     plugins: [
-      esbuild()
+      esbuild(),
+      json()
     ],
     output: [
       {

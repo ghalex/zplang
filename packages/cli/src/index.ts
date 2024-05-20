@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import figlet from 'figlet'
+import pk from '../package.json'
 
 import { Command } from 'commander'
 import create from './commands/create'
@@ -13,7 +14,6 @@ figlet("zptrade-cli", async (err, data) => {
 
   const logoText = err ? 'zptrade CLI' : data + '\n'
   const program = new Command()
-  const pk = await import('../package.json')
 
   program
     .name('zptrade')
