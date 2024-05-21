@@ -93,6 +93,9 @@ importers:
 
   packages/cli:
     dependencies:
+      '@zapant/calendar':
+        specifier: ^1.0.0
+        version: 1.0.0
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -1574,6 +1577,9 @@ packages:
 
   '@ungap/structured-clone@1.2.0':
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
+
+  '@zapant/calendar@1.0.0':
+    resolution: {integrity: sha512-wjRhqd7qBUaMR7rPkJjxY0DvgqMhheW6XQpdbpPT10fYnW0slKMpaeg74zPmnSS4Y7tSeTzE1PifhXEaztN7YQ==}
 
   '@zapant/indicators@1.0.8':
     resolution: {integrity: sha512-4laMXfBC3joiSJRtXqzVF/b51P5yQ8Juj6ylRyyGzsxoqNOAfMkVX6e0Rola5TD1gFdiAriQUha51fQxfZhaAg==}
@@ -3227,6 +3233,11 @@ packages:
   quick-lru@4.0.1:
     resolution: {integrity: sha512-ARhCpm70fzdcvNQfPoy49IaanKkTlRWF2JMzqhcJbhSFRZv7nPTvZJdcY7301IPmvW+/p0RgIWnQDLJxifsQ7g==}
     engines: {node: '>=8'}
+
+  ramda-analytics@0.2.1:
+    resolution: {integrity: sha512-zimrc9hWKRLfFoAq+7R3dyxHe00EKeyJz6Lps09+adjwPYZ+fXcTa8PXe4FbNWACYZpVktRvz5FTqlO9PIJOkA==}
+    peerDependencies:
+      ramda: ^0.27.1
 
   ramda@0.29.1:
     resolution: {integrity: sha512-OfxIeWzd4xdUNxlWhgFazxsA/nl3mS4/jGZI5n00uWOoSSFRhC1b6gl6xvmzUamgmqELraWp0J/qqVlXYPDPyA==}
@@ -5255,6 +5266,15 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
+  '@zapant/calendar@1.0.0':
+    dependencies:
+      axios: 1.6.8
+      dayjs: 1.11.11
+      ramda: 0.29.1
+      ramda-analytics: 0.2.1(ramda@0.29.1)
+    transitivePeerDependencies:
+      - debug
+
   '@zapant/indicators@1.0.8':
     dependencies:
       dayjs: 1.11.11
@@ -7262,6 +7282,11 @@ snapshots:
   queue-microtask@1.2.3: {}
 
   quick-lru@4.0.1: {}
+
+  ramda-analytics@0.2.1(ramda@0.29.1):
+    dependencies:
+      dayjs: 1.11.11
+      ramda: 0.29.1
 
   ramda@0.29.1: {}
 

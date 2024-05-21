@@ -16,6 +16,7 @@ export default () => {
     .option('-d, --date <date>', 'date to execute the file')
     .option('-o, --orders <orders>', 'orders output file')
     .option('-r, --result <result>', 'result output file')
+    .option('-e, --errors', 'debug errors')
     .action(async (file, opts) => {
 
       try {
@@ -52,10 +53,15 @@ export default () => {
         if (result.stdout) {
           console.log(clc.cyanBright(`→ Output: `))
           console.log(result.stdout.split('\n').map(l => clc.xterm(8) (l)).join('\n'))
+
         }
 
       } catch (e: any) {
         console.error(clc.red(`Error: ${e.message}`))
+
+        if (opts.errors) {
+          console.error(e)
+        }
       }
 
     })

@@ -1,5 +1,11 @@
 # zptrade-cli
 
+## 1.0.25
+
+### Patch Changes
+
+- fix cache bug
+
 ## 1.0.24
 
 ### Patch Changes

@@ -3,6 +3,7 @@ import * as path from 'node:path'
 import { gzipSync, gunzipSync } from 'node:zlib'
 import clc from 'cli-color'
 import dayjs from 'dayjs'
+import calendar from '@zapant/calendar'
 
 export default (config) => {
   
@@ -46,23 +47,33 @@ export default (config) => {
   const get = (symbol: string, window: number, resolution: number = 1440, end?: string) => {
     const allData = getAll(symbol, resolution)
     const date = end ? dayjs(end) : dayjs()
-    const fromDate = resolution === 1440 ? date.endOf('D') : date
+    const isStocks = !symbol.includes('/')
+    const resolutionMap = {
+      1440: 'day',
+      240: 'hour',
+      60: 'hour',
+      30: 'minute',
+      15: 'minute',
+      5: 'minute',
+    }
+    let fromDate = resolution === 1440 ? date.endOf('D') : date
 
     // get data from specific date
     const index = allData.findIndex(x => x.date <= fromDate.valueOf())
     const data = allData.slice(index)
+
+    if (isStocks && !calendar.isMarketOpen(fromDate)) {
+      fromDate = fromDate.subtract(1, 'd')
+    }
 
     if (data.length === 0) {
       return []
     }
 
     if (index === 0) {
-      const duration = data[0].date - data[1].date
-      const fromDuration = fromDate.valueOf() - data[0].date
-
-      if (fromDuration > duration) {
-        return []
-      }
+     if (!fromDate.isSame(dayjs(data[0].date), resolutionMap[resolution])) {
+      return []
+     }
     }
 
     if (index < 0) {
