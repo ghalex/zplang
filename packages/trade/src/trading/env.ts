@@ -2,6 +2,7 @@ import zpAssets from './assets'
 import zpCore from './core'
 import zpTrade from './trade'
 import zpIndicators from './indicators'
+import { env } from 'process'
 
 const createEnv = (bars: any) => {
   const env = {

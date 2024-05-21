@@ -1,5 +1,13 @@
 # zptrade-backtest
 
+## 1.0.8
+
+### Patch Changes
+
+- Updated dependencies
+  - zptrade@1.0.5
+  - zplang@1.0.53
+
 ## 1.0.7
 
 ### Patch Changes

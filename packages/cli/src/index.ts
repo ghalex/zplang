@@ -17,7 +17,7 @@ figlet("zptrade-cli", async (err, data) => {
 
   program
     .name('zptrade')
-    .version(pk.version, '-v, --version', 'output the current version')
+    .version(pk.version)
     .usage("command [options]")
     .addHelpText('beforeAll', logoText)
 

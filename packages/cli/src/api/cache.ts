@@ -48,7 +48,7 @@ export default (config) => {
     const allData = getAll(symbol, resolution)
     const date = end ? dayjs(end) : dayjs()
     const isStocks = !symbol.includes('/')
-    const resolutionMap = {
+    const resolutionMap: Record<number, dayjs.OpUnitType> = {
       1440: 'day',
       240: 'hour',
       60: 'hour',
@@ -56,14 +56,15 @@ export default (config) => {
       15: 'minute',
       5: 'minute',
     }
-    let fromDate = resolution === 1440 ? date.endOf('D') : date
+
+    let fromDate = date.endOf(resolutionMap[resolution])
 
     // get data from specific date
     const index = allData.findIndex(x => x.date <= fromDate.valueOf())
     const data = allData.slice(index)
 
-    if (isStocks && !calendar.isMarketOpen(fromDate)) {
-      fromDate = fromDate.subtract(1, 'd')
+    if (isStocks) {
+      fromDate = dayjs(calendar.getDaysUntil(fromDate.toDate(), 1, resolution)?.[0].date)
     }
 
     if (data.length === 0) {
@@ -161,5 +162,5 @@ export default (config) => {
     }
   }
 
-  return { get, save }
+  return { get, getAll, save }
 }

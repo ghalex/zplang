@@ -1,5 +1,11 @@
 # zplang-backtest
 
+## 1.0.5
+
+### Patch Changes
+
+- fix cache when index 0
+
 ## 1.0.4
 
 ### Patch Changes

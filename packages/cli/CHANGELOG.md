@@ -1,5 +1,15 @@
 # zptrade-cli
 
+## 1.0.26
+
+### Patch Changes
+
+- fix cache when index 0
+- Updated dependencies
+  - zptrade@1.0.5
+  - zptrade-backtest@1.0.8
+  - zplang@1.0.53
+
 ## 1.0.25
 
 ### Patch Changes

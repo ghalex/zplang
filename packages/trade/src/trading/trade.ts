@@ -1,5 +1,6 @@
 import type { Order, Position, Bar, OrderOptions } from '../types'
 import helpers from '../helpers'
+import position from '@/helpers/position'
 
 const zpTrade = (env) => {
   const { bars } = env

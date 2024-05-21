@@ -6,6 +6,7 @@
   "MSFT"
 ])
 
+(sma 5 "AAPL")
 
 (loop symbol in symbols
   (buy {symbol} 1)

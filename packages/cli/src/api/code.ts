@@ -107,11 +107,11 @@ export default () => {
   function getJsSymbols (code: string, openPositions: any = [], inputs: any = {}) {
     const execFunc = new Function(code)
     const res = execFunc()
-    const symbols = [
+    const symbols = uniq([
       ...res.assets,
       ...openPositions.map(p => p.symbol),
       ...(inputs.openPositions?.map(p => p.symbol) ?? [])
-    ]
+    ])
 
     return { symbols, maxWindow: res.window ?? 1, settings: res.settings ?? {} }
   }
