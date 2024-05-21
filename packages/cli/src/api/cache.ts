@@ -3,9 +3,6 @@ import * as path from 'node:path'
 import { gzipSync, gunzipSync } from 'node:zlib'
 import clc from 'cli-color'
 import dayjs from 'dayjs'
-import duration from 'dayjs/plugin/duration'
-
-dayjs.extend(duration)
 
 export default (config) => {
   
@@ -56,10 +53,10 @@ export default (config) => {
     const data = allData.slice(index)
 
     if (index === 0) {
-      const duration = dayjs.duration(data[0].date - data[1].date)
-      const fromDuration = dayjs.duration(fromDate.valueOf() - data[0].date)
+      const duration = data[0].date - data[1].date
+      const fromDuration = fromDate.valueOf() - data[0].date
 
-      if (fromDuration.asHours() > duration.asHours()) {
+      if (fromDuration > duration) {
         return []
       }
     }

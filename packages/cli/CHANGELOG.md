@@ -1,5 +1,11 @@
 # zptrade-cli
 
+## 1.0.23
+
+### Patch Changes
+
+- remove dayjs duration
+
 ## 1.0.22
 
 ### Patch Changes
