@@ -52,6 +52,10 @@ export default (config) => {
     const index = allData.findIndex(x => x.date <= fromDate.valueOf())
     const data = allData.slice(index)
 
+    if (data.length === 0) {
+      return []
+    }
+
     if (index === 0) {
       const duration = data[0].date - data[1].date
       const fromDuration = fromDate.valueOf() - data[0].date
