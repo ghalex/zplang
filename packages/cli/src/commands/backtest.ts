@@ -8,6 +8,7 @@ import voca from 'voca'
 import { Strategy, analyzers } from 'zptrade-backtest'
 import loadConfig from '../config'
 import * as api from '../api'
+import calendar from '@zapant/calendar'
 
 const program = new Command('backtest')
 
@@ -28,8 +29,9 @@ export default () => {
     .usage('<file> [options]')
     .description('run a backtest using a .zp or .js file and display the result')
     .argument('file', 'strategy to backtest')
-    .option('-d, --date <date>', 'backtest end date')
-    .option('-w, --window <window>', 'bars to load for backtest')
+    .option('-d1, --startDate <startDate>', 'backtest start date')
+    .option('-d2, --endDate <endDate>', 'backtest end date')
+    .option('-m, --market <market>', 'market to use', 'stocks')
     .option('-s, --save <file>', 'save result to file')
     .option('-v, --verbose', 'verbose mode', false)
     .option('-a, --analyzers <analyzers...>', 'analyzers to use')
@@ -43,9 +45,13 @@ export default () => {
         console.log(clc.cyanBright(`→ Backtesting using file: `) + clc.underline(file))
 
         // add defaults
-        opts.window = opts.window ?? config.backtest?.window ?? 5
-        opts.date = opts.date ?? config.backtest?.date ?? dayjs().format('YYYY-MM-DD')
+        opts.startDate = opts.startDate ?? config.backtest?.startDate ?? dayjs().endOf('day').subtract(1, 'week').format('YYYY-MM-DD')
+        opts.endDate = opts.endDate ?? config.backtest?.endDate ?? dayjs().endOf('day').format('YYYY-MM-DD')
         opts.save = opts.save ?? config.backtest?.saveResult
+        opts.market = opts.market ?? config.backtest?.market ?? 'stocks'
+
+        const dates = calendar.getDays({ start: opts.startDate, end: opts.endDate }, opts.market).map(x => x.date) //allDatas[0].map(x => dayjs(x.date).format('YYYY-MM-DD')).slice(0, parseInt(opts.window)).reverse()
+        const window = dates.length
 
         // 1. Download bars
         const code = api.code().readCode(file)
@@ -73,8 +79,8 @@ export default () => {
         strategy.addAnalyzers(analyzersList)
         console.log('')
 
-        const { symbols, maxWindow, settings } = api.code().getSymbols(code, lang, [], config.inputs ?? {})
-        const bars: Record<string, any[]> = await api.data(config).downloadBars(symbols, maxWindow + parseInt(opts.window), settings.timeframe ?? 1440, opts.date)
+        const { symbols, maxWindow, settings } = api.code().getSymbols(code, lang, [], config.backtest?.inputs ?? {})
+        const bars: Record<string, any[]> = await api.data(config).downloadBars(symbols, maxWindow + window, settings.timeframe ?? 1440, opts.endDate)
 
         // 2. Run backtest
         const allDatas: any[] = Object.values(bars)
@@ -82,8 +88,6 @@ export default () => {
         if (allDatas.length === 0) {
           throw new Error('No data in automation for backtest')
         }
-
-        const dates = allDatas[0].map(x => dayjs(x.date).format('YYYY-MM-DD')).slice(0, parseInt(opts.window)).reverse()
 
         strategy.start()
 

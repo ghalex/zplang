@@ -109,6 +109,7 @@ export default (config) => {
   const combineData = (oldData: any, newData: any) => {
     if (!canCombine(oldData, newData)) return newData
 
+    console.log('data can be combined')
     const dataMap = new Map<number, any>()
 
     // Add all entries from oldData to the map
@@ -136,7 +137,8 @@ export default (config) => {
    */
   const save = async (symbol: string, resolution: number, newData: any) => {
     const dataDir = config.dataDir
-    const data = combineData(getAll(symbol, resolution), newData)
+    const oldData = getAll(symbol, resolution)
+    const data = combineData(oldData, newData)
     const key = `${parseSymbol(symbol)}_${resolution ?? 1440}`
 
     const filePath = path.join(dataDir, key + '.data')

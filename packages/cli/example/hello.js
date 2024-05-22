@@ -1,5 +1,5 @@
 const assets = ["AAPL", "MSFT"]
-const window = 10
+const window = 1
 const settings = {}
 
 function run() {

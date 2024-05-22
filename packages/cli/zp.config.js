@@ -1,3 +1,4 @@
+import { start } from 'repl';
 import { analyzers } from 'zptrade-backtest'
 
 const config = {
@@ -18,15 +19,17 @@ const config = {
     }]
   },
   backtest: {
-    date: "2024-05-01",
-    window: 5,
+    startDate: "2024-04-01",
+    endDate: "2024-05-10",
     saveResult: "./example/result.json",
+    market: "stocks",
     inputs: {
       assets: []
     },
     analyzers: [
       // new RetursAnalyzer()
       // new analyzers.PositionsAnalyzer()
+      // new analyzers.TradesAnalyzer()
     ]
   }
 }

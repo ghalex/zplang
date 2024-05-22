@@ -1,5 +1,11 @@
 # zptrade-cli
 
+## 1.0.27
+
+### Patch Changes
+
+- refactor backtest to use startDate
+
 ## 1.0.26
 
 ### Patch Changes
