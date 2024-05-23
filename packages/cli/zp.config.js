@@ -27,8 +27,8 @@ const config = {
       assets: []
     },
     analyzers: [
-      // new RetursAnalyzer()
-      // new analyzers.PositionsAnalyzer()
+      // new analyzers.RetursAnalyzer(),
+      // new analyzers.PositionsAnalyzer(),
       // new analyzers.TradesAnalyzer()
     ]
   }
