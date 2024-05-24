@@ -1,29 +1,27 @@
 const path = require('path')
 const dts = require('rollup-plugin-dts').default
 const esbuild = require('rollup-plugin-esbuild').default
-const commonjs = require('@rollup/plugin-commonjs')
-const { nodeResolve } = require('@rollup/plugin-node-resolve')
-
 const pkg = require('./package.json')
 
 const name = pkg.name
+// const projectRoot = path.resolve(__dirname, '.')
 
 module.exports = [
   {
     input: 'src/index.ts',
     external: [
-      '@observablehq/plot'
+      'zplang',
+      'figlet'
     ],
     plugins: [
-      nodeResolve(),
-      commonjs(),
       esbuild()
     ],
     output: [
       {
         name,
-        file: path.resolve(__dirname, `dist/${name}.cjs.js`),
-        format: 'cjs'
+        file: path.resolve(__dirname, `dist/${name}.umd.js`),
+        format: 'umd',
+        globals: {}
       },
       {
         file: path.resolve(__dirname, `dist/${name}.es.js`),
@@ -34,9 +32,7 @@ module.exports = [
   {
     input: 'src/index.ts',
     plugins: [dts()],
-    external: [
-      '@observablehq/plot'
-    ],
+    external: [],
     output: {
       file: path.resolve(__dirname, `dist/${name}.d.ts`),
       format: 'es'

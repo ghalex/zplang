@@ -279,8 +279,8 @@ importers:
         specifier: ^0.30.0
         version: 0.30.0
       zptrade:
-        specifier: workspace:*
-        version: link:../trade
+        specifier: ^1.0.6
+        version: 1.0.6
     devDependencies:
       '@types/express':
         specifier: ^4.17.21
@@ -4123,6 +4123,9 @@ packages:
   yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
+
+  zptrade@1.0.6:
+    resolution: {integrity: sha512-VqrUQvqg1/WSZckFaUKax3q6YOhP4KmITZs2E83aIcHwydQllqA1zNqS67lPYuBvyJAhQJzhOuJrlby52iEX6A==}
 
 snapshots:
 
@@ -8427,3 +8430,9 @@ snapshots:
   yn@3.1.1: {}
 
   yocto-queue@0.1.0: {}
+
+  zptrade@1.0.6:
+    dependencies:
+      dayjs: 1.11.11
+      ramda: 0.30.0
+      simple-statistics: 7.8.3

@@ -1,21 +1,18 @@
 {
   "compilerOptions": {
-    /* Base */
-    "target": "esnext",
+    "target": "es6",
     "module": "commonjs",
     "moduleResolution": "node",
     "sourceMap": false,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
-    /* Strictness */
+    "outDir": "dist",
     "strict": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "noImplicitAny": false,
-    /* Paths */
+    "resolveJsonModule": true,
     "baseUrl": ".",
-    "outDir": "dist",
     "paths": {
       "@/*": [
         "./src/*"
@@ -31,5 +28,5 @@
   "include": [
     "./src/**/*",
     "./tests/**/*"
-  ]
+, "../repl/src/cli.ts"  ]
 }
