@@ -1,28 +1,41 @@
 import dayjs from 'dayjs'
+import BaseAnalyzer from './BaseAnalyzer'
 
-class RetursAnalyzer {
+function formatNumber(val) {
+  if (val >= 1000) {
+    const formattedValue = (val / 1000).toFixed(1);
+    return `$${formattedValue}k`;
+  } else {
+
+    const op = {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 3
+    }
+
+    return val.toLocaleString('en-US', op)
+  }
+}
+
+class RetursAnalyzer extends BaseAnalyzer {
   name = 'returns'
-  data = {
-    cash: {},
-    value: {},
-    pl: {}
+  data = [] as any[]
+
+  next() {
+    const date = dayjs(this.strategy.currentDate).format('YYYY-MM-DD')
+
+    const item: any = { date }
+    item.value = this.strategy.broker.getValue()
+    item.cash = this.strategy.broker.getCash()
+    item.pl = this.strategy.broker.getPL()
+
+    this.data.push(item)
   }
 
-  next({ strategy }) {
-    const date = dayjs(strategy.currentDate).format('YYYY-MM-DD')
-
-    this.data.value[date] = strategy.broker.getValue()
-    this.data.cash[date] = strategy.broker.getCash()
-    this.data.pl[date] = strategy.broker.getPL()
+  toConsole() {
+    console.table(this.data)
   }
 
-  end({ strategy }) {
-    const date = dayjs(strategy.currentDate).format('YYYY-MM-DD')
-
-    this.data.value[date] = strategy.broker.getValue()
-    this.data.cash[date] = strategy.broker.getCash()
-    this.data.pl[date] = strategy.broker.getPL()
-  }
 }
 
 export default RetursAnalyzer

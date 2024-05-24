@@ -15,7 +15,7 @@ const program = new Command('backtest')
 class LoggerAnalyzer {
   name: string = 'logger'
 
-  next ({ strategy, date, barIndex, bars, orders }) {
+  next({ strategy, date, barIndex, bars, orders }) {
     console.log(`Date: ${date}, BarIndex: ${barIndex}`)
     console.log(`Cash: ${strategy.broker.getCash()}`)
     console.log(`Bars:`)
@@ -84,7 +84,7 @@ export default () => {
 
         // 2. Run backtest
         const allDatas: any[] = Object.values(bars)
-        
+
         if (allDatas.length === 0) {
           throw new Error('No data in automation for backtest')
         }
@@ -128,7 +128,8 @@ export default () => {
         for (const analyzer of strategy.analyzers) {
           result.analyzers[analyzer.name] = analyzer.data
           console.log(clc.cyanBright(`→ Analyzer: `) + clc.underline(voca.capitalize(analyzer.name)))
-          console.dir(analyzer.data, { depth: null, colors: true })
+          // console.dir(analyzer.data, { depth: null, colors: true })
+          analyzer.toConsole()
           console.log('')
         }
 
@@ -136,11 +137,12 @@ export default () => {
           const filePath = path.join(process.cwd(), opts.save)
           console.log(clc.cyanBright(`→ Saving result to file: `) + clc.underline(filePath))
 
+          result.file = file
+          result.dateGenerated = new Date().toISOString()
+
           fs.writeFileSync(filePath, JSON.stringify(result, null, 2))
           console.log(`${clc.green('✔ Success:')} Result saved successfully\n`)
         }
-
-        
 
       } catch (e: any) {
         console.error(clc.red(`Error: ${e.message}`))

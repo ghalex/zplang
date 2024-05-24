@@ -1,5 +1,11 @@
 # zplang-backtest
 
+## 1.0.6
+
+### Patch Changes
+
+- create reports and fix some bugs
+
 ## 1.0.5
 
 ### Patch Changes

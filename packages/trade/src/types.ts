@@ -46,8 +46,10 @@ export interface Position {
   symbol: string
   openDate: number
   openPrice: number
+  openBar?: number
   closeDate: number | null
   closePrice: number | null
+  closeBar?: number | null
   units: number
   side: PositionSide
 }

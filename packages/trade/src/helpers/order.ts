@@ -70,7 +70,31 @@ const createOrdersAmount = (symbols: string[], weights: Record<string, number>, 
   return res
 }
 
+const mergeOrders = (orders: Order[]): Order[] => {
+  const map = new Map<string, Order>()
+
+  for (const order of orders) {
+    const existing = map.get(order.symbol)
+
+    if (existing) {
+      existing.units += order.units * (order.action === 'buy' ? 1 : -1)
+    } else {
+      map.set(order.symbol, { ...order, units: order.units * (order.action === 'buy' ? 1 : -1) })
+    }
+  }
+
+  return Array.from(map.values()).map(order => {
+    return {
+      ...order,
+      units: Math.abs(order.units),
+      action: order.units > 0 ? 'buy' : 'sell'
+    }
+  }).filter(order => order.units > 0) as Order[]
+}
+
+
 export default {
   createOrdersUnits,
-  createOrdersAmount
+  createOrdersAmount,
+  mergeOrders
 }

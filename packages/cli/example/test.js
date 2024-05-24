@@ -1,23 +1,28 @@
 const assets = ["AAPL", "MSFT"]
-const window = 5
+const window = 1
 const settings = {}
 
-
 function run() {
-  this.sma(5, "AAPL")
 
-  for (const symbol of assets) {
-    if (this.barIndex < 3) {
+  // if (this.barIndex > 10) {
+  //   this.closePositions()
+  //   return
+  // }
+  // for (const symbol of assets) {
+  //   this.buy(this.asset(symbol), 1)
+  //   this.sell(this.asset(symbol), 1)
+  // }
+
+
+  if (this.barIndex % 5 === 0) {
+    this.closePositions()
+  } else {
+    for (const symbol of assets) {
       this.buy(this.asset(symbol), 1)
     }
   }
 
-  // const AAPL = this.asset("AAPL")
 
-  this.print(this.barIndex)
-  this.print(this.date)
-  this.print(this.getCash())
-  this.print(this.getTotalCapital())
 }
 
 return { assets, window, run }

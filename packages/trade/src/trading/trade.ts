@@ -123,7 +123,7 @@ const zpTrade = (env) => {
     if (positionsToClose.length === 0) { return [] }
 
     const newOrders = helpers.position.generateClosePositions(positionsToClose, bars)
-    data.orders = [...data.orders, ...newOrders]
+    data.orders = helpers.order.mergeOrders([...data.orders, ...newOrders])
 
     return data.orders
   }
@@ -140,10 +140,10 @@ const zpTrade = (env) => {
 
     if (options.target) {
       const newOrder = balanceOne(order, data.positions.find(p => p.symbol === order.symbol))
-      data.orders.push(newOrder)
+      data.orders = helpers.order.mergeOrders([...data.orders, newOrder])
       return newOrder
     } else {
-      data.orders.push(order)
+      data.orders = helpers.order.mergeOrders([...data.orders, order])
       return order
     }
   }

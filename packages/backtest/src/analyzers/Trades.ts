@@ -1,6 +1,7 @@
-import { helpers } from 'zptrade'
+import { round } from '../utils'
+import BaseAnalyzer from './BaseAnalyzer'
 
-class TreadesAnalyzer {
+class TreadesAnalyzer extends BaseAnalyzer {
   name = 'trades'
   data = {
     nbOfTrades: 0,
@@ -15,8 +16,8 @@ class TreadesAnalyzer {
     avgTradeDuration: 0, // in seconds
   }
 
-  end({ strategy }) {
-    const positions = strategy.broker.getPositions()
+  end() {
+    const positions = this.strategy.broker.getPositions()
     let totalWin = 0
     let totalLoss = 0
     let totalTradesDuration = 0
@@ -52,14 +53,14 @@ class TreadesAnalyzer {
 
     // Calculate average win and loss
     if(totalWin) {
-      this.data.avgWinningTrade = helpers.round(totalWin / this.data.nbOfWinningTrades, 2)
+      this.data.avgWinningTrade = round(totalWin / this.data.nbOfWinningTrades, 2)
     }
     if(totalLoss) {
-      this.data.avgLosingTrade = helpers.round(totalLoss / this.data.nbOfLosingTrades, 2)
+      this.data.avgLosingTrade = round(totalLoss / this.data.nbOfLosingTrades, 2)
     }
 
-    this.data.winRate = helpers.round(this.data.nbOfWinningTrades / this.data.nbOfTrades, 2)
-    this.data.avgTradeDuration = helpers.round(totalTradesDuration / this.data.nbOfTrades, 2)
+    this.data.winRate = round(this.data.nbOfWinningTrades / this.data.nbOfTrades, 2)
+    this.data.avgTradeDuration = round(totalTradesDuration / this.data.nbOfTrades, 2)
   }
 }
 

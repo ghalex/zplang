@@ -1,6 +1,7 @@
 import { Env, evalCode } from 'zplang'
 import { createJsEnv } from 'zptrade'
-import Broker from "./Broker"
+import Broker from "./broker"
+
 
 class Strategy {
   code: string
@@ -24,54 +25,58 @@ class Strategy {
     this.inputs = inputs ?? {}
   }
 
-  get currentBar () {
+  get currentBar() {
     return this.barIndex
   }
 
-  get currentDate () {
+  get currentDate() {
     return Object.values(this.bars)[0][0].dateFormatted
   }
 
-  get duration () {
+  get duration() {
     const inSeconds = (this.endTime - this.startTime) / 1000
     return inSeconds
   }
 
-  setBars (bars) {
+  setBars(bars) {
     this.bars = bars
   }
 
-  setBarIndex (index) {
+  setBarIndex(index) {
     this.barIndex = index
   }
 
-  addAnalyzer (analyzer) {
-    this.analyzers.push(analyzer)
+  addAnalyzer(analyzer: any) {
+    analyzer.setStrategy(this)
+
+    if (analyzer.init(this)) {
+      this.analyzers.push(analyzer)
+    }
   }
 
-  addAnalyzers (analyzers) {
-    this.analyzers = this.analyzers.concat(analyzers)
+  addAnalyzers(analyzers) {
+    analyzers.forEach(analyzer => this.addAnalyzer(analyzer))
   }
 
-  getAnalyzer (name: string) {
+  getAnalyzer(name: string) {
     return this.analyzers.find(a => a.name === name)
   }
 
-  start () {
+  start() {
     this.broker.setCash(10_000)
     this.broker.setCommision(0.00)
 
-    this.analyzers.forEach(analyzer => analyzer.start?.({ strategy: this}))
+    this.analyzers.forEach(analyzer => analyzer.start?.())
     this.startTime = performance.now()
   }
 
-  end () {
+  end() {
     this.broker.closeAllPositions()
-    this.analyzers.forEach(analyzer => analyzer.end?.({ strategy: this}))
+    this.analyzers.forEach(analyzer => analyzer.end?.())
     this.endTime = performance.now()
   }
 
-  createEnv () {
+  createEnv() {
     switch (this.lang) {
       case 'js':
         this.env = createJsEnv(this.bars)
@@ -85,7 +90,7 @@ class Strategy {
         break
 
       case 'zp':
-        this.env = new Env({ bars: this.bars})
+        this.env = new Env({ bars: this.bars })
 
         this.env.bind('inputs', this.inputs)
         this.env.bind('barIndex', this.currentBar)
@@ -100,10 +105,10 @@ class Strategy {
       default:
         throw new Error('Invalid language')
     }
-    
+
   }
 
-  prenext (context) {
+  prenext(context) {
     const { code, date } = context
 
     // set data to broker
@@ -115,9 +120,12 @@ class Strategy {
 
     // update time
     this.endTime = performance.now()
+
+    // prenext analyzers
+    this.analyzers.forEach(analyzer => analyzer.prenext?.())
   }
 
-  next (context) {
+  next(context) {
     const { code, date } = context
 
     // run zp code
@@ -130,12 +138,12 @@ class Strategy {
       console.log(stdout)
     }
 
-    this.analyzers.forEach(analyzer => analyzer.next?.({ strategy: this, ...context, orders: executedOrders }))
+    this.analyzers.forEach(analyzer => analyzer.next?.())
 
     return executedOrders
   }
 
-  private runZpCode (code: string) {
+  private runZpCode(code: string) {
     if (!this.env) {
       throw new Error('Env is not created')
     }
@@ -154,7 +162,7 @@ class Strategy {
     }
   }
 
-  private runJsCode (code: string) {
+  private runJsCode(code: string) {
     if (!this.env) {
       throw new Error('Env is not created')
     }
@@ -178,7 +186,7 @@ class Strategy {
     }
   }
 
-  private runCode (code: string) {
+  private runCode(code: string) {
     switch (this.lang) {
       case 'js':
         return this.runJsCode(code)
@@ -191,12 +199,12 @@ class Strategy {
     }
   }
 
-  public onOrder (order) {
-    this.analyzers.forEach(analyzer => analyzer.onOrder?.({ strategy: this, order }))
+  public onOrder(order) {
+    this.analyzers.forEach(analyzer => analyzer.onOrder?.(order))
   }
 
-  public onPosition (position) {
-    this.analyzers.forEach(analyzer => analyzer.onPosition?.({ strategy: this, position }))
+  public onPosition(position) {
+    this.analyzers.forEach(analyzer => analyzer.onPosition?.(position))
   }
 }
 

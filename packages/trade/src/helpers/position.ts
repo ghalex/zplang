@@ -37,6 +37,7 @@ const closePosition = (position: Position, order: FilledOrder): Position => {
     symbol: position.symbol,
     openDate: position.openDate,
     openPrice: position.openPrice,
+    openBar: position.openBar,
     closeDate: order.fillDate,
     closePrice: order.fillPrice,
     closeBar: order.fillBar,
