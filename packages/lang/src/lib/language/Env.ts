@@ -15,9 +15,9 @@ interface EnvOptions {
 class Env {
   private readonly env: Record<string, any>
   private readonly parent: Env | null = null
-  private readonly modules: Record<string, Module> = {}
+  private readonly modules: Record<string, any> = {}
 
-  constructor (options: EnvOptions = {}) {
+  constructor(options: EnvOptions = {}) {
     this.parent = options.parent ?? null
     this.env = {
       $$bars: options.bars ?? [],
@@ -33,11 +33,11 @@ class Env {
     this.loadModule(core.indicators)
   }
 
-  setPragma (key: string, value: any) {
+  setPragma(key: string, value: any) {
     this.env.$$settings[key] = value
   }
 
-  getPragma (key?: string) {
+  getPragma(key?: string) {
     if (key) {
       return this.env.$$settings.get(key)
     }
@@ -45,7 +45,7 @@ class Env {
     return { ...this.env.$$settings }
   }
 
-  addAsset (symbol: string, window: number) {
+  addAsset(symbol: string, window: number) {
     if (this.parent) {
       return this.parent.addAsset(symbol, window)
     }
@@ -55,15 +55,15 @@ class Env {
     return asset
   }
 
-  getAssets (): Record<string, number> {
+  getAssets(): Record<string, number> {
     return { ...this.env.$$assets }
   }
 
-  getBars () {
+  getBars() {
     return this.env.$$bars
   }
 
-  bind (name: string, value: unknown) {
+  bind(name: string, value: unknown) {
     const [a, b] = name.split('/')
 
     if (a && b) {
@@ -76,11 +76,11 @@ class Env {
     this.env[a] = value
   }
 
-  public get stdout () {
+  public get stdout() {
     return this.env.$$stdout.join('\n')
   }
 
-  get (name: string) {
+  get(name: string) {
     const [a, b] = name.split('/')
 
     if (a && b) {
@@ -106,7 +106,7 @@ class Env {
     return this.env[a]
   }
 
-  call (...args) {
+  call(...args) {
     const [name, ...rest] = args
     const fn = this.get(name)
 
@@ -115,29 +115,40 @@ class Env {
     }
   }
 
-  loadModule (m: Module, as?: string) {
+  loadModule(m: Module, as?: string) {
     const ns = m.namespace + '/' + m.name
     // store
-    this.modules[ns] = m
+    this.modules[ns] = {
+      name: m.name,
+      namespace: m.namespace,
+      load: m.load,
+      as: as
+    }
 
     // load
     m.load(this, as)
   }
 
-  loadBars (bars = {}) {
+  loadBars(bars = {}) {
     this.env.$$bars = bars
+
+    // reload all modules
+    Object.keys(this.modules).forEach((key) => {
+      const m = this.modules[key]
+      m.load(this, m.as)
+    })
   }
 
-  print (line: string) {
+  print(line: string) {
     this.env.$$stdout.push(line)
   }
 
-  clear () {
+  clear() {
     this.env.$$stdout = []
   }
 
   // this could be replaced with parentEnv and "looking up" if something is not found
-  duplicate () {
+  duplicate() {
     const dupEnv = new Env()
 
     Object.entries(this.env).forEach(([key, value]) => {

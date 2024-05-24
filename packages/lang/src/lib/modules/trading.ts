@@ -4,11 +4,6 @@ import { createJsEnv } from 'zptrade'
 const name = 'trading'
 const namespace = 'core'
 
-interface OrderOptions {
-  round?: boolean
-  target?: boolean
-}
-
 const load = (zpEnv: Env, as: string = '') => {
   const isMeta = zpEnv.get('$$isMeta')
   const bars = zpEnv.get('$$bars')

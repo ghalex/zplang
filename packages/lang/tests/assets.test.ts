@@ -21,7 +21,7 @@ describe('assets', () => {
   // })
 
   test('define an asset', () => {
-    
+
     const code = String.raw`
       {MSFT}
       {MSFT, today}
