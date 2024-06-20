@@ -1,6 +1,6 @@
 {
   "name": "zplang",
-  "version": "1.0.55",
+  "version": "1.0.56",
   "description": "",
   "main": "dist/zplang.cjs.js",
   "module": "dist/zplang.es.js",
@@ -37,9 +37,9 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@zapcli/core": "^1.0.6",
     "dayjs": "^1.11.11",
     "ohm-js": "^17.1.0",
-    "ramda": "^0.30.0",
-    "zptrade": "^1.0.6"
+    "ramda": "~0.30.0"
   }
 }

@@ -1,5 +1,11 @@
 # zplang
 
+## 1.0.56
+
+### Patch Changes
+
+- replace zptrade with @zapcli/core
+
 ## 1.0.55
 
 ### Patch Changes

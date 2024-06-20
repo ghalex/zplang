@@ -1,5 +1,5 @@
 import { Lambda, type Env } from '../language'
-import { createJsEnv } from 'zptrade'
+import { createJsEnv } from '@zapcli/core'
 
 const name = 'trading'
 const namespace = 'core'

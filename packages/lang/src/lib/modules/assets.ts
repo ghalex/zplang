@@ -1,5 +1,5 @@
 import { type Env } from '../language'
-import { createJsEnv } from 'zptrade'
+import { createJsEnv } from '@zapcli/core'
 
 const name = 'assets'
 const namespace = 'core'

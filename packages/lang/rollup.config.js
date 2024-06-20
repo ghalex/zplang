@@ -12,8 +12,7 @@ module.exports = [
     external: [
       'ohm-js',
       'ramda',
-      'zptrade',
-      '@zapant/indicators'
+      '@zapcli/core'
     ],
     plugins: [
       esbuild()

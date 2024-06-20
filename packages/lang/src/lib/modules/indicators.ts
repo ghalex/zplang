@@ -1,5 +1,5 @@
 import { type Env } from '../language'
-import { createJsEnv } from 'zptrade'
+import { createJsEnv } from '@zapcli/core'
 import * as r from 'ramda'
 
 const name = 'indicators'
