@@ -16,6 +16,7 @@ const load = (zpEnv: Env, as: string = '') => {
   zpEnv.bind(ns + 'getOrders', js.getOrders)
   zpEnv.bind(ns + 'getPositions', js.getPositions)
   zpEnv.bind(ns + 'getPosition', js.getPosition)
+  zpEnv.bind(ns + 'getPositionInfo', js.getPositionInfo)
   zpEnv.bind(ns + 'setCash', js.setCash)
   zpEnv.bind(ns + 'setOrders', js.setOrders)
   zpEnv.bind(ns + 'setPositions', js.setPositions)
@@ -28,6 +29,8 @@ const load = (zpEnv: Env, as: string = '') => {
   zpEnv.bind(ns + 'buyAmount', isMeta ? () => [] : js.buyAmount)
   zpEnv.bind(ns + 'sell', isMeta ? () => [] : js.sell)
   zpEnv.bind(ns + 'sellAmount', isMeta ? () => [] : js.sellAmount)
+  zpEnv.bind(ns + 'crossover', js.crossover)
+  zpEnv.bind(ns + 'crossunder', js.crossunder)
 }
 
 export default {

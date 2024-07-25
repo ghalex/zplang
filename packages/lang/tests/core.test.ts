@@ -36,6 +36,8 @@ describe('core', () => {
       (def var1 (* 4 3))
       (def isBigger (> 10 5))
       (% 6 5)
+      (min 2 3)
+      (max 10 20)
     `
     const ast = getAst(code)
     const res = ast.map(stmt => stmt.eval(env))
@@ -44,6 +46,8 @@ describe('core', () => {
     expect(res[1]).toBe(12)
     expect(res[2]).toBe(true)
     expect(res[3]).toBe(1)
+    expect(res[4]).toBe(2)
+    expect(res[5]).toBe(20)
     expect(ast.toString()).toEqual(codeToStr(code))
   })
 

@@ -1,5 +1,11 @@
 # zplang
 
+## 1.0.57
+
+### Patch Changes
+
+- add pos info
+
 ## 1.0.56
 
 ### Patch Changes

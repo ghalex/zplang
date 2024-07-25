@@ -20,6 +20,8 @@ const load = (zpEnv: Env) => {
       ? (symbol: string, window: number, daysAgo: number = 0) => [...Array(window + daysAgo).keys()].map(x => symbol)
       : (symbol: string, window: number, daysAgo: number = 0) => js.assets(symbol, window, { daysAgo })
   )
+
+  zpEnv.bind('getToday', isMeta ? () => new Date().toISOString() : () => js.today().toISOString())
 }
 
 export default {

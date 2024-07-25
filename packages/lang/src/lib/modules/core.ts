@@ -26,7 +26,7 @@ const load = (env: Env) => {
     const isArray = Array.isArray(args[0])
     return args.slice(1).reduce((prev, curr) => isArray ? arrApply(r.multiply, prev, curr) : prev * curr, args[0])
   })
-  
+
   env.bind('/', (...args) => {
     const isArray = Array.isArray(args[0])
     return args.slice(1).reduce((prev, curr) => isArray ? arrApply(r.divide, prev, curr) : prev / curr, args[0])
@@ -81,8 +81,17 @@ const load = (env: Env) => {
   })
 
   // Math
-  env.bind('max', (arr) => Array.isArray(arr) ? Math.max(...arr) : Math.max(arr))
-  env.bind('min', (arr) => Array.isArray(arr) ? Math.min(...arr) : Math.min(arr))
+  env.bind('max', (a, b) => {
+    return Array.isArray(a)
+      ? Math.max(...a)
+      : Math.max(a, b)
+  })
+
+  env.bind('min', (a, b) => {
+    return Array.isArray(a)
+      ? Math.min(...a)
+      : Math.min(a, b)
+  })
 
   // String
   env.bind('str', (...args) => args.map(a => a.toString()).join(' '))
@@ -100,6 +109,7 @@ const load = (env: Env) => {
 
   // Array
   env.bind('len', arr => arr.length)
+  env.bind('substr', (start, end, str) => str.substring(start, end))
   env.bind('indexOf', (el, arr) => arr.indexOf(el))
   env.bind('push', (val, arr) => [...arr, val])
   env.bind('push!', (val, arr) => arr.push(val))
@@ -143,9 +153,9 @@ const load = (env: Env) => {
     if (arr.length === 0) return null
     return arr[arr.length - 1]
   })
-  
+
   env.bind('nth', (idx, arr) => {
-    function getIdx (i, a) {
+    function getIdx(i, a) {
       if (Array.isArray(i)) {
         const [curr, ...rest] = i
         return getIdx(rest.length > 1 ? rest : rest[0], a[curr])
