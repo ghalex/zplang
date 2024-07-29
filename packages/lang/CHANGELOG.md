@@ -1,5 +1,11 @@
 # zplang
 
+## 1.0.58
+
+### Patch Changes
+
+- fix getTotalCapital
+
 ## 1.0.57
 
 ### Patch Changes
