@@ -16,7 +16,16 @@ const load = (zpEnv: Env, as: string = '') => {
   zpEnv.bind(ns + 'getOrders', js.getOrders)
   zpEnv.bind(ns + 'getPositions', js.getPositions)
   zpEnv.bind(ns + 'getPosition', js.getPosition)
-  zpEnv.bind(ns + 'getPositionInfo', js.getPositionInfo)
+  zpEnv.bind(ns + 'getPositionInfo', isMeta
+    ? () => {
+      return {
+        isToday: false,
+        daysOpen: 0,
+        openValue: 0,
+        currentValue: 0
+      }
+    }
+    : js.getPositionInfo)
   zpEnv.bind(ns + 'setCash', js.setCash)
   zpEnv.bind(ns + 'setOrders', js.setOrders)
   zpEnv.bind(ns + 'setPositions', js.setPositions)

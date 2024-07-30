@@ -1,5 +1,11 @@
 # zplang
 
+## 1.0.59
+
+### Patch Changes
+
+- fix getpositioninfo
+
 ## 1.0.58
 
 ### Patch Changes
